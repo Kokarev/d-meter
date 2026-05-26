@@ -1,0 +1,194 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "D-METER",
+  "@appTitle": { "description": "App name — do not translate" },
+
+  "logoSubtitle": "Fuel Density",
+  "@logoSubtitle": { "description": "Subtitle under D-METER logo" },
+
+  "menuDensityCalculator": "Density Calculator",
+  "@menuDensityCalculator": {},
+
+  "menuEscalation": "Escalation",
+  "@menuEscalation": {},
+
+  "menuHowToUse": "How to use",
+  "@menuHowToUse": {},
+
+  "menuHistory": "Calculation history",
+  "@menuHistory": {},
+
+  "menuFuelStandards": "Fuel standards",
+  "@menuFuelStandards": {},
+
+  "menuSettings": "Settings",
+  "@menuSettings": {},
+
+  "menuLanguage": "Language",
+  "@menuLanguage": {},
+
+  "menuAbout": "About D-METER",
+  "@menuAbout": {},
+
+  "snackHowToUse": "How to use D-METER",
+  "@snackHowToUse": {},
+
+  "snackHistory": "Calculation history — coming soon",
+  "@snackHistory": {},
+
+  "snackFuelStandards": "Fuel standards — coming soon",
+  "@snackFuelStandards": {},
+
+  "snackSettings": "Settings — coming soon",
+  "@snackSettings": {},
+
+  "snackLanguage": "Language selection — coming soon",
+  "@snackLanguage": {},
+
+  "snackAbout": "D-METER v1.0.0 — EN ISO 12185",
+  "@snackAbout": { "description": "Version string — EN ISO 12185 must not be translated" },
+
+  "sectionFuel": "Fuel",
+  "@sectionFuel": {},
+
+  "sectionParameters": "Parameters",
+  "@sectionParameters": {},
+
+  "sectionDensityBasis": "Density Basis",
+  "@sectionDensityBasis": {},
+
+  "labelP15": "Density at 15°C (passport)",
+  "@labelP15": { "description": "Input label — P15 is an ISO variable name, keep as-is" },
+
+  "labelDeliveryTemp": "Delivery temperature",
+  "@labelDeliveryTemp": {},
+
+  "labelWeight": "Weight",
+  "@labelWeight": {},
+
+  "labelActualDensity": "Actual density at delivery",
+  "@labelActualDensity": {},
+
+  "labelVolume": "Volume",
+  "@labelVolume": {},
+
+  "labelContractDensity": "Contract density",
+  "@labelContractDensity": {},
+
+  "labelActualDensity15": "Actual density 15°C",
+  "@labelActualDensity15": {},
+
+  "labelAverageQuotation": "Average quotation",
+  "@labelAverageQuotation": {},
+
+  "labelSellerPremium": "Seller premium",
+  "@labelSellerPremium": {},
+
+  "resultDeliveryDensity": "Delivery Density",
+  "@resultDeliveryDensity": {},
+
+  "resultDeliveryTemperature": "Delivery Temperature",
+  "@resultDeliveryTemperature": {},
+
+  "detailsToggle": "Details",
+  "@detailsToggle": {},
+
+  "detailDensityAt15": "Density at 15°C",
+  "@detailDensityAt15": {},
+
+  "detailDensityInAir": "Density in air",
+  "@detailDensityInAir": { "description": "VAC/AIR buoyancy-corrected density label" },
+
+  "detailDeliveryTemp": "Delivery temperature",
+  "@detailDeliveryTemp": {},
+
+  "detailVolume": "Volume",
+  "@detailVolume": {},
+
+  "detailWeight": "Weight",
+  "@detailWeight": {},
+
+  "detailCoefficientA": "Coefficient a",
+  "@detailCoefficientA": { "description": "EN ISO 91-1 temperature correction coefficient — 'a' is a formula variable, keep lowercase" },
+
+  "formulaLabel": "FORMULA",
+  "@formulaLabel": { "description": "Micro-label above formula block" },
+
+  "modeDensityAtTemp": "Density at temp",
+  "@modeDensityAtTemp": {},
+
+  "modeTempAtDensity": "Temp at density",
+  "@modeTempAtDensity": {},
+
+  "escalationSectionLabel": "ESCALATION",
+  "@escalationSectionLabel": {},
+
+  "escalationBasePrice": "Base price: {value} $/t",
+  "@escalationBasePrice": {
+    "placeholders": { "value": { "type": "String" } }
+  },
+
+  "escalationTotalPremium": "Total premium: {value} $/t",
+  "@escalationTotalPremium": {
+    "placeholders": { "value": { "type": "String" } }
+  },
+
+  "escalationFinalPrice": "Final price: {value} $/t",
+  "@escalationFinalPrice": {
+    "placeholders": { "value": { "type": "String" } }
+  },
+
+  "fuelGroupGasoil": "Gasoil",
+  "@fuelGroupGasoil": { "description": "Fuel product group display label — may be localized" },
+
+  "fuelGroupGasoline": "Gasoline",
+  "@fuelGroupGasoline": { "description": "Fuel product group display label — may be localized" },
+
+  "hintModeA": "Enter the reference density at 15°C and the delivery temperature. The density at delivery temperature will be shown as Delivery Density.",
+  "@hintModeA": {},
+
+  "hintModeB": "Enter the actual delivery density. The calculated temperature will appear as Delivery Temperature.",
+  "@hintModeB": {},
+
+  "validationRequired": "Required",
+  "@validationRequired": {},
+
+  "validationEnterNumber": "Enter a number",
+  "@validationEnterNumber": {},
+
+  "validationMustBePositive": "Must be > 0",
+  "@validationMustBePositive": {},
+
+  "validationMustBePositiveStrict": "Must be positive",
+  "@validationMustBePositiveStrict": {},
+
+  "validationTempRange": "−40 – 80 °C",
+  "@validationTempRange": { "description": "Temperature range error — °C must not be translated" },
+
+  "validationDensityRangeKgL": "{min}–{max} kg/l ({family})",
+  "@validationDensityRangeKgL": {
+    "description": "Density out-of-range error. family = diesel or gasoline.",
+    "placeholders": {
+      "min": { "type": "String" },
+      "max": { "type": "String" },
+      "family": { "type": "String" }
+    }
+  },
+
+  "validationDensityRangeKgM3": "{min}–{max} kg/m³ ({family})",
+  "@validationDensityRangeKgM3": {
+    "description": "P15 out-of-range error.",
+    "placeholders": {
+      "min": { "type": "String" },
+      "max": { "type": "String" },
+      "family": { "type": "String" }
+    }
+  },
+
+  "validationContractDensityRange": "0.650–1.100 kg/l",
+  "@validationContractDensityRange": {},
+
+  "validationEscalationDensityRange": "0.700–0.900 kg/l",
+  "@validationEscalationDensityRange": {}
+}

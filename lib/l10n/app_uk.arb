@@ -1,0 +1,117 @@
+{
+  "@@locale": "uk",
+
+  "appTitle": "D-METER",
+
+  "logoSubtitle": "Густина палива",
+
+  "menuDensityCalculator": "Калькулятор густини",
+
+  "menuEscalation": "Escalation",
+
+  "menuHowToUse": "Як користуватись",
+
+  "menuHistory": "Історія розрахунків",
+
+  "menuFuelStandards": "Стандарти палива",
+
+  "menuSettings": "Налаштування",
+
+  "menuLanguage": "Мова",
+
+  "menuAbout": "Про D-METER",
+
+  "snackHowToUse": "Як користуватись D-METER",
+
+  "snackHistory": "Історія розрахунків — незабаром",
+
+  "snackFuelStandards": "Стандарти палива — незабаром",
+
+  "snackSettings": "Налаштування — незабаром",
+
+  "snackLanguage": "Вибір мови — незабаром",
+
+  "snackAbout": "D-METER v1.0.0 — EN ISO 12185",
+
+  "sectionFuel": "Паливо",
+
+  "sectionParameters": "Параметри",
+
+  "sectionDensityBasis": "Основа густини",
+
+  "labelP15": "Густина при 15°C (паспорт)",
+
+  "labelDeliveryTemp": "Температура прийому",
+
+  "labelWeight": "Маса",
+
+  "labelActualDensity": "Фактична густина при прийомі",
+
+  "labelVolume": "Об'єм",
+
+  "labelContractDensity": "Контрактна густина",
+
+  "labelActualDensity15": "Фактична густина 15°C",
+
+  "labelAverageQuotation": "Середнє котирування",
+
+  "labelSellerPremium": "Премія продавця",
+
+  "resultDeliveryDensity": "Густина при прийомі",
+
+  "resultDeliveryTemperature": "Температура прийому",
+
+  "detailsToggle": "Деталі",
+
+  "detailDensityAt15": "Густина при 15°C",
+
+  "detailDensityInAir": "Густина у повітрі",
+
+  "detailDeliveryTemp": "Температура прийому",
+
+  "detailVolume": "Об'єм",
+
+  "detailWeight": "Маса",
+
+  "detailCoefficientA": "Коефіцієнт a",
+
+  "formulaLabel": "ФОРМУЛА",
+
+  "modeDensityAtTemp": "Густину за темп.",
+
+  "modeTempAtDensity": "Темп. за густиною",
+
+  "escalationSectionLabel": "ESCALATION",
+
+  "escalationBasePrice": "Базова ціна: {value} $/т",
+
+  "escalationTotalPremium": "Загальна премія: {value} $/т",
+
+  "escalationFinalPrice": "Кінцева ціна: {value} $/т",
+
+  "fuelGroupGasoil": "Газойль",
+
+  "fuelGroupGasoline": "Бензин",
+
+  "hintModeA": "Введіть референтну густину при 15°C та температуру прийому. Густина при температурі прийому буде показана як «Густина при прийомі».",
+
+  "hintModeB": "Введіть фактичну густину при прийомі. Розрахована температура буде показана як «Температура прийому».",
+
+  "validationRequired": "Обов'язкове поле",
+
+  "validationEnterNumber": "Введіть число",
+
+  "validationMustBePositive": "Має бути > 0",
+
+  "validationMustBePositiveStrict": "Має бути додатнім",
+
+  "validationTempRange": "−40 – 80 °C",
+
+  "validationDensityRangeKgL": "{min}–{max} kg/l ({family})",
+
+  "validationDensityRangeKgM3": "{min}–{max} kg/m³ ({family})",
+
+  "validationContractDensityRange": "0.650–1.100 kg/l",
+
+  "validationEscalationDensityRange": "0.700–0.900 kg/l"
+}
