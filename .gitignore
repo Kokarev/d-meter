@@ -4,7 +4,8 @@ build/
 .flutter-plugins-dependencies
 .packages
 pubspec.lock
-
+.idea/
+.metadata
 *.tar.gz
 *.zip
 *.dmg
