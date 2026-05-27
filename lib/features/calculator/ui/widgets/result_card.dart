@@ -187,7 +187,7 @@ class ResultCard extends StatelessWidget {
             style: const TextStyle(fontSize: 13),
           ),
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: AppRadii.mdAll),
+          shape: const RoundedRectangleBorder(borderRadius: AppRadii.mdAll),
           duration: const Duration(seconds: 2),
           margin: const EdgeInsets.fromLTRB(
             AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.lg,
