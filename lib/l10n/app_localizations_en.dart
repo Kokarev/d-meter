@@ -190,4 +190,16 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get validationEscalationDensityRange => '0.700–0.900 kg/l';
+
+  @override
+  String get resultVolume => 'Volume';
+
+  @override
+  String get resultWeight => 'Weight';
+
+  @override
+  String get detailsCopied => 'Copied';
+
+  @override
+  String get detailContractDensity => 'Contract density';
 }

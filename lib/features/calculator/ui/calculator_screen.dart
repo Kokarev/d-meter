@@ -5,7 +5,6 @@ import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/app_header.dart';
 import '../../menu/app_menu_drawer.dart';
 import '../state/calculator_state.dart';
-import 'widgets/details_panel.dart';
 import 'widgets/fuel_dropdown.dart';
 import 'widgets/labeled_input_field.dart';
 import 'widgets/mode_selector.dart';
@@ -44,7 +43,12 @@ class _CalculatorView extends StatelessWidget {
           drawerEdgeDragWidth: 0,
           backgroundColor: AppColors.background,
           drawer: const AppMenuDrawer(),
-          body: SafeArea(child: _Body(title: l.menuDensityCalculator)),
+          body: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 480),
+            child: SafeArea(child: _Body(title: l.menuDensityCalculator)),
+          ),
+        ),
         ),
       ),
     );
@@ -96,13 +100,6 @@ class _Body extends StatelessWidget {
               // ── Result + Details ─────────────────────────────────────
               if (state.result != null) ...[
                 ResultCard(result: state.result!, mode: state.mode),
-                const SizedBox(height: AppSpacing.sm),
-                DetailsPanel(
-                  result:   state.result!,
-                  mode:     state.mode,
-                  isOpen:   state.detailsOpen,
-                  onToggle: state.toggleDetails,
-                ),
                 const SizedBox(height: AppSpacing.md),
               ],
 

@@ -27,7 +27,6 @@ void main() {
 
     test('switching mode clears result', () {
       state.setMode(CalcMode.tempAtDensity);
-      // errors map will be recalculated; result non-null if fields valid
       expect(state.mode, CalcMode.tempAtDensity);
     });
 
@@ -40,12 +39,16 @@ void main() {
 
     test('invalid P15 clears result', () {
       state.updateField('p15', 'abc');
+      state.calculateNow();
+
       expect(state.result, isNull);
       expect(state.errors['p15'], isNotNull);
     });
 
     test('out-of-range temp clears result', () {
       state.updateField('temp', '999');
+      state.calculateNow();
+
       expect(state.result, isNull);
       expect(state.errors['temp'], isNotNull);
     });
@@ -63,6 +66,8 @@ void main() {
       state.updateField('p15', '833.9');
       state.updateField('density', '0.8368');
       state.updateField('volume', '119.49');
+      state.calculateNow();
+
       expect(state.result, isNotNull);
       expect(state.errors.values.any((e) => e != null), isFalse);
     });

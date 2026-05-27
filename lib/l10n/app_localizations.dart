@@ -438,6 +438,30 @@ abstract class AppL10n {
   /// In en, this message translates to:
   /// **'0.700–0.900 kg/l'**
   String get validationEscalationDensityRange;
+
+  /// Secondary result label in Mode A result card
+  ///
+  /// In en, this message translates to:
+  /// **'Volume'**
+  String get resultVolume;
+
+  /// Secondary result label in Mode B result card
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get resultWeight;
+
+  /// SnackBar text after long-press copy on result card
+  ///
+  /// In en, this message translates to:
+  /// **'Copied'**
+  String get detailsCopied;
+
+  /// Details row label for contract/passport density
+  ///
+  /// In en, this message translates to:
+  /// **'Contract density'**
+  String get detailContractDensity;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {
