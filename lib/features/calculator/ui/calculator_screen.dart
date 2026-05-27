@@ -10,6 +10,8 @@ import 'widgets/fuel_dropdown.dart';
 import 'widgets/labeled_input_field.dart';
 import 'widgets/mode_selector.dart';
 import 'widgets/result_card.dart';
+import 'package:flutter/services.dart';
+import '../../settings/ui/settings_screen.dart';
 
 class CalculatorScreen extends StatelessWidget {
   const CalculatorScreen({super.key});
@@ -29,11 +31,22 @@ class _CalculatorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppL10n.of(context);
-    return Scaffold(
-      drawerEdgeDragWidth: 0,
-      backgroundColor: AppColors.background,
-      drawer: const AppMenuDrawer(),
-      body: SafeArea(child: _Body(title: l.menuDensityCalculator)),
+    return CallbackShortcuts(
+      bindings: {
+        const SingleActivator(LogicalKeyboardKey.comma, meta: true): () =>
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const SettingsScreen()),
+            ),
+      },
+      child: Focus(
+        autofocus: true,
+        child: Scaffold(
+          drawerEdgeDragWidth: 0,
+          backgroundColor: AppColors.background,
+          drawer: const AppMenuDrawer(),
+          body: SafeArea(child: _Body(title: l.menuDensityCalculator)),
+        ),
+      ),
     );
   }
 }
