@@ -17,6 +17,7 @@ class AppShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawerEdgeDragWidth: 0,
       backgroundColor: AppColors.background,
       drawer: const AppMenuDrawer(),
       body: SafeArea(

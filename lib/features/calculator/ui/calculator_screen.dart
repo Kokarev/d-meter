@@ -30,6 +30,7 @@ class _CalculatorView extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppL10n.of(context);
     return Scaffold(
+      drawerEdgeDragWidth: 0,
       backgroundColor: AppColors.background,
       drawer: const AppMenuDrawer(),
       body: SafeArea(child: _Body(title: l.menuDensityCalculator)),
