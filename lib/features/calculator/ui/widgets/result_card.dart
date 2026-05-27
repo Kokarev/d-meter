@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../../../core/app_layout.dart';
 import '../../../../core/tokens.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../service/density_calculator_service.dart';
@@ -132,31 +133,35 @@ class ResultCard extends StatelessWidget {
                             ),
                           ),
 
-                          // Details link
-                          GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () => _openDetails(context),
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 8),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    l.detailsToggle,
-                                    style: AppText.detailNote.copyWith(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w500,
+                          // Details link — только на mobile.
+                          // На desktop Details раскрывается inline
+                          // в DetailsPanel под ResultCard.
+                          if (!AppLayout.isWide(
+                            MediaQuery.of(context).size.width))
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () => _openDetails(context),
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 8),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      l.detailsToggle,
+                                      style: AppText.detailNote.copyWith(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
-                                  ),
-                                  const Icon(
-                                    Icons.chevron_right_rounded,
-                                    size: 14,
-                                    color: AppColors.accent,
-                                  ),
-                                ],
+                                    const Icon(
+                                      Icons.chevron_right_rounded,
+                                      size: 14,
+                                      color: AppColors.accent,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
                         ],
                       ),
                     ],
@@ -182,7 +187,7 @@ class ResultCard extends StatelessWidget {
             style: const TextStyle(fontSize: 13),
           ),
           behavior: SnackBarBehavior.floating,
-          shape: const RoundedRectangleBorder(borderRadius: AppRadii.mdAll),
+          shape: RoundedRectangleBorder(borderRadius: AppRadii.mdAll),
           duration: const Duration(seconds: 2),
           margin: const EdgeInsets.fromLTRB(
             AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.lg,

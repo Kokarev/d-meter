@@ -8,6 +8,7 @@ import '../state/calculator_state.dart';
 import 'widgets/fuel_dropdown.dart';
 import 'widgets/labeled_input_field.dart';
 import 'widgets/mode_selector.dart';
+import 'widgets/details_panel.dart';
 import 'widgets/result_card.dart';
 import 'package:flutter/services.dart';
 import '../../settings/ui/settings_screen.dart';
@@ -97,9 +98,18 @@ class _Body extends StatelessWidget {
               _InputsSection(state: state),
               const SizedBox(height: AppSpacing.xs),
 
-              // ── Result + Details ─────────────────────────────────────
+              // ── Result card + adaptive Details ─────────────────────────────
+              // Mobile: Details › в ResultCard → bottom sheet.
+              // Desktop (>= 600): DetailsPanel раскрывается inline под картой.
               if (state.result != null) ...[
                 ResultCard(result: state.result!, mode: state.mode),
+                const SizedBox(height: AppSpacing.sm),
+                DetailsPanel(
+                  result:   state.result!,
+                  mode:     state.mode,
+                  isOpen:   state.detailsOpen,
+                  onToggle: state.toggleDetails,
+                ),
                 const SizedBox(height: AppSpacing.md),
               ],
 
