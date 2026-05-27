@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
+import '../../../../core/app_layout.dart';
 import '../../../../core/tokens.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../service/density_calculator_service.dart';
 import '../../state/calculator_state.dart';
+import 'density_details_sheet.dart';
+import 'temperature_details_sheet.dart';
 
+/// Details panel — adaptive behaviour:
+///
+/// • **mobile / narrow** (screenWidth < 600):
+///   Tap → [showModalBottomSheet] с [DensityDetailsSheet] или [TemperatureDetailsSheet].
+///   [isOpen] и [onToggle] не используются в этом режиме.
+///
+/// • **desktop / wide** (screenWidth >= 600):
+///   Inline [AnimatedCrossFade] expand/collapse под ResultCard.
+///   [isOpen] и [onToggle] управляются из [CalculatorState] через caller.
 class DetailsPanel extends StatelessWidget {
-  final DensityResult result;
-  final CalcMode mode;
-  final bool isOpen;
-  final VoidCallback onToggle;
+  final DensityResult  result;
+  final CalcMode       mode;
+  final bool           isOpen;
+  final VoidCallback   onToggle;
 
   const DetailsPanel({
     super.key,
@@ -20,15 +32,24 @@ class DetailsPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isWide = AppLayout.isWide(MediaQuery.of(context).size.width);
+    return isWide ? _buildInline(context) : _buildSheetTrigger(context);
+  }
+
+  // ── Desktop: inline expand/collapse (оригинальное поведение) ─────────────
+
+  Widget _buildInline(BuildContext context) {
+    final l = AppL10n.of(context);
+
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color:        AppColors.surface,
         borderRadius: AppRadii.lgAll,
         border: Border.all(color: AppColors.border, width: 0.5),
       ),
       child: Column(
         children: [
-          // ── Toggle header ──────────────────────────────────────────────
+          // ── Toggle header ────────────────────────────────────────────────
           InkWell(
             onTap: onToggle,
             borderRadius: isOpen
@@ -47,7 +68,7 @@ class DetailsPanel extends StatelessWidget {
                     color: AppColors.accent,
                   ),
                   const SizedBox(width: AppSpacing.sm),
-                  Text(AppL10n.of(context).detailsToggle, style: AppText.resultLabel),
+                  Text(l.detailsToggle, style: AppText.resultLabel),
                   const Spacer(),
                   AnimatedRotation(
                     duration: const Duration(milliseconds: 200),
@@ -63,52 +84,54 @@ class DetailsPanel extends StatelessWidget {
             ),
           ),
 
-          // ── Expandable body ────────────────────────────────────────────
+          // ── Expandable body ───────────────────────────────────────────────
+          // ExcludeFocus: исключает скрытый secondChild из TAB traversal
+          // и accessibility tree когда панель закрыта.
           AnimatedCrossFade(
             duration: const Duration(milliseconds: 220),
             crossFadeState:
                 isOpen ? CrossFadeState.showSecond : CrossFadeState.showFirst,
             firstChild: const SizedBox(width: double.infinity),
-            secondChild: Column(
+            secondChild: ExcludeFocus(
+              excluding: !isOpen,
+              child: Column(
               children: [
                 const Divider(height: 1, thickness: 0.5, color: AppColors.divider),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.lg,
-                    AppSpacing.sm,
-                    AppSpacing.lg,
-                    AppSpacing.sm,
+                    AppSpacing.lg, AppSpacing.sm,
+                    AppSpacing.lg, AppSpacing.sm,
                   ),
                   child: Column(
                     children: [
                       _DetailRow(
-                        label: AppL10n.of(context).detailDensityAt15,
+                        label: l.detailDensityAt15,
                         value: result.densityAt15KgL.toStringAsFixed(4),
                         unit:  'kg/l',
                         note:  'EN ISO 12185',
                       ),
                       _DetailRow(
-                        label: AppL10n.of(context).detailDensityInAir,
+                        label: l.detailDensityInAir,
                         value: result.densityInAirKgL.toStringAsFixed(4),
                         unit:  'kg/l',
                       ),
                       _DetailRow(
-                        label: AppL10n.of(context).detailDeliveryTemp,
+                        label: l.detailDeliveryTemp,
                         value: result.tempC.toStringAsFixed(1),
                         unit:  '°C',
                       ),
                       _DetailRow(
-                        label: AppL10n.of(context).detailVolume,
+                        label: l.detailVolume,
                         value: result.volumeM3.toStringAsFixed(3),
                         unit:  'm³',
                       ),
                       _DetailRow(
-                        label: AppL10n.of(context).detailWeight,
+                        label: l.detailWeight,
                         value: result.weightT.toStringAsFixed(3),
                         unit:  't',
                       ),
                       _DetailRow(
-                        label: AppL10n.of(context).detailCoefficientA,
+                        label: l.detailCoefficientA,
                         value: result.coeffA.toStringAsFixed(1),
                         unit:  '×10⁻³/°C',
                       ),
@@ -119,20 +142,71 @@ class DetailsPanel extends StatelessWidget {
                 _FormulaBlock(mode: mode),
               ],
             ),
+            ), // ExcludeFocus
           ),
         ],
       ),
     );
   }
+
+  // ── Mobile: tap открывает bottom sheet ───────────────────────────────────
+
+  Widget _buildSheetTrigger(BuildContext context) {
+    final l = AppL10n.of(context);
+
+    return Container(
+      decoration: BoxDecoration(
+        color:        AppColors.surface,
+        borderRadius: AppRadii.lgAll,
+        border: Border.all(color: AppColors.border, width: 0.5),
+      ),
+      child: InkWell(
+        onTap: () => _openSheet(context),
+        borderRadius: AppRadii.lgAll,
+        child: Padding(
+          padding: AppSpacing.cardPadding,
+          child: Row(
+            children: [
+              const Icon(
+                Icons.expand_circle_down_outlined,
+                size: 15,
+                color: AppColors.accent,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Text(l.detailsToggle, style: AppText.resultLabel),
+              const Spacer(),
+              const Icon(
+                Icons.chevron_right_rounded,
+                size: 16,
+                color: AppColors.textHint,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _openSheet(BuildContext context) {
+    final sheet = mode == CalcMode.densityAtTemp
+        ? DensityDetailsSheet(result: result, mode: mode)
+        : TemperatureDetailsSheet(result: result, mode: mode);
+
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => sheet,
+    );
+  }
 }
 
 // ─── Detail row ───────────────────────────────────────────────────────────────
-// Fixed-width value + unit columns ensure consistent right-side alignment.
 
 class _DetailRow extends StatelessWidget {
-  final String label;
-  final String value;
-  final String unit;
+  final String  label;
+  final String  value;
+  final String  unit;
   final String? note;
 
   const _DetailRow({
@@ -148,35 +222,20 @@ class _DetailRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.detailRowV),
       child: Row(
         children: [
-          // Label — left-aligned, takes remaining space
-          Expanded(
-            child: Text(label, style: AppText.detailKey),
-          ),
-
-          // Optional standard note, e.g. "EN ISO 12185"
+          Expanded(child: Text(label, style: AppText.detailKey)),
           if (note != null) ...[
             Text(note!, style: AppText.detailNote),
             const SizedBox(width: AppSpacing.xs),
           ],
-
-          // Value — right-aligned, fixed width for consistent column
           SizedBox(
             width: 64,
-            child: Text(
-              value,
-              style: AppText.detailValue,
-              textAlign: TextAlign.right,
-            ),
+            child: Text(value,
+                style: AppText.detailValue, textAlign: TextAlign.right),
           ),
-
-          // Unit — fixed width, secondary color
           SizedBox(
             width: 56,
-            child: Text(
-              unit,
-              style: AppText.detailUnit,
-              textAlign: TextAlign.right,
-            ),
+            child: Text(unit,
+                style: AppText.detailUnit, textAlign: TextAlign.right),
           ),
         ],
       ),
@@ -185,11 +244,9 @@ class _DetailRow extends StatelessWidget {
 }
 
 // ─── Formula block ────────────────────────────────────────────────────────────
-// Engineering reference note: compact, technical, not a debug box.
 
 class _FormulaBlock extends StatelessWidget {
   final CalcMode mode;
-
   const _FormulaBlock({required this.mode});
 
   @override
@@ -202,7 +259,7 @@ class _FormulaBlock extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.lg,
-        vertical: AppSpacing.sm + 2,
+        vertical:   AppSpacing.sm + 2,
       ),
       decoration: const BoxDecoration(
         color: AppColors.formulaBg,
@@ -214,14 +271,12 @@ class _FormulaBlock extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // "FORMULA" micro-label
           Text(AppL10n.of(context).formulaLabel, style: AppText.formulaLabel),
           const SizedBox(height: 3),
-          // The actual formula — monospace, blue, readable
           Text(formula, style: AppText.formulaCode),
           const SizedBox(height: 2),
-          // Standard reference — quiet
-          const Text('EN ISO 91-1 / EN ISO 12185', style: AppText.formulaStandard),
+          const Text('EN ISO 91-1 / EN ISO 12185',
+              style: AppText.formulaStandard),
         ],
       ),
     );

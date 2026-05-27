@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import '../../../core/fuel_grade.dart';
 import '../../../core/validation.dart';
@@ -32,6 +33,9 @@ class CalculatorState extends ChangeNotifier {
 
   bool _detailsOpen = false;
   bool get detailsOpen => _detailsOpen;
+
+  // debounce для updateField — 200 мс
+  Timer? _debounce;
 
   void setFuel(FuelGrade f) {
     final familyChanged = f.family != _fuel.family;
@@ -70,13 +74,26 @@ class CalculatorState extends ChangeNotifier {
       case 'volume':
         volumeRaw = value;
     }
-    _calculate();
+    // Debounce 200 мс: пересчёт откладывается пока пользователь набирает.
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 200), _calculate);
   }
 
   void toggleDetails() {
     _detailsOpen = !_detailsOpen;
     notifyListeners();
   }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
+
+  /// Только для тестов: немедленный пересчёт без debounce.
+  /// В продакшн-коде не вызывать напрямую.
+  @visibleForTesting
+  void calculateNow() => _calculate();
 
   void _calculate() {
     _errors = _validate();

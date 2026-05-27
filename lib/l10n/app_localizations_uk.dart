@@ -190,4 +190,16 @@ class AppL10nUk extends AppL10n {
 
   @override
   String get validationEscalationDensityRange => '0.700–0.900 kg/l';
+
+  @override
+  String get resultVolume => 'Об\'єм';
+
+  @override
+  String get resultWeight => 'Маса';
+
+  @override
+  String get detailsCopied => 'Скопійовано';
+
+  @override
+  String get detailContractDensity => 'Контрактна густина';
 }

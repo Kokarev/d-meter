@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../core/tokens.dart';
 import '../../l10n/app_localizations.dart';
@@ -17,8 +18,26 @@ enum MenuAction {
   about,
 }
 
-class AppMenuDrawer extends StatelessWidget {
+class AppMenuDrawer extends StatefulWidget {
   const AppMenuDrawer({super.key});
+
+  @override
+  State<AppMenuDrawer> createState() => _AppMenuDrawerState();
+}
+
+class _AppMenuDrawerState extends State<AppMenuDrawer> {
+  String _version = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadVersion();
+  }
+
+  Future<void> _loadVersion() async {
+    final info = await PackageInfo.fromPlatform();
+    if (mounted) setState(() => _version = info.version);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +111,7 @@ class AppMenuDrawer extends StatelessWidget {
             Padding(
               padding: AppSpacing.screenPadding,
               child: Text(
-                'v1.1.0',
+                _version.isEmpty ? '' : 'v$_version',
                 style: AppText.detailValue.copyWith(
                   color: AppColors.textSecondary,
                 ),

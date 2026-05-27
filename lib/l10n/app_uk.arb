@@ -113,5 +113,12 @@
 
   "validationContractDensityRange": "0.650–1.100 kg/l",
 
-  "validationEscalationDensityRange": "0.700–0.900 kg/l"
+  "validationEscalationDensityRange": "0.700–0.900 kg/l",
+"resultVolume": "Об'єм",
+
+  "resultWeight": "Маса",
+
+  "detailsCopied": "Скопійовано",
+
+  "detailContractDensity": "Контрактна густина"
 }

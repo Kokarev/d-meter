@@ -5,10 +5,10 @@ import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/app_header.dart';
 import '../../menu/app_menu_drawer.dart';
 import '../state/calculator_state.dart';
-import 'widgets/details_panel.dart';
 import 'widgets/fuel_dropdown.dart';
 import 'widgets/labeled_input_field.dart';
 import 'widgets/mode_selector.dart';
+import 'widgets/details_panel.dart';
 import 'widgets/result_card.dart';
 import 'package:flutter/services.dart';
 import '../../settings/ui/settings_screen.dart';
@@ -44,7 +44,12 @@ class _CalculatorView extends StatelessWidget {
           drawerEdgeDragWidth: 0,
           backgroundColor: AppColors.background,
           drawer: const AppMenuDrawer(),
-          body: SafeArea(child: _Body(title: l.menuDensityCalculator)),
+          body: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 480),
+            child: SafeArea(child: _Body(title: l.menuDensityCalculator)),
+          ),
+        ),
         ),
       ),
     );
@@ -93,7 +98,9 @@ class _Body extends StatelessWidget {
               _InputsSection(state: state),
               const SizedBox(height: AppSpacing.xs),
 
-              // ── Result + Details ─────────────────────────────────────
+              // ── Result card + adaptive Details ─────────────────────────────
+              // Mobile: Details › в ResultCard → bottom sheet.
+              // Desktop (>= 600): DetailsPanel раскрывается inline под картой.
               if (state.result != null) ...[
                 ResultCard(result: state.result!, mode: state.mode),
                 const SizedBox(height: AppSpacing.sm),

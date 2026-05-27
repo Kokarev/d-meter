@@ -190,5 +190,16 @@
   "@validationContractDensityRange": {},
 
   "validationEscalationDensityRange": "0.700–0.900 kg/l",
-  "@validationEscalationDensityRange": {}
+  "@validationEscalationDensityRange": {},
+"resultVolume": "Volume",
+  "@resultVolume": { "description": "Secondary result label in Mode A result card" },
+
+  "resultWeight": "Weight",
+  "@resultWeight": { "description": "Secondary result label in Mode B result card" },
+
+  "detailsCopied": "Copied",
+  "@detailsCopied": { "description": "SnackBar text after long-press copy on result card" },
+
+  "detailContractDensity": "Contract density",
+  "@detailContractDensity": { "description": "Details row label for contract/passport density" }
 }
