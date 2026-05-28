@@ -21,11 +21,11 @@ void main() {
     });
 
     test('default range is 101–1000', () {
-      expect(state.quantityRange, QuantityRange.r101to1000);
+      expect(state.quantityRange, QuantityRange.r1to100);
     });
 
     test('default value is 120', () {
-      expect(state.quantityValue, closeTo(120.0, 0.01));
+      expect(state.quantityValue, closeTo(50.0, 0.01));
     });
 
     test('default temp is 15', () {
@@ -70,18 +70,19 @@ void main() {
   group('Quantity value', () {
     test('setQuantityValue clamps to range', () {
       state.setQuantityRange(QuantityRange.r1to100);
-      state.setQuantityValue(500); // above max
+      state.setQuantityValue(500);
       expect(state.quantityValue, closeTo(100.0, 0.01));
     });
 
-    test('volume 120 m3 gives volumeM3 ≈ 120', () {
+    test('volume 50 m3 gives volumeM3 ≈ 50', () {
       state.setSliderTemp(15.0);
-      state.setQuantityValue(120.0);
-      expect(state.thermalState.volumeM3, closeTo(120.0, 0.5));
+      state.setQuantityValue(50.0);
+      expect(state.thermalState.volumeM3, closeTo(50.0, 0.5));
     });
 
     test('mass is proportional to volume', () {
       state.setSliderTemp(15.0);
+      state.setQuantityRange(QuantityRange.r101to1000);
       state.setQuantityValue(120.0);
       final m1 = state.thermalState.massT;
       state.setQuantityValue(240.0);
@@ -94,7 +95,7 @@ void main() {
 
   group('Range switching', () {
     test('switching range clamps value if out of bounds', () {
-      state.setQuantityRange(QuantityRange.r101to1000);
+      state.setQuantityRange(QuantityRange.r1to100);
       state.setQuantityValue(500);
       state.setQuantityRange(QuantityRange.r1to100);
       expect(state.quantityValue, closeTo(100.0, 0.01));
@@ -113,7 +114,7 @@ void main() {
   group('Unit switching', () {
     test('switching m3→t→m3 preserves quantity approximately', () {
       state.setSliderTemp(15.0);
-      state.setQuantityValue(120.0);
+      state.setQuantityValue(50.0);
       final originalVolume = state.thermalState.volumeM3;
 
       state.setQuantityUnit(QuantityUnit.tonnes);
@@ -141,21 +142,21 @@ void main() {
 
   group('QuantityRange', () {
     test('contains: values within range', () {
-      expect(QuantityRange.r1to100.contains(50),   isTrue);
-      expect(QuantityRange.r1to100.contains(0),    isFalse);
-      expect(QuantityRange.r1to100.contains(101),  isFalse);
+      expect(QuantityRange.r1to100.contains(50), isTrue);
+      expect(QuantityRange.r1to100.contains(0), isFalse);
+      expect(QuantityRange.r1to100.contains(101), isFalse);
     });
 
     test('bestFor selects correct range', () {
-      expect(QuantityRange.bestFor(50),    QuantityRange.r1to100);
-      expect(QuantityRange.bestFor(500),   QuantityRange.r101to1000);
-      expect(QuantityRange.bestFor(5000),  QuantityRange.r1001to10000);
+      expect(QuantityRange.bestFor(50), QuantityRange.r1to100);
+      expect(QuantityRange.bestFor(500), QuantityRange.r101to1000);
+      expect(QuantityRange.bestFor(5000), QuantityRange.r1001to10000);
       expect(QuantityRange.bestFor(50000), QuantityRange.r10kto100k);
     });
 
     test('clamp keeps value in range', () {
-      expect(QuantityRange.r1to100.clamp(0),   1.0);
-      expect(QuantityRange.r1to100.clamp(50),  50.0);
+      expect(QuantityRange.r1to100.clamp(0), 1.0);
+      expect(QuantityRange.r1to100.clamp(50), 50.0);
       expect(QuantityRange.r1to100.clamp(200), 100.0);
     });
   });
@@ -164,8 +165,8 @@ void main() {
 
   group('Fuel switching', () {
     test('switching to gasoline resets p15 to gasoline range', () {
-      state.setFuel(kFuelGrades.firstWhere(
-          (f) => f.family == FuelFamily.gasoline));
+      state.setFuel(
+          kFuelGrades.firstWhere((f) => f.family == FuelFamily.gasoline));
       expect(state.p15KgM3, closeTo(743.3, 0.1));
       expect(state.thermalState.densityKgL, greaterThan(0.700));
       expect(state.thermalState.densityKgL, lessThan(0.780));

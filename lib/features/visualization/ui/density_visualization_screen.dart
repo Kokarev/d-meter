@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../core/app_layout.dart';
 import '../../../core/fuel_grade.dart';
 import '../../../core/tokens.dart';
 import '../../../l10n/app_localizations.dart';
@@ -89,12 +88,12 @@ class _Body extends StatelessWidget {
         // ── Legend ─────────────────────────────────────────────────────
         Row(
           children: [
-            _LegendDot(color: AppColors.accent),
+            const _LegendDot(color: AppColors.accent),
             const SizedBox(width: 4),
             Text(l.vizLegendPassport,
                 style: AppText.detailUnit),
             const SizedBox(width: AppSpacing.md),
-            _LegendDot(color: AppColors.brand),
+            const _LegendDot(color: AppColors.brand),
             const SizedBox(width: 4),
             Text(l.vizLegendOperating,
                 style: AppText.detailUnit),
