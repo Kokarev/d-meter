@@ -62,7 +62,8 @@ class DensityCurveService {
     final vals = curve.map((p) => p.densityKgL);
     final minVal = vals.reduce((a, b) => a < b ? a : b);
     final maxVal = vals.reduce((a, b) => a > b ? a : b);
-    final pad = (maxVal - minVal) * 0.05;
+    final rawPad = (maxVal - minVal) * 0.08;
+    final pad = rawPad < 0.003 ? 0.003 : rawPad;
 
     return (min: minVal - pad, max: maxVal + pad);
   }

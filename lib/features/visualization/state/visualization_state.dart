@@ -11,9 +11,18 @@ enum QuantityUnit { m3, tonnes }
 
 enum QuantityRange {
   r1to100(min: 1, max: 100, label: '1–100', description: 'Tank trucks'),
-  r101to1000(min: 101, max: 1000, label: '101–1 000', description: 'Oil depots'),
-  r1001to10000(min: 1001, max: 10000, label: '1 001–10 000', description: 'Tanker fleet'),
-  r10kto100k(min: 10001, max: 100000, label: '10 001–100 000', description: 'Refineries / Panamax');
+  r101to1000(
+      min: 101, max: 1000, label: '101–1 000', description: 'Oil depots'),
+  r1001to10000(
+      min: 1001,
+      max: 10000,
+      label: '1 001–10 000',
+      description: 'Tanker fleet'),
+  r10kto100k(
+      min: 10001,
+      max: 100000,
+      label: '10 001–100 000',
+      description: 'Refineries / Panamax');
 
   final double min;
   final double max;
@@ -56,7 +65,21 @@ class VisualizationState extends ChangeNotifier {
   MixtureResult? _mixtureResult;
   String? _mixtureError;
 
-  VisualizationState() {
+  VisualizationState({
+    double? initialP15KgM3,
+    FuelFamily? initialFamily,
+  }) {
+    if (initialFamily != null) {
+      _fuel = kFuelGrades.firstWhere(
+        (f) => f.family == initialFamily,
+        orElse: () => _fuel,
+      );
+    }
+
+    if (initialP15KgM3 != null) {
+      _p15KgM3 = initialP15KgM3;
+    }
+
     _recalculate();
   }
 
@@ -162,9 +185,7 @@ class VisualizationState extends ChangeNotifier {
 
     final densityKgL = densityState.densityKgL;
 
-    final massT = _qUnit == QuantityUnit.m3
-        ? _qValue * densityKgL
-        : _qValue;
+    final massT = _qUnit == QuantityUnit.m3 ? _qValue * densityKgL : _qValue;
 
     return DensityCurveService.computeThermalState(
       p15KgM3: _p15KgM3,

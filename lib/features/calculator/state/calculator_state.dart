@@ -46,6 +46,11 @@ class CalculatorState extends ChangeNotifier {
       densityRaw = f.family == FuelFamily.diesel ? '0.8300' : '0.7433';
     }
 
+    final parsedP15 = _parse(p15Raw);
+    if (parsedP15 != null) {
+      DensityMemory.setP15KgM3(parsedP15, _fuel.family);
+    }
+
     contractDensityRaw = (f.contractDensityKgM3 / 1000).toStringAsFixed(3);
     _calculate();
   }
@@ -103,25 +108,25 @@ class CalculatorState extends ChangeNotifier {
       return;
     }
 
-    final p15      = _parse(p15Raw)!;
+    final p15 = _parse(p15Raw)!;
     final contract = _parse(contractDensityRaw)! * 1000;
-    final family   = _fuel.family;
+    final family = _fuel.family;
 
     if (_mode == CalcMode.densityAtTemp) {
       _result = DensityCalculatorService.calcFromWeight(
-        p15KgM3:             p15,
-        tempC:               _parse(tempRaw)!,
-        weightT:             _parse(weightRaw)!,
+        p15KgM3: p15,
+        tempC: _parse(tempRaw)!,
+        weightT: _parse(weightRaw)!,
         contractDensityKgM3: contract,
-        fuelFamily:          family,
+        fuelFamily: family,
       );
     } else {
       _result = DensityCalculatorService.calcFromDensity(
-        p15KgM3:             p15,
-        actualDensityKgL:    _parse(densityRaw)!,
-        volumeM3:            _parse(volumeRaw)!,
+        p15KgM3: p15,
+        actualDensityKgL: _parse(densityRaw)!,
+        volumeM3: _parse(volumeRaw)!,
         contractDensityKgM3: contract,
-        fuelFamily:          family,
+        fuelFamily: family,
       );
     }
 
@@ -129,14 +134,14 @@ class CalculatorState extends ChangeNotifier {
   }
 
   Map<String, ValidationError?> _validate() {
-    final e      = <String, ValidationError?>{};
+    final e = <String, ValidationError?>{};
     final family = _fuel.family;
 
-    e['p15']             = DensityCalculatorService.validateP15(p15Raw, family);
+    e['p15'] = DensityCalculatorService.validateP15(p15Raw, family);
     e['contractDensity'] = _validateContractDensity(contractDensityRaw);
 
     if (_mode == CalcMode.densityAtTemp) {
-      e['temp']   = DensityCalculatorService.validateTemp(tempRaw);
+      e['temp'] = DensityCalculatorService.validateTemp(tempRaw);
       e['weight'] = DensityCalculatorService.validateWeight(weightRaw);
     } else {
       e['density'] =
@@ -148,7 +153,9 @@ class CalculatorState extends ChangeNotifier {
   }
 
   static ValidationError? _validateContractDensity(String? raw) {
-    if (raw == null || raw.trim().isEmpty) return const ValidationError.required();
+    if (raw == null || raw.trim().isEmpty) {
+      return const ValidationError.required();
+    }
     final v = double.tryParse(raw.replaceAll(',', '.'));
     if (v == null) return const ValidationError.notANumber();
     if (v < 0.650 || v > 1.100) {
