@@ -22,7 +22,9 @@ void main() {
     expect(state.contractDensityRaw, isNotEmpty);
   });
 
-  test('setBasis VAC to AIR converts actualDensity, leaves contractDensity unchanged', () {
+  test(
+      'setBasis VAC to AIR converts actualDensity, leaves contractDensity unchanged',
+      () {
     DensityMemory.setP15KgL(0.8332, FuelFamily.diesel);
     state.dispose();
     state = EscalationState();
@@ -38,7 +40,9 @@ void main() {
     );
   });
 
-  test('setBasis AIR to VAC converts actualDensity, leaves contractDensity unchanged', () {
+  test(
+      'setBasis AIR to VAC converts actualDensity, leaves contractDensity unchanged',
+      () {
     DensityMemory.setP15KgL(0.8332, FuelFamily.diesel);
     state.dispose();
     state = EscalationState();
@@ -55,7 +59,8 @@ void main() {
     );
   });
 
-  test('setBasis round-trip VAC to AIR to VAC recovers original actualDensity', () {
+  test('setBasis round-trip VAC to AIR to VAC recovers original actualDensity',
+      () {
     DensityMemory.setP15KgL(0.8332, FuelFamily.diesel);
     state.dispose();
     state = EscalationState();
@@ -145,8 +150,12 @@ void main() {
   });
   test('setGroup does not overwrite user-edited contractDensity', () {
     state.updateField('contractDensity', '0.8600');
-    state.setGroup(FuelProductGroup.gasoline);
-    state.setGroup(FuelProductGroup.gasoil);
+    state.setProduct(
+      kFuelGrades.firstWhere((f) => f.family == FuelFamily.gasoline),
+    );
+    state.setProduct(
+      kFuelGrades.firstWhere((f) => f.family == FuelFamily.diesel),
+    );
 
     expect(state.contractDensityRaw, '0.8600');
   }, skip: 'known bug: setGroup resets contractDensityRaw unconditionally');
@@ -163,5 +172,4 @@ void main() {
       expect(state.contractDensityRaw, equals(contract));
     }
   });
-
 }

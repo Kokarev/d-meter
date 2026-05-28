@@ -16,7 +16,7 @@ import 'temperature_details_sheet.dart';
 /// • Tap "Details ›" — відкрити відповідний bottom sheet.
 class ResultCard extends StatelessWidget {
   final DensityResult result;
-  final CalcMode      mode;
+  final CalcMode mode;
 
   const ResultCard({
     super.key,
@@ -30,9 +30,8 @@ class ResultCard extends StatelessWidget {
     final isDensityMode = mode == CalcMode.densityAtTemp;
 
     // Primary
-    final primaryLabel = isDensityMode
-        ? l.resultDeliveryDensity
-        : l.resultDeliveryTemperature;
+    final primaryLabel =
+        isDensityMode ? l.resultDeliveryDensity : l.resultDeliveryTemperature;
     final primaryValue = isDensityMode
         ? result.densityAtTempKgL.toStringAsFixed(4)
         : result.tempC.toStringAsFixed(1);
@@ -46,16 +45,17 @@ class ResultCard extends StatelessWidget {
     final secondaryUnit = isDensityMode ? 'm³' : 't';
 
     return GestureDetector(
-      onLongPress: () => _copyToClipboard(context, l, primaryValue, primaryUnit),
+      onLongPress: () =>
+          _copyToClipboard(context, l, primaryValue, primaryUnit),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color:        AppColors.resultBg,
+          color: AppColors.resultBg,
           borderRadius: AppRadii.lgAll,
           border: Border.all(color: AppColors.border, width: 0.5),
           boxShadow: const [
             BoxShadow(
-              color:  AppColors.shadow,
+              color: AppColors.shadow,
               blurRadius: 8,
               offset: Offset(0, 2),
             ),
@@ -71,7 +71,7 @@ class ResultCard extends StatelessWidget {
                 decoration: const BoxDecoration(
                   color: AppColors.accent,
                   borderRadius: BorderRadius.only(
-                    topLeft:    Radius.circular(AppRadii.lg),
+                    topLeft: Radius.circular(AppRadii.lg),
                     bottomLeft: Radius.circular(AppRadii.lg),
                   ),
                 ),
@@ -136,8 +136,15 @@ class ResultCard extends StatelessWidget {
                           // Details link — только на mobile.
                           // На desktop Details раскрывается inline
                           // в DetailsPanel под ResultCard.
-                          if (!AppLayout.isWide(
-                            MediaQuery.of(context).size.width))
+                          if (!(Theme.of(context).platform ==
+                                      TargetPlatform.macOS ||
+                                  Theme.of(context).platform ==
+                                      TargetPlatform.windows ||
+                                  Theme.of(context).platform ==
+                                      TargetPlatform.linux) &&
+                              !AppLayout.isWide(
+                                MediaQuery.of(context).size.width,
+                              ))
                             GestureDetector(
                               behavior: HitTestBehavior.opaque,
                               onTap: () => _openDetails(context),
@@ -190,7 +197,10 @@ class ResultCard extends StatelessWidget {
           shape: const RoundedRectangleBorder(borderRadius: AppRadii.mdAll),
           duration: const Duration(seconds: 2),
           margin: const EdgeInsets.fromLTRB(
-            AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.lg,
+            AppSpacing.lg,
+            0,
+            AppSpacing.lg,
+            AppSpacing.lg,
           ),
         ),
       );
