@@ -120,5 +120,30 @@
 
   "detailsCopied": "Скопійовано",
 
-  "detailContractDensity": "Контрактна густина"
+  "detailContractDensity": "Контрактна густина",
+"vizScreenTitle": "Графік густини",
+
+  "vizChartTitle": "Густина vs Температура",
+
+  "vizLegendPassport": "Паспортна крива",
+
+  "vizLegendOperating": "Робоча точка",
+
+  "vizThermalExpansion": "Теплове розширення",
+
+  "vizMixtureTitle": "Змішування палива",
+
+  "vizMixtureBatchA": "Наявний резервуар",
+
+  "vizMixtureBatchB": "Паливо, що надходить",
+
+  "vizMixtureResult": "Результат змішування",
+
+  "vizTotalVolume": "Загальний об'єм",
+
+  "vizTotalMass": "Загальна маса",
+
+  "vizMixedDensity": "Змішана густина",
+
+  "vizMixedTemp": "Температура суміші"
 }

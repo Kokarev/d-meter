@@ -79,9 +79,9 @@ class DensityChart extends StatelessWidget {
         horizontalInterval: dInterval,
         verticalInterval:   tInterval,
         getDrawingHorizontalLine: (_) =>
-            const FlLine(color: AppColors.divider, strokeWidth: 0.5),
+            FlLine(color: AppColors.divider, strokeWidth: 0.5),
         getDrawingVerticalLine: (_) =>
-            const FlLine(color: AppColors.divider, strokeWidth: 0.5),
+            FlLine(color: AppColors.divider, strokeWidth: 0.5),
       ),
 
       titlesData: FlTitlesData(
@@ -119,7 +119,7 @@ class DensityChart extends StatelessWidget {
 
       borderData: FlBorderData(
         show: true,
-        border: const Border(
+        border: Border(
           bottom: BorderSide(color: AppColors.border, width: 0.5),
           left:   BorderSide(color: AppColors.border, width: 0.5),
         ),
