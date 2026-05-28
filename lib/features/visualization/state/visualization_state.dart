@@ -12,14 +12,14 @@ enum QuantityUnit { m3, tonnes }
 enum QuantityRange {
   r1to100(min: 1, max: 100, label: '1–100', description: 'Tank trucks'),
   r101to1000(
-      min: 101, max: 1000, label: '101–1 000', description: 'Oil depots'),
+      min: 100, max: 1000, label: '101–1 000', description: 'Oil depots'),
   r1001to10000(
-      min: 1001,
+      min: 1000,
       max: 10000,
       label: '1 001–10 000',
       description: 'Tanker fleet'),
   r10kto100k(
-      min: 10001,
+      min: 10000,
       max: 100000,
       label: '10 001–100 000',
       description: 'Refineries / Panamax');
@@ -36,7 +36,12 @@ enum QuantityRange {
     required this.description,
   });
 
-  bool contains(double value) => value >= min && value <= max;
+  bool contains(double value) {
+    if (this == QuantityRange.r10kto100k) {
+      return value >= min && value <= max;
+    }
+    return value >= min && value < max;
+  }
 
   double clamp(double value) => value.clamp(min, max).toDouble();
 

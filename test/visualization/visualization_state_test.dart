@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:d_meter/shared/state/density_memory.dart';
 import 'package:d_meter/features/visualization/state/visualization_state.dart';
 import 'package:d_meter/core/fuel_grade.dart';
 
@@ -11,6 +12,7 @@ void main() {
 
   tearDown(() {
     state.dispose();
+    DensityMemory.clear();
   });
 
   // ── Initial state ─────────────────────────────────────────────────────────
