@@ -202,4 +202,43 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get detailContractDensity => 'Contract density';
+
+  @override
+  String get vizScreenTitle => 'Density Chart';
+
+  @override
+  String get vizChartTitle => 'Density vs Temperature';
+
+  @override
+  String get vizLegendPassport => 'Passport curve';
+
+  @override
+  String get vizLegendOperating => 'Operating point';
+
+  @override
+  String get vizThermalExpansion => 'Thermal expansion';
+
+  @override
+  String get vizMixtureTitle => 'Fuel Mixing';
+
+  @override
+  String get vizMixtureBatchA => 'Existing tank';
+
+  @override
+  String get vizMixtureBatchB => 'Incoming fuel';
+
+  @override
+  String get vizMixtureResult => 'Mixture Result';
+
+  @override
+  String get vizTotalVolume => 'Total volume';
+
+  @override
+  String get vizTotalMass => 'Total mass';
+
+  @override
+  String get vizMixedDensity => 'Mixed density';
+
+  @override
+  String get vizMixedTemp => 'Mixed temperature';
 }

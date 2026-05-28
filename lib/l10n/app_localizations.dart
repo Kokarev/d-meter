@@ -462,6 +462,84 @@ abstract class AppL10n {
   /// In en, this message translates to:
   /// **'Contract density'**
   String get detailContractDensity;
+
+  /// Title for the density visualization screen
+  ///
+  /// In en, this message translates to:
+  /// **'Density Chart'**
+  String get vizScreenTitle;
+
+  /// Section label above the chart
+  ///
+  /// In en, this message translates to:
+  /// **'Density vs Temperature'**
+  String get vizChartTitle;
+
+  /// Chart legend — blue passport density curve
+  ///
+  /// In en, this message translates to:
+  /// **'Passport curve'**
+  String get vizLegendPassport;
+
+  /// Chart legend — red operating point marker
+  ///
+  /// In en, this message translates to:
+  /// **'Operating point'**
+  String get vizLegendOperating;
+
+  /// Label for thermal expansion row
+  ///
+  /// In en, this message translates to:
+  /// **'Thermal expansion'**
+  String get vizThermalExpansion;
+
+  /// Phase 3: section title for fuel mixing
+  ///
+  /// In en, this message translates to:
+  /// **'Fuel Mixing'**
+  String get vizMixtureTitle;
+
+  /// Phase 3: label for batch A
+  ///
+  /// In en, this message translates to:
+  /// **'Existing tank'**
+  String get vizMixtureBatchA;
+
+  /// Phase 3: label for batch B
+  ///
+  /// In en, this message translates to:
+  /// **'Incoming fuel'**
+  String get vizMixtureBatchB;
+
+  /// Phase 3: result card title
+  ///
+  /// In en, this message translates to:
+  /// **'Mixture Result'**
+  String get vizMixtureResult;
+
+  /// No description provided for @vizTotalVolume.
+  ///
+  /// In en, this message translates to:
+  /// **'Total volume'**
+  String get vizTotalVolume;
+
+  /// No description provided for @vizTotalMass.
+  ///
+  /// In en, this message translates to:
+  /// **'Total mass'**
+  String get vizTotalMass;
+
+  /// No description provided for @vizMixedDensity.
+  ///
+  /// In en, this message translates to:
+  /// **'Mixed density'**
+  String get vizMixedDensity;
+
+  /// No description provided for @vizMixedTemp.
+  ///
+  /// In en, this message translates to:
+  /// **'Mixed temperature'**
+  String get vizMixedTemp;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {
