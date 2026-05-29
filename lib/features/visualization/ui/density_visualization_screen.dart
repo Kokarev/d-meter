@@ -248,15 +248,21 @@ class _QuantityCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<VisualizationState>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final surface = isDark ? AppColorsDark.surface : AppColors.surface;
+    final border = isDark ? AppColorsDark.border : AppColors.border;
+    final accent = isDark ? AppColorsDark.accent : AppColors.accent;
+    final surfaceAlt = isDark ? AppColorsDark.surfaceAlt : AppColors.surfaceAlt;
     // Стандартное обозначение массы: t (не tn)
     final unitText = state.quantityUnit == QuantityUnit.m3 ? 'm³' : 't';
     final isFineVolumeRange = state.quantityUnit == QuantityUnit.m3 &&
         state.quantityRange == QuantityRange.r1to100;
     // Всегда 3 знака после запятой
     const valueDecimals = 3;
-    final sliderDivisions = ((state.quantityRange.max -
-            state.quantityRange.min) *
-        (isFineVolumeRange ? 10 : 1)).round();
+    final sliderDivisions =
+        ((state.quantityRange.max - state.quantityRange.min) *
+                (isFineVolumeRange ? 10 : 1))
+            .round();
 
     return Container(
       padding: AppSpacing.cardPadding,
@@ -298,15 +304,13 @@ class _QuantityCard extends StatelessWidget {
           ),
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
-              activeTrackColor:   accent,
+              activeTrackColor: accent,
               inactiveTrackColor: surfaceAlt,
-              thumbColor:         accent,
-              overlayColor:       accent.withAlpha(25),
-              trackHeight:        3,
-              thumbShape:
-                  const RoundSliderThumbShape(enabledThumbRadius: 7),
-              overlayShape:
-                  const RoundSliderOverlayShape(overlayRadius: 16),
+              thumbColor: accent,
+              overlayColor: accent.withAlpha(25),
+              trackHeight: 3,
+              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
+              overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
             ),
             child: Slider(
               value: state.quantityValue.clamp(
@@ -354,12 +358,12 @@ class _QuantityCard extends StatelessWidget {
 
 // ── Quantity input: текстовое поле + слайдер синхронизированы ──────────────
 class _QuantityInput extends StatefulWidget {
-  final double       value;
-  final String       unitText;
-  final int          decimals;
-  final double       rangeMin;
-  final double       rangeMax;
-  final String       description;
+  final double value;
+  final String unitText;
+  final int decimals;
+  final double rangeMin;
+  final double rangeMax;
+  final String description;
   final ValueChanged<double> onChanged;
 
   const _QuantityInput({
@@ -438,7 +442,7 @@ class _QuantityInputState extends State<_QuantityInput> {
           width: 108,
           child: TextField(
             controller: _controller,
-            focusNode:  _focusNode,
+            focusNode: _focusNode,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             textAlign: TextAlign.right,
             style: AppText.detailValue.copyWith(
@@ -507,9 +511,11 @@ class _UnitButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: active
               ? (Theme.of(context).brightness == Brightness.dark
-                  ? AppColorsDark.accent : AppColors.accent)
+                  ? AppColorsDark.accent
+                  : AppColors.accent)
               : (Theme.of(context).brightness == Brightness.dark
-                  ? AppColorsDark.surfaceAlt : AppColors.surfaceAlt),
+                  ? AppColorsDark.surfaceAlt
+                  : AppColors.surfaceAlt),
           borderRadius: AppRadii.smAll,
         ),
         child: Text(
@@ -541,9 +547,11 @@ class _RangeChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: active
               ? (Theme.of(context).brightness == Brightness.dark
-                  ? AppColorsDark.accent : AppColors.accent)
+                  ? AppColorsDark.accent
+                  : AppColors.accent)
               : (Theme.of(context).brightness == Brightness.dark
-                  ? AppColorsDark.surfaceAlt : AppColors.surfaceAlt),
+                  ? AppColorsDark.surfaceAlt
+                  : AppColors.surfaceAlt),
           borderRadius: AppRadii.smAll,
         ),
         child: Text(
@@ -572,11 +580,13 @@ class _FuelToggle extends StatelessWidget {
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
         color: Theme.of(context).brightness == Brightness.dark
-            ? AppColorsDark.surfaceAlt : AppColors.surfaceAlt,
+            ? AppColorsDark.surfaceAlt
+            : AppColors.surfaceAlt,
         borderRadius: AppRadii.mdAll,
         border: Border.all(
           color: Theme.of(context).brightness == Brightness.dark
-              ? AppColorsDark.border : AppColors.border,
+              ? AppColorsDark.border
+              : AppColors.border,
           width: 0.5,
         ),
       ),
@@ -615,7 +625,8 @@ class _Tab extends StatelessWidget {
           decoration: BoxDecoration(
             color: active
                 ? (Theme.of(context).brightness == Brightness.dark
-                    ? AppColorsDark.accent : AppColors.accent)
+                    ? AppColorsDark.accent
+                    : AppColors.accent)
                 : Colors.transparent,
             borderRadius: AppRadii.smAll,
           ),
