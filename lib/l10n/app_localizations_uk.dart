@@ -202,4 +202,43 @@ class AppL10nUk extends AppL10n {
 
   @override
   String get detailContractDensity => 'Контрактна густина';
+
+  @override
+  String get vizScreenTitle => 'Графік густини';
+
+  @override
+  String get vizChartTitle => 'Густина vs Температура';
+
+  @override
+  String get vizLegendPassport => 'Паспортна крива';
+
+  @override
+  String get vizLegendOperating => 'Робоча точка';
+
+  @override
+  String get vizThermalExpansion => 'Теплове розширення';
+
+  @override
+  String get vizMixtureTitle => 'Змішування палива';
+
+  @override
+  String get vizMixtureBatchA => 'Наявний резервуар';
+
+  @override
+  String get vizMixtureBatchB => 'Паливо, що надходить';
+
+  @override
+  String get vizMixtureResult => 'Результат змішування';
+
+  @override
+  String get vizTotalVolume => 'Загальний об\'єм';
+
+  @override
+  String get vizTotalMass => 'Загальна маса';
+
+  @override
+  String get vizMixedDensity => 'Змішана густина';
+
+  @override
+  String get vizMixedTemp => 'Температура суміші';
 }

@@ -27,7 +27,7 @@ class _EscalationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<EscalationState>();
-    final l     = AppL10n.of(context);
+    final l = AppL10n.of(context);
 
     return AppShell(
       title: l.menuEscalation,
@@ -38,14 +38,7 @@ class _EscalationView extends StatelessWidget {
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 const SizedBox(height: AppSpacing.md),
-                _GroupSelector(state: state),
-                const SizedBox(height: AppSpacing.sm),
-                _ProductSelector(state: state),
-                const SizedBox(height: AppSpacing.md),
-                Text(l.sectionDensityBasis.toUpperCase(),
-                    style: AppText.sectionLabel),
-                const SizedBox(height: AppSpacing.xs),
-                _BasisSelector(state: state),
+                _FuelBasisCard(state: state),
                 const SizedBox(height: AppSpacing.md),
                 Text(l.sectionParameters.toUpperCase(),
                     style: AppText.sectionLabel),
@@ -67,174 +60,151 @@ class _EscalationView extends StatelessWidget {
   }
 }
 
-class _GroupSelector extends StatelessWidget {
+class _FuelBasisCard extends StatelessWidget {
   final EscalationState state;
-  const _GroupSelector({required this.state});
+  const _FuelBasisCard({required this.state});
 
   @override
   Widget build(BuildContext context) {
-    final l = AppL10n.of(context);
-
-    String groupLabel(FuelProductGroup g) => switch (g) {
-          FuelProductGroup.gasoil   => l.fuelGroupGasoil,
-          FuelProductGroup.gasoline => l.fuelGroupGasoline,
-        };
+    final isGasoil = state.product.family == FuelFamily.diesel;
+    final fuelLabel = isGasoil ? 'GASOIL' : 'GASOLINE';
 
     return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: const BoxDecoration(
-        color:        AppColors.surfaceAlt,
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
         borderRadius: AppRadii.lgAll,
-      ),
-      child: Row(
-        children: FuelProductGroup.values.map((group) {
-          final active = state.group == group;
-          return Expanded(
-            child: GestureDetector(
-              onTap: () => state.setGroup(group),
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  color:        active ? AppColors.accentBg : Colors.transparent,
-                  borderRadius: AppRadii.mdAll,
-                ),
-                child: Text(
-                  groupLabel(group),
-                  textAlign: TextAlign.center,
-                  style: AppText.dropdownItem.copyWith(
-                    color:      active ? AppColors.accent : AppColors.textSecondary,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-}
-
-class _ProductSelector extends StatelessWidget {
-  final EscalationState state;
-  const _ProductSelector({required this.state});
-
-  @override
-  Widget build(BuildContext context) {
-    // FuelGrade.name values are industry-standard and intentionally NOT localized.
-    return PopupMenuButton<FuelGrade>(
-      color: AppColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: AppRadii.lgAll),
-      onSelected: state.setProduct,
-      itemBuilder: (_) => state.availableProducts.map((p) {
-        return PopupMenuItem<FuelGrade>(
-          value: p,
-          child: Text(
-            p.name,
-            style: AppText.dropdownItem.copyWith(
-              color: p.id == state.product.id
-                  ? AppColors.accent
-                  : AppColors.textPrimary,
-              fontWeight:
-                  p.id == state.product.id ? FontWeight.w700 : FontWeight.w400,
-            ),
-          ),
-        );
-      }).toList(),
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
-          vertical:   AppSpacing.sm,
-        ),
-        decoration: BoxDecoration(
-          color:        AppColors.surface,
-          borderRadius: AppRadii.mdAll,
-          border:       Border.all(color: AppColors.border, width: 0.5),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                state.product.name,
-                style: AppText.dropdownItem.copyWith(
-                  color:      AppColors.accent,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            const Icon(
-              Icons.keyboard_arrow_down_rounded,
-              size:  18,
-              color: AppColors.accent,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _BasisSelector extends StatelessWidget {
-  final EscalationState state;
-  const _BasisSelector({required this.state});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: const BoxDecoration(
-        color:        AppColors.surfaceAlt,
-        borderRadius: AppRadii.lgAll,
+        border: Border.all(color: AppColors.border, width: 0.5),
       ),
       child: Row(
         children: [
-          // VAC and AIR are ISO standard basis names — intentionally not translated.
-          _BasisButton(
-            label:  'VAC',
-            active: state.basis == DensityBasis.vac,
-            onTap:  () => state.setBasis(DensityBasis.vac),
+          Expanded(
+            child: PopupMenuButton<FuelFamily>(
+              onSelected: (family) {
+                final product =
+                    kFuelGrades.firstWhere((f) => f.family == family);
+                state.setProduct(product);
+              },
+              itemBuilder: (_) => const [
+                PopupMenuItem(
+                  value: FuelFamily.diesel,
+                  child: Text('GASOIL'),
+                ),
+                PopupMenuItem(
+                  value: FuelFamily.gasoline,
+                  child: Text('GASOLINE'),
+                ),
+              ],
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    child: Text(
+                      fuelLabel,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppText.detailValue.copyWith(
+                        color: AppColors.accent,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                  const Icon(
+                    Icons.keyboard_arrow_down_rounded,
+                    color: AppColors.accent,
+                  ),
+                ],
+              ),
+            ),
           ),
-          _BasisButton(
-            label:  'AIR',
-            active: state.basis == DensityBasis.air,
-            onTap:  () => state.setBasis(DensityBasis.air),
+          Container(
+            width: 1,
+            height: 30,
+            margin: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+            color: AppColors.border,
           ),
+          _DensityBasisSwitch(state: state),
         ],
       ),
     );
   }
 }
 
-class _BasisButton extends StatelessWidget {
-  final String     label;
-  final bool       active;
-  final VoidCallback onTap;
-
-  const _BasisButton({
-    required this.label,
-    required this.active,
-    required this.onTap,
-  });
+class _DensityBasisSwitch extends StatelessWidget {
+  final EscalationState state;
+  const _DensityBasisSwitch({required this.state});
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          decoration: BoxDecoration(
-            color:        active ? AppColors.accentBg : Colors.transparent,
-            borderRadius: AppRadii.mdAll,
-          ),
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: AppText.dropdownItem.copyWith(
-              color:      active ? AppColors.accent : AppColors.textSecondary,
-              fontWeight: FontWeight.w700,
+    final isAir = state.basis == DensityBasis.air;
+
+    return GestureDetector(
+      onTap: () => state.setBasis(
+        isAir ? DensityBasis.vac : DensityBasis.air,
+      ),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        width: 132,
+        height: 44,
+        padding: const EdgeInsets.all(3),
+        decoration: BoxDecoration(
+          color: AppColors.surfaceAlt,
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: AppColors.border, width: 0.5),
+        ),
+        child: Stack(
+          children: [
+            AnimatedAlign(
+              duration: const Duration(milliseconds: 180),
+              curve: Curves.easeOut,
+              alignment: isAir ? Alignment.centerRight : Alignment.centerLeft,
+              child: Container(
+                width: 62,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: AppColors.accent,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withAlpha(18),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
+            Row(
+              children: [
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      'VAC',
+                      style: AppText.detailValue.copyWith(
+                        fontWeight: FontWeight.w800,
+                        color: isAir ? AppColors.textSecondary : Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      'AIR',
+                      style: AppText.detailValue.copyWith(
+                        fontWeight: FontWeight.w800,
+                        color: isAir ? Colors.white : AppColors.textSecondary,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -248,37 +218,37 @@ class _Inputs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final errors = state.errors;
-    final l      = AppL10n.of(context);
+    final l = AppL10n.of(context);
 
     return Column(
       children: [
         LabeledInputField(
-          label:        l.labelContractDensity,
-          unit:         'kg/l',
+          label: l.labelContractDensity,
+          unit: 'kg/l',
           initialValue: state.contractDensityRaw,
-          error:        errors['contractDensity'],
-          onChanged:    (v) => state.updateField('contractDensity', v),
+          error: errors['contractDensity'],
+          onChanged: (v) => state.updateField('contractDensity', v),
         ),
         LabeledInputField(
-          label:        l.labelActualDensity15,
-          unit:         'kg/l',
+          label: l.labelActualDensity15,
+          unit: 'kg/l',
           initialValue: state.actualDensityRaw,
-          error:        errors['actualDensity'],
-          onChanged:    (v) => state.updateField('actualDensity', v),
+          error: errors['actualDensity'],
+          onChanged: (v) => state.updateField('actualDensity', v),
         ),
         LabeledInputField(
-          label:        l.labelAverageQuotation,
-          unit:         r'$/t',
+          label: l.labelAverageQuotation,
+          unit: r'$/t',
           initialValue: state.averagePlattsRaw,
-          error:        errors['averagePlatts'],
-          onChanged:    (v) => state.updateField('averagePlatts', v),
+          error: errors['averagePlatts'],
+          onChanged: (v) => state.updateField('averagePlatts', v),
         ),
         LabeledInputField(
-          label:        l.labelSellerPremium,
-          unit:         r'$/t',
+          label: l.labelSellerPremium,
+          unit: r'$/t',
           initialValue: state.sellerPremiumRaw,
-          error:        errors['sellerPremium'],
-          onChanged:    (v) => state.updateField('sellerPremium', v),
+          error: errors['sellerPremium'],
+          onChanged: (v) => state.updateField('sellerPremium', v),
         ),
       ],
     );
@@ -291,23 +261,23 @@ class _ResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l    = AppL10n.of(context);
+    final l = AppL10n.of(context);
     final sign = result.escalationPerTon >= 0 ? '+' : '';
 
     return Container(
       padding: AppSpacing.resultCardPadding,
       decoration: BoxDecoration(
-        color:        AppColors.cardSurface,
+        color: AppColors.cardSurface,
         borderRadius: AppRadii.lgAll,
-        border:       Border.all(color: AppColors.border, width: 0.5),
+        border: Border.all(color: AppColors.border, width: 0.5),
       ),
       child: Row(
         children: [
           Container(
-            width:  3,
+            width: 3,
             height: 92,
             decoration: BoxDecoration(
-              color:        AppColors.accent,
+              color: AppColors.accent,
               borderRadius: BorderRadius.circular(99),
             ),
           ),
@@ -335,8 +305,7 @@ class _ResultCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  l.escalationBasePrice(
-                      result.basePrice.toStringAsFixed(2)),
+                  l.escalationBasePrice(result.basePrice.toStringAsFixed(2)),
                   style: AppText.detailKey,
                 ),
                 Text(
@@ -345,8 +314,7 @@ class _ResultCard extends StatelessWidget {
                   style: AppText.detailKey,
                 ),
                 Text(
-                  l.escalationFinalPrice(
-                      result.finalPrice.toStringAsFixed(2)),
+                  l.escalationFinalPrice(result.finalPrice.toStringAsFixed(2)),
                   style: AppText.detailKey,
                 ),
               ],
@@ -368,9 +336,9 @@ class _FormulaNote extends StatelessWidget {
     return Container(
       padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
-        color:        AppColors.formulaBg,
+        color: AppColors.formulaBg,
         borderRadius: AppRadii.lgAll,
-        border:       Border.all(color: AppColors.border, width: 0.5),
+        border: Border.all(color: AppColors.border, width: 0.5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

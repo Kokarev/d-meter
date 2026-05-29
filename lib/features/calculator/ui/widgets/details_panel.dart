@@ -17,10 +17,10 @@ import 'temperature_details_sheet.dart';
 ///   Inline [AnimatedCrossFade] expand/collapse под ResultCard.
 ///   [isOpen] и [onToggle] управляются из [CalculatorState] через caller.
 class DetailsPanel extends StatelessWidget {
-  final DensityResult  result;
-  final CalcMode       mode;
-  final bool           isOpen;
-  final VoidCallback   onToggle;
+  final DensityResult result;
+  final CalcMode mode;
+  final bool isOpen;
+  final VoidCallback onToggle;
 
   const DetailsPanel({
     super.key,
@@ -32,7 +32,12 @@ class DetailsPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isWide = AppLayout.isWide(MediaQuery.of(context).size.width);
+    final platform = Theme.of(context).platform;
+    final isDesktop = platform == TargetPlatform.macOS ||
+        platform == TargetPlatform.windows ||
+        platform == TargetPlatform.linux;
+    final isWide =
+        isDesktop || AppLayout.isWide(MediaQuery.of(context).size.width);
     return isWide ? _buildInline(context) : _buildSheetTrigger(context);
   }
 
@@ -43,7 +48,7 @@ class DetailsPanel extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color:        AppColors.surface,
+        color: AppColors.surface,
         borderRadius: AppRadii.lgAll,
         border: Border.all(color: AppColors.border, width: 0.5),
       ),
@@ -54,7 +59,7 @@ class DetailsPanel extends StatelessWidget {
             onTap: onToggle,
             borderRadius: isOpen
                 ? const BorderRadius.only(
-                    topLeft:  Radius.circular(AppRadii.lg),
+                    topLeft: Radius.circular(AppRadii.lg),
                     topRight: Radius.circular(AppRadii.lg),
                   )
                 : AppRadii.lgAll,
@@ -95,53 +100,57 @@ class DetailsPanel extends StatelessWidget {
             secondChild: ExcludeFocus(
               excluding: !isOpen,
               child: Column(
-              children: [
-                const Divider(height: 1, thickness: 0.5, color: AppColors.divider),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.lg, AppSpacing.sm,
-                    AppSpacing.lg, AppSpacing.sm,
+                children: [
+                  const Divider(
+                      height: 1, thickness: 0.5, color: AppColors.divider),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.lg,
+                      AppSpacing.sm,
+                      AppSpacing.lg,
+                      AppSpacing.sm,
+                    ),
+                    child: Column(
+                      children: [
+                        _DetailRow(
+                          label: l.detailDensityAt15,
+                          value: result.densityAt15KgL.toStringAsFixed(4),
+                          unit: 'kg/l',
+                          note: 'EN ISO 12185',
+                        ),
+                        _DetailRow(
+                          label: l.detailDensityInAir,
+                          value: result.densityInAirKgL.toStringAsFixed(4),
+                          unit: 'kg/l',
+                        ),
+                        _DetailRow(
+                          label: l.detailDeliveryTemp,
+                          value: result.tempC.toStringAsFixed(1),
+                          unit: '°C',
+                        ),
+                        _DetailRow(
+                          label: l.detailVolume,
+                          value: result.volumeM3.toStringAsFixed(3),
+                          unit: 'm³',
+                        ),
+                        _DetailRow(
+                          label: l.detailWeight,
+                          value: result.weightT.toStringAsFixed(3),
+                          unit: 't',
+                        ),
+                        _DetailRow(
+                          label: l.detailCoefficientA,
+                          value: result.coeffA.toStringAsFixed(1),
+                          unit: '×10⁻³/°C',
+                        ),
+                      ],
+                    ),
                   ),
-                  child: Column(
-                    children: [
-                      _DetailRow(
-                        label: l.detailDensityAt15,
-                        value: result.densityAt15KgL.toStringAsFixed(4),
-                        unit:  'kg/l',
-                        note:  'EN ISO 12185',
-                      ),
-                      _DetailRow(
-                        label: l.detailDensityInAir,
-                        value: result.densityInAirKgL.toStringAsFixed(4),
-                        unit:  'kg/l',
-                      ),
-                      _DetailRow(
-                        label: l.detailDeliveryTemp,
-                        value: result.tempC.toStringAsFixed(1),
-                        unit:  '°C',
-                      ),
-                      _DetailRow(
-                        label: l.detailVolume,
-                        value: result.volumeM3.toStringAsFixed(3),
-                        unit:  'm³',
-                      ),
-                      _DetailRow(
-                        label: l.detailWeight,
-                        value: result.weightT.toStringAsFixed(3),
-                        unit:  't',
-                      ),
-                      _DetailRow(
-                        label: l.detailCoefficientA,
-                        value: result.coeffA.toStringAsFixed(1),
-                        unit:  '×10⁻³/°C',
-                      ),
-                    ],
-                  ),
-                ),
-                const Divider(height: 1, thickness: 0.5, color: AppColors.divider),
-                _FormulaBlock(mode: mode),
-              ],
-            ),
+                  const Divider(
+                      height: 1, thickness: 0.5, color: AppColors.divider),
+                  _FormulaBlock(mode: mode),
+                ],
+              ),
             ), // ExcludeFocus
           ),
         ],
@@ -156,7 +165,7 @@ class DetailsPanel extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color:        AppColors.surface,
+        color: AppColors.surface,
         borderRadius: AppRadii.lgAll,
         border: Border.all(color: AppColors.border, width: 0.5),
       ),
@@ -204,9 +213,9 @@ class DetailsPanel extends StatelessWidget {
 // ─── Detail row ───────────────────────────────────────────────────────────────
 
 class _DetailRow extends StatelessWidget {
-  final String  label;
-  final String  value;
-  final String  unit;
+  final String label;
+  final String value;
+  final String unit;
   final String? note;
 
   const _DetailRow({
@@ -259,12 +268,12 @@ class _FormulaBlock extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.lg,
-        vertical:   AppSpacing.sm + 2,
+        vertical: AppSpacing.sm + 2,
       ),
       decoration: const BoxDecoration(
         color: AppColors.formulaBg,
         borderRadius: BorderRadius.only(
-          bottomLeft:  Radius.circular(AppRadii.lg),
+          bottomLeft: Radius.circular(AppRadii.lg),
           bottomRight: Radius.circular(AppRadii.lg),
         ),
       ),

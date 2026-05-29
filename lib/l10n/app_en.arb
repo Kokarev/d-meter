@@ -201,5 +201,43 @@
   "@detailsCopied": { "description": "SnackBar text after long-press copy on result card" },
 
   "detailContractDensity": "Contract density",
-  "@detailContractDensity": { "description": "Details row label for contract/passport density" }
+  "@detailContractDensity": { "description": "Details row label for contract/passport density" },
+"vizScreenTitle": "Density Chart",
+  "@vizScreenTitle": { "description": "Title for the density visualization screen" },
+
+  "vizChartTitle": "Density vs Temperature",
+  "@vizChartTitle": { "description": "Section label above the chart" },
+
+  "vizLegendPassport": "Passport curve",
+  "@vizLegendPassport": { "description": "Chart legend — blue passport density curve" },
+
+  "vizLegendOperating": "Operating point",
+  "@vizLegendOperating": { "description": "Chart legend — red operating point marker" },
+
+  "vizThermalExpansion": "Thermal expansion",
+  "@vizThermalExpansion": { "description": "Label for thermal expansion row" },
+
+  "vizMixtureTitle": "Fuel Mixing",
+  "@vizMixtureTitle": { "description": "Phase 3: section title for fuel mixing" },
+
+  "vizMixtureBatchA": "Existing tank",
+  "@vizMixtureBatchA": { "description": "Phase 3: label for batch A" },
+
+  "vizMixtureBatchB": "Incoming fuel",
+  "@vizMixtureBatchB": { "description": "Phase 3: label for batch B" },
+
+  "vizMixtureResult": "Mixture Result",
+  "@vizMixtureResult": { "description": "Phase 3: result card title" },
+
+  "vizTotalVolume": "Total volume",
+  "@vizTotalVolume": {},
+
+  "vizTotalMass": "Total mass",
+  "@vizTotalMass": {},
+
+  "vizMixedDensity": "Mixed density",
+  "@vizMixedDensity": {},
+
+  "vizMixedTemp": "Mixed temperature",
+  "@vizMixedTemp": {}
 }

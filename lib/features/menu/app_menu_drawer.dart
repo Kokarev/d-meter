@@ -6,9 +6,11 @@ import '../../l10n/app_localizations.dart';
 import '../calculator/ui/calculator_screen.dart';
 import '../escalation/ui/escalation_screen.dart';
 import '../settings/ui/settings_screen.dart';
+import '../visualization/ui/density_visualization_screen.dart';
 
 enum MenuAction {
   densityCalculator,
+  densityChart,
   escalation,
   howToUse,
   history,
@@ -93,6 +95,12 @@ class _AppMenuDrawerState extends State<AppMenuDrawer> {
             ),
 
             _MenuItem(
+              icon: Icons.show_chart_rounded,
+              label: l.vizScreenTitle,
+              action: MenuAction.densityChart,
+            ),
+
+            _MenuItem(
               icon: Icons.trending_up_rounded,
               label: l.menuEscalation,
               action: MenuAction.escalation,
@@ -148,6 +156,15 @@ class _MenuItem extends StatelessWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => const CalculatorScreen(),
+                ),
+              );
+              return;
+
+            case MenuAction.densityChart:
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) =>
+                      const DensityVisualizationScreen(),
                 ),
               );
               return;

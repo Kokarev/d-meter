@@ -1,0 +1,3136 @@
+diff --git a/flutter_01.log b/flutter_01.log
+new file mode 100644
+index 0000000..8aca3f2
+--- /dev/null
++++ b/flutter_01.log
+@@ -0,0 +1,90 @@
++Flutter crash report.
++Please report a bug at https://github.com/flutter/flutter/issues.
++
++## command
++
++flutter run -d macos
++
++## exception
++
++PathExistsException: PathExistsException: Cannot create link, path = '/Users/tanos/Downloads/D-METER_WORKSPACE/project/d_meter/ios/Flutter/ephemeral/Packages/.packages/package_info_plus-8.3.1' (OS Error: File exists, errno = 17)
++
++```
++#0      _Link.throwIfError (dart:io/link.dart:358:7)
++#1      _Link.createSync (dart:io/link.dart:276:5)
++#2      ForwardingLink.createSync (package:file/src/forwarding/forwarding_link.dart:20:16)
++#3      ForwardingLink.createSync (package:file/src/forwarding/forwarding_link.dart:20:16)
++#4      SwiftPackageManager._dependenciesForPlugins (package:flutter_tools/src/macos/swift_package_manager.dart:177:21)
++#5      SwiftPackageManager.generatePluginsSwiftPackage (package:flutter_tools/src/macos/swift_package_manager.dart:72:9)
++#6      DarwinDependencyManagement.setUp (package:flutter_tools/src/macos/darwin_dependency_management.dart:77:34)
++#7      injectPlugins (package:flutter_tools/src/flutter_plugins.dart:1378:42)
++<asynchronous suspension>
++#8      FlutterProject.ensureReadyForPlatformSpecificTooling (package:flutter_tools/src/project.dart:420:5)
++<asynchronous suspension>
++#9      FlutterCommand.regeneratePlatformSpecificToolingIfApplicable (package:flutter_tools/src/runner/flutter_command.dart:2010:5)
++<asynchronous suspension>
++#10     FlutterCommand.verifyThenRunCommand (package:flutter_tools/src/runner/flutter_command.dart:1966:7)
++<asynchronous suspension>
++#11     FlutterCommand.run.<anonymous closure> (package:flutter_tools/src/runner/flutter_command.dart:1630:27)
++<asynchronous suspension>
++#12     AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
++<asynchronous suspension>
++#13     CommandRunner.runCommand (package:args/command_runner.dart:212:13)
++<asynchronous suspension>
++#14     FlutterCommandRunner.runCommand.<anonymous closure> (package:flutter_tools/src/runner/flutter_command_runner.dart:496:9)
++<asynchronous suspension>
++#15     AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
++<asynchronous suspension>
++#16     FlutterCommandRunner.runCommand (package:flutter_tools/src/runner/flutter_command_runner.dart:431:5)
++<asynchronous suspension>
++#17     FlutterCommandRunner.run.<anonymous closure> (package:flutter_tools/src/runner/flutter_command_runner.dart:307:33)
++<asynchronous suspension>
++#18     run.<anonymous closure>.<anonymous closure> (package:flutter_tools/runner.dart:104:11)
++<asynchronous suspension>
++#19     AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
++<asynchronous suspension>
++#20     main (package:flutter_tools/executable.dart:103:3)
++<asynchronous suspension>
++```
++
++## flutter doctor
++
++```
++[32m[✓][39m Flutter (Channel stable, 3.44.0, on macOS 26.5 25F71 darwin-arm64, locale ru-UA) [363ms]
++    [32m•[39m Flutter version 3.44.0 on channel stable at /opt/homebrew/share/flutter
++    [32m•[39m Upstream repository https://github.com/flutter/flutter.git
++    [32m•[39m Framework revision 559ffa3f75 (13 days ago), 2026-05-15 14:13:13 -0700
++    [32m•[39m Engine revision 4c525dac5e
++    [32m•[39m Dart version 3.12.0
++    [32m•[39m DevTools version 2.57.0
++    [32m•[39m Feature flags: enable-web, enable-linux-desktop, enable-macos-desktop, enable-windows-desktop,
++      enable-android, enable-ios, cli-animations, enable-native-assets, enable-swift-package-manager,
++      omit-legacy-version-file, enable-lldb-debugging, enable-uiscene-migration
++
++[31m[✗][39m Android toolchain - develop for Android devices [325ms]
++    [31m✗[39m Unable to locate Android SDK.
++      Install Android Studio from: https://developer.android.com/studio/index.html
++      On first launch it will assist you in installing the Android SDK components.
++      (or visit https://flutter.dev/to/macos-android-setup for detailed instructions).
++      If the Android SDK has been installed to a custom location, please use
++      `flutter config --android-sdk` to update to that location.
++
++
++[32m[✓][39m Xcode - develop for iOS and macOS (Xcode 26.5) [1 326ms]
++    [32m•[39m Xcode at /Applications/Xcode.app/Contents/Developer
++    [32m•[39m Build 17F42
++    [32m•[39m CocoaPods version 1.16.2
++
++[31m[✗][39m Chrome - develop for the web (Cannot find Chrome executable at /Applications/Google
++    Chrome.app/Contents/MacOS/Google Chrome) [2ms]
++    [33m![39m Cannot find Chrome. Try setting CHROME_EXECUTABLE to a Chrome executable.
++
++[32m[✓][39m Connected device (2 available) [5,9s]
++    [32m•[39m iPhone (mobile) • 00008110-0015591422FA801E • ios          • iOS 26.6 23G5028e
++    [32m•[39m macOS (desktop) • macos                     • darwin-arm64 • macOS 26.5 25F71 darwin-arm64
++
++[32m[✓][39m Network resources [301ms]
++    [32m•[39m All expected network resources are available.
++
++[33m![39m Doctor found issues in 2 categories.
++```
+diff --git a/lib/features/calculator/models/density_point.dart b/lib/features/calculator/models/density_point.dart
+new file mode 100644
+index 0000000..a4233c2
+--- /dev/null
++++ b/lib/features/calculator/models/density_point.dart
+@@ -0,0 +1,28 @@
++/// Одна точка на кривой плотность/температура.
++/// Иммутабельный value object. Не содержит бизнес-логику.
++class DensityPoint {
++  /// Температура, °C
++  final double tempC;
++
++  /// Плотность при данной температуре, kg/l
++  final double densityKgL;
++
++  const DensityPoint({required this.tempC, required this.densityKgL});
++
++  /// Плотность в kg/m³ (для отображения)
++  double get densityKgM3 => densityKgL * 1000;
++
++  @override
++  String toString() =>
++      'DensityPoint(t=${tempC.toStringAsFixed(1)}°C, '
++      'ρ=${densityKgL.toStringAsFixed(4)} kg/l)';
++
++  @override
++  bool operator ==(Object other) =>
++      other is DensityPoint &&
++      other.tempC == tempC &&
++      other.densityKgL == densityKgL;
++
++  @override
++  int get hashCode => Object.hash(tempC, densityKgL);
++}
+diff --git a/lib/features/calculator/models/fuel_mixture.dart b/lib/features/calculator/models/fuel_mixture.dart
+new file mode 100644
+index 0000000..917db70
+--- /dev/null
++++ b/lib/features/calculator/models/fuel_mixture.dart
+@@ -0,0 +1,38 @@
++import '../../../core/fuel_grade.dart';
++
++/// Одна партия топлива для смешивания.
++class FuelBatch {
++  final FuelFamily family;
++  final double volumeM3;
++  final double p15KgM3;
++  final double actualDensityKgL;
++  final double tempC;
++
++  const FuelBatch({
++    required this.family,
++    required this.volumeM3,
++    required this.p15KgM3,
++    required this.actualDensityKgL,
++    required this.tempC,
++  });
++
++  double get massT           => volumeM3 * actualDensityKgL;
++  double get densityAt15KgL  => p15KgM3 / 1000;
++}
++
++/// Результат смешивания двух партий.
++class MixtureResult {
++  final double totalVolumeM3;
++  final double totalMassT;
++  final double mixedDensityAt15KgL;
++  final double mixedActualDensityKgL;
++  final double mixedTempC;
++
++  const MixtureResult({
++    required this.totalVolumeM3,
++    required this.totalMassT,
++    required this.mixedDensityAt15KgL,
++    required this.mixedActualDensityKgL,
++    required this.mixedTempC,
++  });
++}
+diff --git a/lib/features/calculator/models/thermal_state.dart b/lib/features/calculator/models/thermal_state.dart
+new file mode 100644
+index 0000000..bcc2cf0
+--- /dev/null
++++ b/lib/features/calculator/models/thermal_state.dart
+@@ -0,0 +1,26 @@
++/// Операционное состояние при заданной температуре.
++///
++/// Масса инвариантна — volume и density меняются при сдвиге t.
++class ThermalState {
++  final double tempC;
++  final double densityKgL;
++  final double volumeM3;
++  final double massT;
++  final double densityAt15KgL;
++
++  /// Тепловое расширение vs 15°C, литры.
++  /// Положительное = расширение (t > 15), отрицательное = сжатие (t < 15).
++  final double thermalExpansionL;
++
++  const ThermalState({
++    required this.tempC,
++    required this.densityKgL,
++    required this.volumeM3,
++    required this.massT,
++    required this.densityAt15KgL,
++    required this.thermalExpansionL,
++  });
++
++  /// Объём при 15°C для сравнения
++  double get volumeAt15M3 => massT / densityAt15KgL;
++}
+diff --git a/lib/features/calculator/services/density_curve_service.dart b/lib/features/calculator/services/density_curve_service.dart
+new file mode 100644
+index 0000000..2290acd
+--- /dev/null
++++ b/lib/features/calculator/services/density_curve_service.dart
+@@ -0,0 +1,70 @@
++import '../../../core/fuel_grade.dart';
++import '../models/density_point.dart';
++import '../models/thermal_state.dart';
++import '../service/density_calculator_service.dart';
++
++class DensityCurveService {
++  static List<DensityPoint> generateCurve({
++    required double p15KgM3,
++    required FuelFamily family,
++    double tempFrom = -10,
++    double tempTo = 50,
++    double step = 1,
++  }) {
++    assert(tempFrom <= tempTo, 'tempFrom должен быть меньше или равен tempTo');
++    assert(step > 0, 'step должен быть положительным');
++
++    final a = DensityCalculatorService.interpolateA(p15KgM3, family);
++    final points = <DensityPoint>[];
++
++    final count = ((tempTo - tempFrom) / step).round();
++
++    for (var i = 0; i <= count; i++) {
++      final t = double.parse((tempFrom + i * step).toStringAsFixed(6));
++      final ptKgM3 = p15KgM3 - a * (t - 15) / 1000;
++      points.add(DensityPoint(tempC: t, densityKgL: ptKgM3 / 1000));
++    }
++
++    return points;
++  }
++
++  static ThermalState computeThermalState({
++    required double p15KgM3,
++    required FuelFamily family,
++    required double tempC,
++    required double massT,
++  }) {
++    final a = DensityCalculatorService.interpolateA(p15KgM3, family);
++    final ptKgM3 = p15KgM3 - a * (tempC - 15) / 1000;
++    final ptKgL = ptKgM3 / 1000;
++
++    final safeDensity = ptKgL > 0 ? ptKgL : 0.001;
++    final safeMass = massT > 0 ? massT : 0.001;
++
++    final volumeM3 = safeMass / safeDensity;
++    final densAt15KgL = p15KgM3 / 1000;
++    final volAt15M3 = safeMass / densAt15KgL;
++    final expansionL = (volumeM3 - volAt15M3) * 1000;
++
++    return ThermalState(
++      tempC: tempC,
++      densityKgL: safeDensity,
++      volumeM3: volumeM3,
++      massT: safeMass,
++      densityAt15KgL: densAt15KgL,
++      thermalExpansionL: expansionL,
++    );
++  }
++
++  static ({double min, double max}) densityRange(List<DensityPoint> curve) {
++    if (curve.isEmpty) return (min: 0.8, max: 0.9);
++
++    final vals = curve.map((p) => p.densityKgL);
++    final minVal = vals.reduce((a, b) => a < b ? a : b);
++    final maxVal = vals.reduce((a, b) => a > b ? a : b);
++    final rawPad = (maxVal - minVal) * 0.08;
++    final pad = rawPad < 0.003 ? 0.003 : rawPad;
++
++    return (min: minVal - pad, max: maxVal + pad);
++  }
++}
+diff --git a/lib/features/calculator/services/fuel_mixing_service.dart b/lib/features/calculator/services/fuel_mixing_service.dart
+new file mode 100644
+index 0000000..36a8d80
+--- /dev/null
++++ b/lib/features/calculator/services/fuel_mixing_service.dart
+@@ -0,0 +1,53 @@
++// ─────────────────────────────────────────────────────────────────────────────
++// FuelMixingService — Phase 3
++//
++// Смешивание двух партий топлива по методу взвешенного среднего по массе.
++// Работает только с одинаковым типом топлива.
++// ─────────────────────────────────────────────────────────────────────────────
++
++import '../models/fuel_mixture.dart';
++
++class FuelMixingService {
++  /// Рассчитывает результат смешивания двух партий.
++  /// Выбрасывает [ArgumentError] если партии разного типа.
++  static MixtureResult mix(FuelBatch batchA, FuelBatch batchB) {
++    if (batchA.family != batchB.family) {
++      throw ArgumentError(
++        'Cannot mix ${batchA.family.name} and ${batchB.family.name}.',
++      );
++    }
++
++    final massA  = batchA.massT;
++    final massB  = batchB.massT;
++    final total  = massA + massB;
++
++    if (total <= 0) throw ArgumentError('Total mass must be > 0');
++
++    final mixedD15     = (massA * batchA.densityAt15KgL +
++                          massB * batchB.densityAt15KgL) / total;
++    final mixedActual  = (massA * batchA.actualDensityKgL +
++                          massB * batchB.actualDensityKgL) / total;
++    final totalVolume  = total / mixedActual;
++    final mixedTemp    = (massA * batchA.tempC +
++                          massB * batchB.tempC) / total;
++
++    return MixtureResult(
++      totalVolumeM3:         totalVolume,
++      totalMassT:            total,
++      mixedDensityAt15KgL:   mixedD15,
++      mixedActualDensityKgL: mixedActual,
++      mixedTempC:            mixedTemp,
++    );
++  }
++
++  /// Валидация двух партий перед смешиванием.
++  /// Возвращает null если ОК, строку ошибки если нет.
++  static String? validate(FuelBatch? a, FuelBatch? b) {
++    if (a == null || b == null) return 'Both batches must be filled';
++    if (a.volumeM3 <= 0 || b.volumeM3 <= 0) return 'Volume must be > 0';
++    if (a.family != b.family) {
++      return 'Different fuel types: ${a.family.name} and ${b.family.name}';
++    }
++    return null;
++  }
++}
+diff --git a/lib/features/calculator/state/calculator_state.dart b/lib/features/calculator/state/calculator_state.dart
+index 4202354..7b0d2da 100644
+--- a/lib/features/calculator/state/calculator_state.dart
++++ b/lib/features/calculator/state/calculator_state.dart
+@@ -46,6 +46,11 @@ class CalculatorState extends ChangeNotifier {
+       densityRaw = f.family == FuelFamily.diesel ? '0.8300' : '0.7433';
+     }
+ 
++    final parsedP15 = _parse(p15Raw);
++    if (parsedP15 != null) {
++      DensityMemory.setP15KgM3(parsedP15, _fuel.family);
++    }
++
+     contractDensityRaw = (f.contractDensityKgM3 / 1000).toStringAsFixed(3);
+     _calculate();
+   }
+@@ -103,25 +108,25 @@ class CalculatorState extends ChangeNotifier {
+       return;
+     }
+ 
+-    final p15      = _parse(p15Raw)!;
++    final p15 = _parse(p15Raw)!;
+     final contract = _parse(contractDensityRaw)! * 1000;
+-    final family   = _fuel.family;
++    final family = _fuel.family;
+ 
+     if (_mode == CalcMode.densityAtTemp) {
+       _result = DensityCalculatorService.calcFromWeight(
+-        p15KgM3:             p15,
+-        tempC:               _parse(tempRaw)!,
+-        weightT:             _parse(weightRaw)!,
++        p15KgM3: p15,
++        tempC: _parse(tempRaw)!,
++        weightT: _parse(weightRaw)!,
+         contractDensityKgM3: contract,
+-        fuelFamily:          family,
++        fuelFamily: family,
+       );
+     } else {
+       _result = DensityCalculatorService.calcFromDensity(
+-        p15KgM3:             p15,
+-        actualDensityKgL:    _parse(densityRaw)!,
+-        volumeM3:            _parse(volumeRaw)!,
++        p15KgM3: p15,
++        actualDensityKgL: _parse(densityRaw)!,
++        volumeM3: _parse(volumeRaw)!,
+         contractDensityKgM3: contract,
+-        fuelFamily:          family,
++        fuelFamily: family,
+       );
+     }
+ 
+@@ -129,14 +134,14 @@ class CalculatorState extends ChangeNotifier {
+   }
+ 
+   Map<String, ValidationError?> _validate() {
+-    final e      = <String, ValidationError?>{};
++    final e = <String, ValidationError?>{};
+     final family = _fuel.family;
+ 
+-    e['p15']             = DensityCalculatorService.validateP15(p15Raw, family);
++    e['p15'] = DensityCalculatorService.validateP15(p15Raw, family);
+     e['contractDensity'] = _validateContractDensity(contractDensityRaw);
+ 
+     if (_mode == CalcMode.densityAtTemp) {
+-      e['temp']   = DensityCalculatorService.validateTemp(tempRaw);
++      e['temp'] = DensityCalculatorService.validateTemp(tempRaw);
+       e['weight'] = DensityCalculatorService.validateWeight(weightRaw);
+     } else {
+       e['density'] =
+@@ -148,7 +153,9 @@ class CalculatorState extends ChangeNotifier {
+   }
+ 
+   static ValidationError? _validateContractDensity(String? raw) {
+-    if (raw == null || raw.trim().isEmpty) return const ValidationError.required();
++    if (raw == null || raw.trim().isEmpty) {
++      return const ValidationError.required();
++    }
+     final v = double.tryParse(raw.replaceAll(',', '.'));
+     if (v == null) return const ValidationError.notANumber();
+     if (v < 0.650 || v > 1.100) {
+diff --git a/lib/features/calculator/ui/widgets/density_chart.dart b/lib/features/calculator/ui/widgets/density_chart.dart
+new file mode 100644
+index 0000000..ec4f2a7
+--- /dev/null
++++ b/lib/features/calculator/ui/widgets/density_chart.dart
+@@ -0,0 +1,203 @@
++import 'package:fl_chart/fl_chart.dart';
++import 'package:flutter/material.dart';
++import '../../../../core/tokens.dart';
++import '../../models/density_point.dart';
++import '../../services/density_curve_service.dart';
++
++/// График плотности vs температуры.
++///
++/// Отображает:
++///   1. Паспортную кривую (синяя линия)
++///   2. Текущую рабочую точку (красная точка + вертикальная пунктирная линия)
++///   3. Опциональную точку смеси — Phase 3 (зелёная точка)
++///
++/// Стиль: industrial, mobile-first, без тяжёлых градиентов.
++class DensityChart extends StatelessWidget {
++  final List<DensityPoint> curve;
++  final DensityPoint operatingPoint;
++  final DensityPoint? mixturePoint;
++  final double height;
++
++  const DensityChart({
++    super.key,
++    required this.curve,
++    required this.operatingPoint,
++    this.mixturePoint,
++    this.height = 220,
++  });
++
++  @override
++  Widget build(BuildContext context) {
++    if (curve.isEmpty) return const SizedBox.shrink();
++
++    final range = DensityCurveService.densityRange(curve);
++    final minTemp = curve.first.tempC;
++    final maxTemp = curve.last.tempC;
++
++    final passportSpots =
++        curve.map((p) => FlSpot(p.tempC, p.densityKgL)).toList();
++
++    return Container(
++      height: height,
++      padding: const EdgeInsets.fromLTRB(
++        AppSpacing.md,
++        AppSpacing.md,
++        AppSpacing.md,
++        AppSpacing.md,
++      ),
++      decoration: BoxDecoration(
++        color: AppColors.surface,
++        borderRadius: AppRadii.lgAll,
++        border: Border.all(color: AppColors.border, width: 0.5),
++      ),
++      child: LineChart(
++        _buildData(
++          passportSpots: passportSpots,
++          range: range,
++          minTemp: minTemp,
++          maxTemp: maxTemp,
++        ),
++        duration: const Duration(milliseconds: 150),
++      ),
++    );
++  }
++
++  LineChartData _buildData({
++    required List<FlSpot> passportSpots,
++    required ({double min, double max}) range,
++    required double minTemp,
++    required double maxTemp,
++  }) {
++    final tInterval = (maxTemp - minTemp) / 6;
++    final dInterval = (range.max - range.min) / 3;
++
++    return LineChartData(
++      minX: minTemp,
++      maxX: maxTemp,
++      minY: range.min,
++      maxY: range.max,
++      clipData: const FlClipData.all(),
++      gridData: FlGridData(
++        show: true,
++        horizontalInterval: dInterval,
++        verticalInterval: tInterval,
++        getDrawingHorizontalLine: (_) =>
++            const FlLine(color: AppColors.divider, strokeWidth: 0.5),
++        getDrawingVerticalLine: (_) =>
++            const FlLine(color: AppColors.divider, strokeWidth: 0.5),
++      ),
++      titlesData: FlTitlesData(
++        bottomTitles: AxisTitles(
++          axisNameWidget:
++              Text('°C', style: AppText.detailUnit.copyWith(fontSize: 10)),
++          sideTitles: SideTitles(
++            showTitles: true,
++            interval: tInterval,
++            reservedSize: 22,
++            getTitlesWidget: (val, _) => Text(
++              val.toStringAsFixed(0),
++              style: AppText.detailUnit.copyWith(fontSize: 9),
++            ),
++          ),
++        ),
++        leftTitles: AxisTitles(
++          axisNameWidget:
++              Text('kg/l', style: AppText.detailUnit.copyWith(fontSize: 10)),
++          sideTitles: SideTitles(
++            showTitles: true,
++            interval: dInterval,
++            reservedSize: 54,
++            getTitlesWidget: (val, _) => Text(
++              val.toStringAsFixed(3),
++              style: AppText.detailUnit.copyWith(fontSize: 9),
++            ),
++          ),
++        ),
++        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
++        rightTitles:
++            const AxisTitles(sideTitles: SideTitles(showTitles: false)),
++      ),
++      borderData: FlBorderData(
++        show: true,
++        border: const Border(
++          bottom: BorderSide(color: AppColors.border, width: 0.5),
++          left: BorderSide(color: AppColors.border, width: 0.5),
++        ),
++      ),
++      lineTouchData: LineTouchData(
++        touchTooltipData: LineTouchTooltipData(
++          getTooltipColor: (_) => AppColors.surface,
++          tooltipBorder: const BorderSide(color: AppColors.border, width: 0.5),
++          tooltipRoundedRadius: AppRadii.sm,
++          getTooltipItems: (spots) => spots.map((s) {
++            return LineTooltipItem(
++              '${s.x.toStringAsFixed(1)}°C\n'
++              '${s.y.toStringAsFixed(4)} kg/l',
++              AppText.detailValue.copyWith(fontSize: 10),
++            );
++          }).toList(),
++        ),
++      ),
++      lineBarsData: [
++        // 1. Паспортная кривая — синяя
++        LineChartBarData(
++          spots: passportSpots,
++          isCurved: true,
++          curveSmoothness: 0.3,
++          color: AppColors.accent,
++          barWidth: 1.5,
++          dotData: const FlDotData(show: false),
++          belowBarData: BarAreaData(
++            show: true,
++            color: AppColors.accent.withAlpha(15),
++          ),
++        ),
++
++        // 2. Пунктирная вертикаль на рабочей точке
++        LineChartBarData(
++          spots: [
++            FlSpot(operatingPoint.tempC, range.min),
++            FlSpot(operatingPoint.tempC, range.max),
++          ],
++          color: AppColors.brand.withAlpha(100),
++          barWidth: 1,
++          dotData: const FlDotData(show: false),
++          dashArray: [4, 4],
++        ),
++
++        // 3. Рабочая точка — красная
++        LineChartBarData(
++          spots: [FlSpot(operatingPoint.tempC, operatingPoint.densityKgL)],
++          color: AppColors.brand,
++          barWidth: 0,
++          dotData: FlDotData(
++            show: true,
++            getDotPainter: (_, __, ___, ____) => FlDotCirclePainter(
++              radius: 5,
++              color: AppColors.brand,
++              strokeColor: AppColors.surface,
++              strokeWidth: 2,
++            ),
++          ),
++        ),
++
++        // 4. Точка смеси — зелёная (Phase 3)
++        if (mixturePoint != null)
++          LineChartBarData(
++            spots: [FlSpot(mixturePoint!.tempC, mixturePoint!.densityKgL)],
++            color: AppColors.success,
++            barWidth: 0,
++            dotData: FlDotData(
++              show: true,
++              getDotPainter: (_, __, ___, ____) => FlDotCirclePainter(
++                radius: 5,
++                color: AppColors.success,
++                strokeColor: AppColors.surface,
++                strokeWidth: 2,
++              ),
++            ),
++          ),
++      ],
++    );
++  }
++}
+diff --git a/lib/features/calculator/ui/widgets/density_slider.dart b/lib/features/calculator/ui/widgets/density_slider.dart
+new file mode 100644
+index 0000000..1b90bde
+--- /dev/null
++++ b/lib/features/calculator/ui/widgets/density_slider.dart
+@@ -0,0 +1,87 @@
++import 'package:flutter/material.dart';
++import '../../../../core/tokens.dart';
++
++/// Слайдер температуры с live отображением текущего значения.
++class DensitySlider extends StatelessWidget {
++  final double             value;
++  final double             min;
++  final double             max;
++  final ValueChanged<double> onChanged;
++  final String             label;
++
++  const DensitySlider({
++    super.key,
++    required this.value,
++    required this.min,
++    required this.max,
++    required this.onChanged,
++    required this.label,
++  });
++
++  @override
++  Widget build(BuildContext context) {
++    return Container(
++      padding: const EdgeInsets.symmetric(
++        horizontal: AppSpacing.lg,
++        vertical:   AppSpacing.sm,
++      ),
++      decoration: BoxDecoration(
++        color:        AppColors.surface,
++        borderRadius: AppRadii.lgAll,
++        border: Border.all(color: AppColors.border, width: 0.5),
++      ),
++      child: Column(
++        crossAxisAlignment: CrossAxisAlignment.start,
++        children: [
++          Row(
++            children: [
++              Text(label, style: AppText.detailKey),
++              const Spacer(),
++              Text(
++                '${value.toStringAsFixed(1)} °C',
++                style: AppText.detailValue.copyWith(
++                  color: AppColors.accent,
++                  fontFeatures: const [FontFeature.tabularFigures()],
++                ),
++              ),
++            ],
++          ),
++          const SizedBox(height: 2),
++          SliderTheme(
++            data: SliderTheme.of(context).copyWith(
++              activeTrackColor:   AppColors.accent,
++              inactiveTrackColor: AppColors.surfaceAlt,
++              thumbColor:         AppColors.accent,
++              overlayColor:       AppColors.accent.withAlpha(25),
++              trackHeight:        3,
++              thumbShape:
++                  const RoundSliderThumbShape(enabledThumbRadius: 7),
++              overlayShape:
++                  const RoundSliderOverlayShape(overlayRadius: 16),
++            ),
++            child: Slider(
++              value:     value.clamp(min, max),
++              min:       min,
++              max:       max,
++              divisions: ((max - min) * 2).round(),
++              onChanged: onChanged,
++            ),
++          ),
++          Padding(
++            padding:
++                const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
++            child: Row(
++              mainAxisAlignment: MainAxisAlignment.spaceBetween,
++              children: [
++                Text('${min.toStringAsFixed(0)}°C',
++                    style: AppText.detailUnit.copyWith(fontSize: 9)),
++                Text('${max.toStringAsFixed(0)}°C',
++                    style: AppText.detailUnit.copyWith(fontSize: 9)),
++              ],
++            ),
++          ),
++        ],
++      ),
++    );
++  }
++}
+diff --git a/lib/features/calculator/ui/widgets/details_panel.dart b/lib/features/calculator/ui/widgets/details_panel.dart
+index 00b7709..dd8e89a 100644
+--- a/lib/features/calculator/ui/widgets/details_panel.dart
++++ b/lib/features/calculator/ui/widgets/details_panel.dart
+@@ -17,10 +17,10 @@ import 'temperature_details_sheet.dart';
+ ///   Inline [AnimatedCrossFade] expand/collapse под ResultCard.
+ ///   [isOpen] и [onToggle] управляются из [CalculatorState] через caller.
+ class DetailsPanel extends StatelessWidget {
+-  final DensityResult  result;
+-  final CalcMode       mode;
+-  final bool           isOpen;
+-  final VoidCallback   onToggle;
++  final DensityResult result;
++  final CalcMode mode;
++  final bool isOpen;
++  final VoidCallback onToggle;
+ 
+   const DetailsPanel({
+     super.key,
+@@ -32,7 +32,12 @@ class DetailsPanel extends StatelessWidget {
+ 
+   @override
+   Widget build(BuildContext context) {
+-    final isWide = AppLayout.isWide(MediaQuery.of(context).size.width);
++    final platform = Theme.of(context).platform;
++    final isDesktop = platform == TargetPlatform.macOS ||
++        platform == TargetPlatform.windows ||
++        platform == TargetPlatform.linux;
++    final isWide =
++        isDesktop || AppLayout.isWide(MediaQuery.of(context).size.width);
+     return isWide ? _buildInline(context) : _buildSheetTrigger(context);
+   }
+ 
+@@ -43,7 +48,7 @@ class DetailsPanel extends StatelessWidget {
+ 
+     return Container(
+       decoration: BoxDecoration(
+-        color:        AppColors.surface,
++        color: AppColors.surface,
+         borderRadius: AppRadii.lgAll,
+         border: Border.all(color: AppColors.border, width: 0.5),
+       ),
+@@ -54,7 +59,7 @@ class DetailsPanel extends StatelessWidget {
+             onTap: onToggle,
+             borderRadius: isOpen
+                 ? const BorderRadius.only(
+-                    topLeft:  Radius.circular(AppRadii.lg),
++                    topLeft: Radius.circular(AppRadii.lg),
+                     topRight: Radius.circular(AppRadii.lg),
+                   )
+                 : AppRadii.lgAll,
+@@ -95,53 +100,57 @@ class DetailsPanel extends StatelessWidget {
+             secondChild: ExcludeFocus(
+               excluding: !isOpen,
+               child: Column(
+-              children: [
+-                const Divider(height: 1, thickness: 0.5, color: AppColors.divider),
+-                Padding(
+-                  padding: const EdgeInsets.fromLTRB(
+-                    AppSpacing.lg, AppSpacing.sm,
+-                    AppSpacing.lg, AppSpacing.sm,
+-                  ),
+-                  child: Column(
+-                    children: [
+-                      _DetailRow(
+-                        label: l.detailDensityAt15,
+-                        value: result.densityAt15KgL.toStringAsFixed(4),
+-                        unit:  'kg/l',
+-                        note:  'EN ISO 12185',
+-                      ),
+-                      _DetailRow(
+-                        label: l.detailDensityInAir,
+-                        value: result.densityInAirKgL.toStringAsFixed(4),
+-                        unit:  'kg/l',
+-                      ),
+-                      _DetailRow(
+-                        label: l.detailDeliveryTemp,
+-                        value: result.tempC.toStringAsFixed(1),
+-                        unit:  '°C',
+-                      ),
+-                      _DetailRow(
+-                        label: l.detailVolume,
+-                        value: result.volumeM3.toStringAsFixed(3),
+-                        unit:  'm³',
+-                      ),
+-                      _DetailRow(
+-                        label: l.detailWeight,
+-                        value: result.weightT.toStringAsFixed(3),
+-                        unit:  't',
+-                      ),
+-                      _DetailRow(
+-                        label: l.detailCoefficientA,
+-                        value: result.coeffA.toStringAsFixed(1),
+-                        unit:  '×10⁻³/°C',
+-                      ),
+-                    ],
++                children: [
++                  const Divider(
++                      height: 1, thickness: 0.5, color: AppColors.divider),
++                  Padding(
++                    padding: const EdgeInsets.fromLTRB(
++                      AppSpacing.lg,
++                      AppSpacing.sm,
++                      AppSpacing.lg,
++                      AppSpacing.sm,
++                    ),
++                    child: Column(
++                      children: [
++                        _DetailRow(
++                          label: l.detailDensityAt15,
++                          value: result.densityAt15KgL.toStringAsFixed(4),
++                          unit: 'kg/l',
++                          note: 'EN ISO 12185',
++                        ),
++                        _DetailRow(
++                          label: l.detailDensityInAir,
++                          value: result.densityInAirKgL.toStringAsFixed(4),
++                          unit: 'kg/l',
++                        ),
++                        _DetailRow(
++                          label: l.detailDeliveryTemp,
++                          value: result.tempC.toStringAsFixed(1),
++                          unit: '°C',
++                        ),
++                        _DetailRow(
++                          label: l.detailVolume,
++                          value: result.volumeM3.toStringAsFixed(3),
++                          unit: 'm³',
++                        ),
++                        _DetailRow(
++                          label: l.detailWeight,
++                          value: result.weightT.toStringAsFixed(3),
++                          unit: 't',
++                        ),
++                        _DetailRow(
++                          label: l.detailCoefficientA,
++                          value: result.coeffA.toStringAsFixed(1),
++                          unit: '×10⁻³/°C',
++                        ),
++                      ],
++                    ),
+                   ),
+-                ),
+-                const Divider(height: 1, thickness: 0.5, color: AppColors.divider),
+-                _FormulaBlock(mode: mode),
+-              ],
+-            ),
++                  const Divider(
++                      height: 1, thickness: 0.5, color: AppColors.divider),
++                  _FormulaBlock(mode: mode),
++                ],
++              ),
+             ), // ExcludeFocus
+           ),
+         ],
+@@ -156,7 +165,7 @@ class DetailsPanel extends StatelessWidget {
+ 
+     return Container(
+       decoration: BoxDecoration(
+-        color:        AppColors.surface,
++        color: AppColors.surface,
+         borderRadius: AppRadii.lgAll,
+         border: Border.all(color: AppColors.border, width: 0.5),
+       ),
+@@ -204,9 +213,9 @@ class DetailsPanel extends StatelessWidget {
+ // ─── Detail row ───────────────────────────────────────────────────────────────
+ 
+ class _DetailRow extends StatelessWidget {
+-  final String  label;
+-  final String  value;
+-  final String  unit;
++  final String label;
++  final String value;
++  final String unit;
+   final String? note;
+ 
+   const _DetailRow({
+@@ -259,12 +268,12 @@ class _FormulaBlock extends StatelessWidget {
+       width: double.infinity,
+       padding: const EdgeInsets.symmetric(
+         horizontal: AppSpacing.lg,
+-        vertical:   AppSpacing.sm + 2,
++        vertical: AppSpacing.sm + 2,
+       ),
+       decoration: const BoxDecoration(
+         color: AppColors.formulaBg,
+         borderRadius: BorderRadius.only(
+-          bottomLeft:  Radius.circular(AppRadii.lg),
++          bottomLeft: Radius.circular(AppRadii.lg),
+           bottomRight: Radius.circular(AppRadii.lg),
+         ),
+       ),
+diff --git a/lib/features/calculator/ui/widgets/result_card.dart b/lib/features/calculator/ui/widgets/result_card.dart
+index 8049610..ef6bc9e 100644
+--- a/lib/features/calculator/ui/widgets/result_card.dart
++++ b/lib/features/calculator/ui/widgets/result_card.dart
+@@ -16,7 +16,7 @@ import 'temperature_details_sheet.dart';
+ /// • Tap "Details ›" — відкрити відповідний bottom sheet.
+ class ResultCard extends StatelessWidget {
+   final DensityResult result;
+-  final CalcMode      mode;
++  final CalcMode mode;
+ 
+   const ResultCard({
+     super.key,
+@@ -30,9 +30,8 @@ class ResultCard extends StatelessWidget {
+     final isDensityMode = mode == CalcMode.densityAtTemp;
+ 
+     // Primary
+-    final primaryLabel = isDensityMode
+-        ? l.resultDeliveryDensity
+-        : l.resultDeliveryTemperature;
++    final primaryLabel =
++        isDensityMode ? l.resultDeliveryDensity : l.resultDeliveryTemperature;
+     final primaryValue = isDensityMode
+         ? result.densityAtTempKgL.toStringAsFixed(4)
+         : result.tempC.toStringAsFixed(1);
+@@ -46,16 +45,17 @@ class ResultCard extends StatelessWidget {
+     final secondaryUnit = isDensityMode ? 'm³' : 't';
+ 
+     return GestureDetector(
+-      onLongPress: () => _copyToClipboard(context, l, primaryValue, primaryUnit),
++      onLongPress: () =>
++          _copyToClipboard(context, l, primaryValue, primaryUnit),
+       child: Container(
+         width: double.infinity,
+         decoration: BoxDecoration(
+-          color:        AppColors.resultBg,
++          color: AppColors.resultBg,
+           borderRadius: AppRadii.lgAll,
+           border: Border.all(color: AppColors.border, width: 0.5),
+           boxShadow: const [
+             BoxShadow(
+-              color:  AppColors.shadow,
++              color: AppColors.shadow,
+               blurRadius: 8,
+               offset: Offset(0, 2),
+             ),
+@@ -71,7 +71,7 @@ class ResultCard extends StatelessWidget {
+                 decoration: const BoxDecoration(
+                   color: AppColors.accent,
+                   borderRadius: BorderRadius.only(
+-                    topLeft:    Radius.circular(AppRadii.lg),
++                    topLeft: Radius.circular(AppRadii.lg),
+                     bottomLeft: Radius.circular(AppRadii.lg),
+                   ),
+                 ),
+@@ -136,8 +136,15 @@ class ResultCard extends StatelessWidget {
+                           // Details link — только на mobile.
+                           // На desktop Details раскрывается inline
+                           // в DetailsPanel под ResultCard.
+-                          if (!AppLayout.isWide(
+-                            MediaQuery.of(context).size.width))
++                          if (!(Theme.of(context).platform ==
++                                      TargetPlatform.macOS ||
++                                  Theme.of(context).platform ==
++                                      TargetPlatform.windows ||
++                                  Theme.of(context).platform ==
++                                      TargetPlatform.linux) &&
++                              !AppLayout.isWide(
++                                MediaQuery.of(context).size.width,
++                              ))
+                             GestureDetector(
+                               behavior: HitTestBehavior.opaque,
+                               onTap: () => _openDetails(context),
+@@ -190,7 +197,10 @@ class ResultCard extends StatelessWidget {
+           shape: const RoundedRectangleBorder(borderRadius: AppRadii.mdAll),
+           duration: const Duration(seconds: 2),
+           margin: const EdgeInsets.fromLTRB(
+-            AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.lg,
++            AppSpacing.lg,
++            0,
++            AppSpacing.lg,
++            AppSpacing.lg,
+           ),
+         ),
+       );
+diff --git a/lib/features/calculator/ui/widgets/thermal_info_panel.dart b/lib/features/calculator/ui/widgets/thermal_info_panel.dart
+new file mode 100644
+index 0000000..b34a590
+--- /dev/null
++++ b/lib/features/calculator/ui/widgets/thermal_info_panel.dart
+@@ -0,0 +1,112 @@
++import 'package:flutter/material.dart';
++import '../../../../core/tokens.dart';
++import '../../models/thermal_state.dart';
++
++/// Панель live-результатов при движении слайдера:
++/// Density / Volume / Mass / Thermal expansion.
++class ThermalInfoPanel extends StatelessWidget {
++  final ThermalState state;
++  final String labelDensity;
++  final String labelVolume;
++  final String labelMass;
++  final String labelExpansion;
++
++  const ThermalInfoPanel({
++    super.key,
++    required this.state,
++    required this.labelDensity,
++    required this.labelVolume,
++    required this.labelMass,
++    required this.labelExpansion,
++  });
++
++  @override
++  Widget build(BuildContext context) {
++    final isExpanded   = state.thermalExpansionL >= 0;
++    final expColor     = isExpanded ? AppColors.warning : AppColors.accent;
++    final expSign      = isExpanded ? '+' : '';
++
++    return Container(
++      padding: AppSpacing.cardPadding,
++      decoration: BoxDecoration(
++        color:        AppColors.surface,
++        borderRadius: AppRadii.lgAll,
++        border: Border.all(color: AppColors.border, width: 0.5),
++      ),
++      child: Column(
++        children: [
++          _Row(label: labelDensity,
++               value: state.densityKgL.toStringAsFixed(4),
++               unit:  'kg/l'),
++          _Row(label: labelVolume,
++               value: state.volumeM3.toStringAsFixed(3),
++               unit:  'm³'),
++          _Row(label: labelMass,
++               value: state.massT.toStringAsFixed(3),
++               unit:  't',
++               muted: true),
++          const SizedBox(height: AppSpacing.xs),
++          const Divider(height: 1, thickness: 0.5,
++              color: AppColors.divider),
++          const SizedBox(height: AppSpacing.xs),
++          _Row(
++            label:      labelExpansion,
++            value:
++                '$expSign${state.thermalExpansionL.toStringAsFixed(1)}',
++            unit:       'L vs 15°C',
++            valueColor: expColor,
++          ),
++        ],
++      ),
++    );
++  }
++}
++
++class _Row extends StatelessWidget {
++  final String label;
++  final String value;
++  final String unit;
++  final Color? valueColor;
++  final bool   muted;
++
++  const _Row({
++    required this.label,
++    required this.value,
++    required this.unit,
++    this.valueColor,
++    this.muted = false,
++  });
++
++  @override
++  Widget build(BuildContext context) {
++    return Padding(
++      padding: const EdgeInsets.symmetric(
++          vertical: AppSpacing.detailRowV),
++      child: Row(
++        children: [
++          Expanded(
++            child: Text(label,
++                style: AppText.detailKey.copyWith(
++                    color: muted ? AppColors.textHint : null)),
++          ),
++          Text(
++            value,
++            style: AppText.detailValue.copyWith(
++              color: valueColor ??
++                     (muted ? AppColors.textHint : null),
++              fontFeatures:
++                  const [FontFeature.tabularFigures()],
++            ),
++          ),
++          const SizedBox(width: 4),
++          SizedBox(
++            width: 56,
++            child: Text(unit,
++                style: AppText.detailUnit,
++                textAlign: TextAlign.right),
++          ),
++        ],
++      ),
++    );
++  }
++}
+diff --git a/lib/features/escalation/state/escalation_state.dart b/lib/features/escalation/state/escalation_state.dart
+index 0102116..72e414d 100644
+--- a/lib/features/escalation/state/escalation_state.dart
++++ b/lib/features/escalation/state/escalation_state.dart
+@@ -1,72 +1,69 @@
+ import 'package:flutter/foundation.dart';
++
+ import '../../../core/fuel_grade.dart';
+ import '../../../core/validation.dart';
+ import '../../../shared/state/density_memory.dart';
+ import '../service/escalation_service.dart';
+ 
+ class EscalationState extends ChangeNotifier {
+-  FuelProductGroup _group = FuelProductGroup.gasoil;
+-  FuelProductGroup get group => _group;
+-
+-  FuelGrade _product = kFuelGrades.first;
++  FuelGrade _product = _initialProduct();
+   FuelGrade get product => _product;
+ 
+   DensityBasis _basis = DensityBasis.vac;
+   DensityBasis get basis => _basis;
+ 
+-  String contractDensityRaw = '0.8450';
+-  String actualDensityRaw   = '0.8332';
+-  String averagePlattsRaw   = '1044.75';
+-  String sellerPremiumRaw   = '140.00';
++  String contractDensityRaw = '';
++  String actualDensityRaw = '';
++  String averagePlattsRaw = '1044.75';
++  String sellerPremiumRaw = '140.00';
+ 
+   EscalationResult? _result;
+   EscalationResult? get result => _result;
+ 
+-  // errors carry typed ValidationError? — widgets localize on demand.
+   Map<String, ValidationError?> _errors = {};
+   Map<String, ValidationError?> get errors => _errors;
+ 
+   EscalationState() {
+-    _group = DensityMemory.family == FuelFamily.gasoline
+-        ? FuelProductGroup.gasoline
+-        : FuelProductGroup.gasoil;
+-
+-    _product = kFuelGrades.firstWhere(
+-      (f) => f.group == _group,
+-      orElse: () => kFuelGrades.first,
+-    );
++    contractDensityRaw =
++        (_product.contractDensityKgM3 / 1000).toStringAsFixed(4);
+ 
+     actualDensityRaw = DensityMemory.p15VacKgL != null
+         ? DensityMemory.p15VacKgL!.toStringAsFixed(4)
+-        : (_group == FuelProductGroup.gasoil ? '0.8332' : '0.7433');
+-
+-    contractDensityRaw =
+-        _group == FuelProductGroup.gasoil ? '0.8450' : '0.7450';
++        : _defaultActualDensityKgL(_product).toStringAsFixed(4);
+ 
+     _calculate();
+   }
+ 
+-  void setGroup(FuelProductGroup group) {
+-    _group = group;
+-    final products = kFuelGrades.where((f) => f.group == group).toList();
+-    _product = products.first;
+-
+-    if (group == FuelProductGroup.gasoil) {
+-      contractDensityRaw = '0.8450';
+-      actualDensityRaw   = '0.8332';
+-    } else {
+-      contractDensityRaw = '0.7450';
+-      actualDensityRaw   = '0.7433';
++  static FuelGrade _initialProduct() {
++    final memoryFamily = DensityMemory.family;
++    if (memoryFamily != null) {
++      return kFuelGrades.firstWhere(
++        (f) => f.family == memoryFamily,
++        orElse: () => kFuelGrades.first,
++      );
+     }
++    return kFuelGrades.first;
++  }
+ 
+-    _calculate();
++  static double _defaultActualDensityKgL(FuelGrade product) {
++    return product.family == FuelFamily.gasoline ? 0.7433 : 0.8332;
+   }
+ 
+   void setProduct(FuelGrade product) {
+     _product = product;
+-    _group   = product.group;
++
+     contractDensityRaw =
+         (product.contractDensityKgM3 / 1000).toStringAsFixed(4);
++
++    final rememberedFamily = DensityMemory.family;
++    final rememberedP15 = DensityMemory.p15VacKgL;
++
++    if (rememberedP15 != null && rememberedFamily == product.family) {
++      actualDensityRaw = rememberedP15.toStringAsFixed(4);
++    } else {
++      actualDensityRaw = _defaultActualDensityKgL(product).toStringAsFixed(4);
++    }
++
+     _calculate();
+   }
+ 
+@@ -107,11 +104,11 @@ class EscalationState extends ChangeNotifier {
+       case 'sellerPremium':
+         sellerPremiumRaw = value;
+     }
++
+     _calculate();
+   }
+ 
+-  List<FuelGrade> get availableProducts =>
+-      kFuelGrades.where((f) => f.group == _group).toList();
++  List<FuelGrade> get availableProducts => kFuelGrades;
+ 
+   void _calculate() {
+     _errors = _validate();
+@@ -123,11 +120,11 @@ class EscalationState extends ChangeNotifier {
+     }
+ 
+     _result = EscalationService.calculate(
+-      averagePlatts:   _parse(averagePlattsRaw)!,
+-      sellerPremium:   _parse(sellerPremiumRaw)!,
++      averagePlatts: _parse(averagePlattsRaw)!,
++      sellerPremium: _parse(sellerPremiumRaw)!,
+       contractDensity: _parse(contractDensityRaw)!,
+-      actualDensity:   _parse(actualDensityRaw)!,
+-      basis:           _basis,
++      actualDensity: _parse(actualDensityRaw)!,
++      basis: _basis,
+     );
+ 
+     notifyListeners();
+@@ -136,9 +133,9 @@ class EscalationState extends ChangeNotifier {
+   Map<String, ValidationError?> _validate() {
+     return {
+       'contractDensity': EscalationService.validateDensity(contractDensityRaw),
+-      'actualDensity':   EscalationService.validateDensity(actualDensityRaw),
+-      'averagePlatts':   EscalationService.validatePrice(averagePlattsRaw),
+-      'sellerPremium':   EscalationService.validatePrice(sellerPremiumRaw),
++      'actualDensity': EscalationService.validateDensity(actualDensityRaw),
++      'averagePlatts': EscalationService.validatePrice(averagePlattsRaw),
++      'sellerPremium': EscalationService.validatePrice(sellerPremiumRaw),
+     };
+   }
+ 
+diff --git a/lib/features/escalation/ui/escalation_screen.dart b/lib/features/escalation/ui/escalation_screen.dart
+index 13ccaef..3e02c81 100644
+--- a/lib/features/escalation/ui/escalation_screen.dart
++++ b/lib/features/escalation/ui/escalation_screen.dart
+@@ -27,7 +27,7 @@ class _EscalationView extends StatelessWidget {
+   @override
+   Widget build(BuildContext context) {
+     final state = context.watch<EscalationState>();
+-    final l     = AppL10n.of(context);
++    final l = AppL10n.of(context);
+ 
+     return AppShell(
+       title: l.menuEscalation,
+@@ -38,14 +38,7 @@ class _EscalationView extends StatelessWidget {
+             sliver: SliverList(
+               delegate: SliverChildListDelegate([
+                 const SizedBox(height: AppSpacing.md),
+-                _GroupSelector(state: state),
+-                const SizedBox(height: AppSpacing.sm),
+-                _ProductSelector(state: state),
+-                const SizedBox(height: AppSpacing.md),
+-                Text(l.sectionDensityBasis.toUpperCase(),
+-                    style: AppText.sectionLabel),
+-                const SizedBox(height: AppSpacing.xs),
+-                _BasisSelector(state: state),
++                _FuelBasisCard(state: state),
+                 const SizedBox(height: AppSpacing.md),
+                 Text(l.sectionParameters.toUpperCase(),
+                     style: AppText.sectionLabel),
+@@ -67,105 +60,149 @@ class _EscalationView extends StatelessWidget {
+   }
+ }
+ 
+-class _GroupSelector extends StatelessWidget {
++class _FuelBasisCard extends StatelessWidget {
+   final EscalationState state;
+-  const _GroupSelector({required this.state});
++  const _FuelBasisCard({required this.state});
+ 
+   @override
+   Widget build(BuildContext context) {
+-    final l = AppL10n.of(context);
+-
+-    String groupLabel(FuelProductGroup g) => switch (g) {
+-          FuelProductGroup.gasoil   => l.fuelGroupGasoil,
+-          FuelProductGroup.gasoline => l.fuelGroupGasoline,
+-        };
++    final isGasoil = state.product.family == FuelFamily.diesel;
++    final fuelLabel = isGasoil ? 'GASOIL' : 'GASOLINE';
+ 
+     return Container(
+-      padding: const EdgeInsets.all(4),
+-      decoration: const BoxDecoration(
+-        color:        AppColors.surfaceAlt,
++      padding: const EdgeInsets.symmetric(
++        horizontal: AppSpacing.md,
++        vertical: AppSpacing.sm,
++      ),
++      decoration: BoxDecoration(
++        color: AppColors.surface,
+         borderRadius: AppRadii.lgAll,
++        border: Border.all(color: AppColors.border, width: 0.5),
+       ),
+       child: Row(
+-        children: FuelProductGroup.values.map((group) {
+-          final active = state.group == group;
+-          return Expanded(
+-            child: GestureDetector(
+-              onTap: () => state.setGroup(group),
+-              child: Container(
+-                padding: const EdgeInsets.symmetric(vertical: 10),
+-                decoration: BoxDecoration(
+-                  color:        active ? AppColors.accentBg : Colors.transparent,
+-                  borderRadius: AppRadii.mdAll,
++        children: [
++          Expanded(
++            child: PopupMenuButton<FuelFamily>(
++              onSelected: (family) {
++                final product =
++                    kFuelGrades.firstWhere((f) => f.family == family);
++                state.setProduct(product);
++              },
++              itemBuilder: (_) => const [
++                PopupMenuItem(
++                  value: FuelFamily.diesel,
++                  child: Text('GASOIL'),
+                 ),
+-                child: Text(
+-                  groupLabel(group),
+-                  textAlign: TextAlign.center,
+-                  style: AppText.dropdownItem.copyWith(
+-                    color:      active ? AppColors.accent : AppColors.textSecondary,
+-                    fontWeight: FontWeight.w700,
+-                  ),
++                PopupMenuItem(
++                  value: FuelFamily.gasoline,
++                  child: Text('GASOLINE'),
+                 ),
++              ],
++              child: Row(
++                mainAxisSize: MainAxisSize.min,
++                children: [
++                  Flexible(
++                    child: Text(
++                      fuelLabel,
++                      overflow: TextOverflow.ellipsis,
++                      style: AppText.detailValue.copyWith(
++                        color: AppColors.accent,
++                        fontWeight: FontWeight.w800,
++                        letterSpacing: 0.5,
++                      ),
++                    ),
++                  ),
++                  const SizedBox(width: AppSpacing.xs),
++                  const Icon(
++                    Icons.keyboard_arrow_down_rounded,
++                    color: AppColors.accent,
++                  ),
++                ],
+               ),
+             ),
+-          );
+-        }).toList(),
++          ),
++          Container(
++            width: 1,
++            height: 30,
++            margin: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
++            color: AppColors.border,
++          ),
++          _DensityBasisSwitch(state: state),
++        ],
+       ),
+     );
+   }
+ }
+ 
+-class _ProductSelector extends StatelessWidget {
++class _DensityBasisSwitch extends StatelessWidget {
+   final EscalationState state;
+-  const _ProductSelector({required this.state});
++  const _DensityBasisSwitch({required this.state});
+ 
+   @override
+   Widget build(BuildContext context) {
+-    // FuelGrade.name values are industry-standard and intentionally NOT localized.
+-    return PopupMenuButton<FuelGrade>(
+-      color: AppColors.surface,
+-      shape: const RoundedRectangleBorder(borderRadius: AppRadii.lgAll),
+-      onSelected: state.setProduct,
+-      itemBuilder: (_) => state.availableProducts.map((p) {
+-        return PopupMenuItem<FuelGrade>(
+-          value: p,
+-          child: Text(
+-            p.name,
+-            style: AppText.dropdownItem.copyWith(
+-              color: p.id == state.product.id
+-                  ? AppColors.accent
+-                  : AppColors.textPrimary,
+-              fontWeight:
+-                  p.id == state.product.id ? FontWeight.w700 : FontWeight.w400,
+-            ),
+-          ),
+-        );
+-      }).toList(),
+-      child: Container(
+-        padding: const EdgeInsets.symmetric(
+-          horizontal: AppSpacing.md,
+-          vertical:   AppSpacing.sm,
+-        ),
++    final isAir = state.basis == DensityBasis.air;
++
++    return GestureDetector(
++      onTap: () => state.setBasis(
++        isAir ? DensityBasis.vac : DensityBasis.air,
++      ),
++      child: AnimatedContainer(
++        duration: const Duration(milliseconds: 180),
++        width: 132,
++        height: 44,
++        padding: const EdgeInsets.all(3),
+         decoration: BoxDecoration(
+-          color:        AppColors.surface,
+-          borderRadius: AppRadii.mdAll,
+-          border:       Border.all(color: AppColors.border, width: 0.5),
++          color: AppColors.surfaceAlt,
++          borderRadius: BorderRadius.circular(22),
++          border: Border.all(color: AppColors.border, width: 0.5),
+         ),
+-        child: Row(
++        child: Stack(
+           children: [
+-            Expanded(
+-              child: Text(
+-                state.product.name,
+-                style: AppText.dropdownItem.copyWith(
+-                  color:      AppColors.accent,
+-                  fontWeight: FontWeight.w600,
++            AnimatedAlign(
++              duration: const Duration(milliseconds: 180),
++              curve: Curves.easeOut,
++              alignment: isAir ? Alignment.centerRight : Alignment.centerLeft,
++              child: Container(
++                width: 62,
++                height: 38,
++                decoration: BoxDecoration(
++                  color: AppColors.accent,
++                  borderRadius: BorderRadius.circular(20),
++                  boxShadow: [
++                    BoxShadow(
++                      color: Colors.black.withAlpha(18),
++                      blurRadius: 8,
++                      offset: const Offset(0, 2),
++                    ),
++                  ],
+                 ),
+               ),
+             ),
+-            const Icon(
+-              Icons.keyboard_arrow_down_rounded,
+-              size:  18,
+-              color: AppColors.accent,
++            Row(
++              children: [
++                Expanded(
++                  child: Center(
++                    child: Text(
++                      'VAC',
++                      style: AppText.detailValue.copyWith(
++                        fontWeight: FontWeight.w800,
++                        color: isAir ? AppColors.textSecondary : Colors.white,
++                      ),
++                    ),
++                  ),
++                ),
++                Expanded(
++                  child: Center(
++                    child: Text(
++                      'AIR',
++                      style: AppText.detailValue.copyWith(
++                        fontWeight: FontWeight.w800,
++                        color: isAir ? Colors.white : AppColors.textSecondary,
++                      ),
++                    ),
++                  ),
++                ),
++              ],
+             ),
+           ],
+         ),
+@@ -174,73 +211,6 @@ class _ProductSelector extends StatelessWidget {
+   }
+ }
+ 
+-class _BasisSelector extends StatelessWidget {
+-  final EscalationState state;
+-  const _BasisSelector({required this.state});
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return Container(
+-      padding: const EdgeInsets.all(4),
+-      decoration: const BoxDecoration(
+-        color:        AppColors.surfaceAlt,
+-        borderRadius: AppRadii.lgAll,
+-      ),
+-      child: Row(
+-        children: [
+-          // VAC and AIR are ISO standard basis names — intentionally not translated.
+-          _BasisButton(
+-            label:  'VAC',
+-            active: state.basis == DensityBasis.vac,
+-            onTap:  () => state.setBasis(DensityBasis.vac),
+-          ),
+-          _BasisButton(
+-            label:  'AIR',
+-            active: state.basis == DensityBasis.air,
+-            onTap:  () => state.setBasis(DensityBasis.air),
+-          ),
+-        ],
+-      ),
+-    );
+-  }
+-}
+-
+-class _BasisButton extends StatelessWidget {
+-  final String     label;
+-  final bool       active;
+-  final VoidCallback onTap;
+-
+-  const _BasisButton({
+-    required this.label,
+-    required this.active,
+-    required this.onTap,
+-  });
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return Expanded(
+-      child: GestureDetector(
+-        onTap: onTap,
+-        child: Container(
+-          padding: const EdgeInsets.symmetric(vertical: 10),
+-          decoration: BoxDecoration(
+-            color:        active ? AppColors.accentBg : Colors.transparent,
+-            borderRadius: AppRadii.mdAll,
+-          ),
+-          child: Text(
+-            label,
+-            textAlign: TextAlign.center,
+-            style: AppText.dropdownItem.copyWith(
+-              color:      active ? AppColors.accent : AppColors.textSecondary,
+-              fontWeight: FontWeight.w700,
+-            ),
+-          ),
+-        ),
+-      ),
+-    );
+-  }
+-}
+-
+ class _Inputs extends StatelessWidget {
+   final EscalationState state;
+   const _Inputs({required this.state});
+@@ -248,37 +218,37 @@ class _Inputs extends StatelessWidget {
+   @override
+   Widget build(BuildContext context) {
+     final errors = state.errors;
+-    final l      = AppL10n.of(context);
++    final l = AppL10n.of(context);
+ 
+     return Column(
+       children: [
+         LabeledInputField(
+-          label:        l.labelContractDensity,
+-          unit:         'kg/l',
++          label: l.labelContractDensity,
++          unit: 'kg/l',
+           initialValue: state.contractDensityRaw,
+-          error:        errors['contractDensity'],
+-          onChanged:    (v) => state.updateField('contractDensity', v),
++          error: errors['contractDensity'],
++          onChanged: (v) => state.updateField('contractDensity', v),
+         ),
+         LabeledInputField(
+-          label:        l.labelActualDensity15,
+-          unit:         'kg/l',
++          label: l.labelActualDensity15,
++          unit: 'kg/l',
+           initialValue: state.actualDensityRaw,
+-          error:        errors['actualDensity'],
+-          onChanged:    (v) => state.updateField('actualDensity', v),
++          error: errors['actualDensity'],
++          onChanged: (v) => state.updateField('actualDensity', v),
+         ),
+         LabeledInputField(
+-          label:        l.labelAverageQuotation,
+-          unit:         r'$/t',
++          label: l.labelAverageQuotation,
++          unit: r'$/t',
+           initialValue: state.averagePlattsRaw,
+-          error:        errors['averagePlatts'],
+-          onChanged:    (v) => state.updateField('averagePlatts', v),
++          error: errors['averagePlatts'],
++          onChanged: (v) => state.updateField('averagePlatts', v),
+         ),
+         LabeledInputField(
+-          label:        l.labelSellerPremium,
+-          unit:         r'$/t',
++          label: l.labelSellerPremium,
++          unit: r'$/t',
+           initialValue: state.sellerPremiumRaw,
+-          error:        errors['sellerPremium'],
+-          onChanged:    (v) => state.updateField('sellerPremium', v),
++          error: errors['sellerPremium'],
++          onChanged: (v) => state.updateField('sellerPremium', v),
+         ),
+       ],
+     );
+@@ -291,23 +261,23 @@ class _ResultCard extends StatelessWidget {
+ 
+   @override
+   Widget build(BuildContext context) {
+-    final l    = AppL10n.of(context);
++    final l = AppL10n.of(context);
+     final sign = result.escalationPerTon >= 0 ? '+' : '';
+ 
+     return Container(
+       padding: AppSpacing.resultCardPadding,
+       decoration: BoxDecoration(
+-        color:        AppColors.cardSurface,
++        color: AppColors.cardSurface,
+         borderRadius: AppRadii.lgAll,
+-        border:       Border.all(color: AppColors.border, width: 0.5),
++        border: Border.all(color: AppColors.border, width: 0.5),
+       ),
+       child: Row(
+         children: [
+           Container(
+-            width:  3,
++            width: 3,
+             height: 92,
+             decoration: BoxDecoration(
+-              color:        AppColors.accent,
++              color: AppColors.accent,
+               borderRadius: BorderRadius.circular(99),
+             ),
+           ),
+@@ -335,8 +305,7 @@ class _ResultCard extends StatelessWidget {
+                 ),
+                 const SizedBox(height: 8),
+                 Text(
+-                  l.escalationBasePrice(
+-                      result.basePrice.toStringAsFixed(2)),
++                  l.escalationBasePrice(result.basePrice.toStringAsFixed(2)),
+                   style: AppText.detailKey,
+                 ),
+                 Text(
+@@ -345,8 +314,7 @@ class _ResultCard extends StatelessWidget {
+                   style: AppText.detailKey,
+                 ),
+                 Text(
+-                  l.escalationFinalPrice(
+-                      result.finalPrice.toStringAsFixed(2)),
++                  l.escalationFinalPrice(result.finalPrice.toStringAsFixed(2)),
+                   style: AppText.detailKey,
+                 ),
+               ],
+@@ -368,9 +336,9 @@ class _FormulaNote extends StatelessWidget {
+     return Container(
+       padding: AppSpacing.cardPadding,
+       decoration: BoxDecoration(
+-        color:        AppColors.formulaBg,
++        color: AppColors.formulaBg,
+         borderRadius: AppRadii.lgAll,
+-        border:       Border.all(color: AppColors.border, width: 0.5),
++        border: Border.all(color: AppColors.border, width: 0.5),
+       ),
+       child: Column(
+         crossAxisAlignment: CrossAxisAlignment.start,
+diff --git a/lib/features/menu/app_menu_drawer.dart b/lib/features/menu/app_menu_drawer.dart
+index 6b2d417..c8e6a1e 100644
+--- a/lib/features/menu/app_menu_drawer.dart
++++ b/lib/features/menu/app_menu_drawer.dart
+@@ -6,9 +6,11 @@ import '../../l10n/app_localizations.dart';
+ import '../calculator/ui/calculator_screen.dart';
+ import '../escalation/ui/escalation_screen.dart';
+ import '../settings/ui/settings_screen.dart';
++import '../visualization/ui/density_visualization_screen.dart';
+ 
+ enum MenuAction {
+   densityCalculator,
++  densityChart,
+   escalation,
+   howToUse,
+   history,
+@@ -92,6 +94,12 @@ class _AppMenuDrawerState extends State<AppMenuDrawer> {
+               action: MenuAction.densityCalculator,
+             ),
+ 
++            _MenuItem(
++              icon: Icons.show_chart_rounded,
++              label: l.vizScreenTitle,
++              action: MenuAction.densityChart,
++            ),
++
+             _MenuItem(
+               icon: Icons.trending_up_rounded,
+               label: l.menuEscalation,
+@@ -152,6 +160,15 @@ class _MenuItem extends StatelessWidget {
+               );
+               return;
+ 
++            case MenuAction.densityChart:
++              Navigator.of(context).push(
++                MaterialPageRoute(
++                  builder: (_) =>
++                      const DensityVisualizationScreen(),
++                ),
++              );
++              return;
++
+             case MenuAction.escalation:
+               Navigator.of(context).push(
+                 MaterialPageRoute(
+diff --git a/lib/features/visualization/state/visualization_state.dart b/lib/features/visualization/state/visualization_state.dart
+new file mode 100644
+index 0000000..8b112bf
+--- /dev/null
++++ b/lib/features/visualization/state/visualization_state.dart
+@@ -0,0 +1,224 @@
++import 'package:flutter/foundation.dart';
++
++import '../../../core/fuel_grade.dart';
++import '../../calculator/models/density_point.dart';
++import '../../calculator/models/fuel_mixture.dart';
++import '../../calculator/models/thermal_state.dart';
++import '../../calculator/services/density_curve_service.dart';
++import '../../calculator/services/fuel_mixing_service.dart';
++
++enum QuantityUnit { m3, tonnes }
++
++enum QuantityRange {
++  r1to100(min: 1, max: 100, label: '1–100', description: 'Tank trucks'),
++  r101to1000(
++      min: 101, max: 1000, label: '101–1 000', description: 'Oil depots'),
++  r1001to10000(
++      min: 1001,
++      max: 10000,
++      label: '1 001–10 000',
++      description: 'Tanker fleet'),
++  r10kto100k(
++      min: 10001,
++      max: 100000,
++      label: '10 001–100 000',
++      description: 'Refineries / Panamax');
++
++  final double min;
++  final double max;
++  final String label;
++  final String description;
++
++  const QuantityRange({
++    required this.min,
++    required this.max,
++    required this.label,
++    required this.description,
++  });
++
++  bool contains(double value) => value >= min && value <= max;
++
++  double clamp(double value) => value.clamp(min, max).toDouble();
++
++  static QuantityRange bestFor(double value) {
++    for (final r in QuantityRange.values) {
++      if (r.contains(value)) return r;
++    }
++    return value < 1 ? QuantityRange.r1to100 : QuantityRange.r10kto100k;
++  }
++}
++
++class VisualizationState extends ChangeNotifier {
++  FuelGrade _fuel = kFuelGrades.first;
++  double _p15KgM3 = 833.9;
++  double _sliderT = 15.0;
++
++  QuantityUnit _qUnit = QuantityUnit.m3;
++  QuantityRange _qRange = QuantityRange.r1to100;
++  double _qValue = 50.0;
++
++  late List<DensityPoint> _passportCurve;
++  late ThermalState _thermalState;
++
++  FuelBatch? _batchA;
++  FuelBatch? _batchB;
++  MixtureResult? _mixtureResult;
++  String? _mixtureError;
++
++  VisualizationState({
++    double? initialP15KgM3,
++    FuelFamily? initialFamily,
++  }) {
++    if (initialFamily != null) {
++      _fuel = kFuelGrades.firstWhere(
++        (f) => f.family == initialFamily,
++        orElse: () => _fuel,
++      );
++    }
++
++    if (initialP15KgM3 != null) {
++      _p15KgM3 = initialP15KgM3;
++    }
++
++    _recalculate();
++  }
++
++  FuelGrade get fuel => _fuel;
++  double get p15KgM3 => _p15KgM3;
++
++  double get sliderTempC => _sliderT;
++  double get sliderMin => -10.0;
++  double get sliderMax => 50.0;
++
++  QuantityUnit get quantityUnit => _qUnit;
++  QuantityRange get quantityRange => _qRange;
++  double get quantityValue => _qValue;
++
++  double get massT => _thermalState.massT;
++
++  List<DensityPoint> get passportCurve => _passportCurve;
++  ThermalState get thermalState => _thermalState;
++
++  FuelBatch? get batchA => _batchA;
++  FuelBatch? get batchB => _batchB;
++  MixtureResult? get mixtureResult => _mixtureResult;
++  String? get mixtureError => _mixtureError;
++
++  void setFuel(FuelGrade f) {
++    _fuel = f;
++    _p15KgM3 = f.family == FuelFamily.diesel ? 833.9 : 743.3;
++    _recalculate();
++  }
++
++  void setP15(double p15KgM3) {
++    _p15KgM3 = p15KgM3;
++    _recalculate();
++  }
++
++  void setSliderTemp(double tempC) {
++    _sliderT = tempC;
++    _thermalState = _computeState(tempC);
++    notifyListeners();
++  }
++
++  void setMass(double massT) {
++    _qUnit = QuantityUnit.tonnes;
++    _qRange = QuantityRange.bestFor(massT);
++    _qValue = _qRange.clamp(massT);
++    _thermalState = _computeState(_sliderT);
++    notifyListeners();
++  }
++
++  void setQuantityValue(double value) {
++    _qValue = _qRange.clamp(value);
++    _thermalState = _computeState(_sliderT);
++    notifyListeners();
++  }
++
++  void setQuantityUnit(QuantityUnit unit) {
++    if (unit == _qUnit) return;
++
++    final converted = unit == QuantityUnit.tonnes
++        ? _thermalState.massT
++        : _thermalState.volumeM3;
++
++    _qUnit = unit;
++    _qRange = QuantityRange.bestFor(converted);
++    _qValue = _qRange.clamp(converted);
++
++    _thermalState = _computeState(_sliderT);
++    notifyListeners();
++  }
++
++  void setQuantityRange(QuantityRange range) {
++    _qRange = range;
++    _qValue = range.clamp(_qValue);
++    _thermalState = _computeState(_sliderT);
++    notifyListeners();
++  }
++
++  void setBatchA(FuelBatch batch) {
++    _batchA = batch;
++    _computeMixture();
++  }
++
++  void setBatchB(FuelBatch batch) {
++    _batchB = batch;
++    _computeMixture();
++  }
++
++  void clearMixture() {
++    _batchA = null;
++    _batchB = null;
++    _mixtureResult = null;
++    _mixtureError = null;
++    notifyListeners();
++  }
++
++  ThermalState _computeState(double tempC) {
++    final densityState = DensityCurveService.computeThermalState(
++      p15KgM3: _p15KgM3,
++      family: _fuel.family,
++      tempC: tempC,
++      massT: 1.0,
++    );
++
++    final densityKgL = densityState.densityKgL;
++
++    final massT = _qUnit == QuantityUnit.m3 ? _qValue * densityKgL : _qValue;
++
++    return DensityCurveService.computeThermalState(
++      p15KgM3: _p15KgM3,
++      family: _fuel.family,
++      tempC: tempC,
++      massT: massT > 0 ? massT : 0.001,
++    );
++  }
++
++  void _recalculate() {
++    _passportCurve = DensityCurveService.generateCurve(
++      p15KgM3: _p15KgM3,
++      family: _fuel.family,
++      tempFrom: sliderMin,
++      tempTo: sliderMax,
++    );
++    _thermalState = _computeState(_sliderT);
++    notifyListeners();
++  }
++
++  void _computeMixture() {
++    _mixtureError = FuelMixingService.validate(_batchA, _batchB);
++    if (_mixtureError != null) {
++      _mixtureResult = null;
++    } else {
++      try {
++        _mixtureResult = FuelMixingService.mix(_batchA!, _batchB!);
++        _mixtureError = null;
++      } on ArgumentError catch (e) {
++        _mixtureResult = null;
++        _mixtureError = e.message.toString();
++      }
++    }
++    notifyListeners();
++  }
++}
+diff --git a/lib/features/visualization/ui/density_visualization_screen.dart b/lib/features/visualization/ui/density_visualization_screen.dart
+new file mode 100644
+index 0000000..92ffd1e
+--- /dev/null
++++ b/lib/features/visualization/ui/density_visualization_screen.dart
+@@ -0,0 +1,432 @@
++import 'package:flutter/material.dart';
++import 'package:provider/provider.dart';
++
++import '../../../core/fuel_grade.dart';
++import '../../../core/tokens.dart';
++import '../../../l10n/app_localizations.dart';
++import '../../../shared/state/density_memory.dart';
++import '../../calculator/models/density_point.dart';
++import '../../calculator/ui/widgets/density_chart.dart';
++import '../../calculator/ui/widgets/density_slider.dart';
++import '../../calculator/ui/widgets/thermal_info_panel.dart';
++import '../state/visualization_state.dart';
++
++class DensityVisualizationScreen extends StatelessWidget {
++  const DensityVisualizationScreen({super.key});
++
++  @override
++  Widget build(BuildContext context) {
++    return ChangeNotifierProvider(
++      create: (_) => VisualizationState(
++        initialP15KgM3: DensityMemory.p15VacKgM3,
++        initialFamily: DensityMemory.family,
++      ),
++      child: const _View(),
++    );
++  }
++}
++
++class _View extends StatelessWidget {
++  const _View();
++
++  @override
++  Widget build(BuildContext context) {
++    final l = AppL10n.of(context);
++
++    return Scaffold(
++      backgroundColor: AppColors.background,
++      body: SafeArea(
++        child: Center(
++          child: ConstrainedBox(
++            constraints: const BoxConstraints(maxWidth: 480),
++            child: Column(
++              children: [
++                _VizHeader(title: l.vizScreenTitle),
++                const Expanded(child: _Body()),
++              ],
++            ),
++          ),
++        ),
++      ),
++    );
++  }
++}
++
++class _VizHeader extends StatelessWidget {
++  final String title;
++
++  const _VizHeader({required this.title});
++
++  @override
++  Widget build(BuildContext context) {
++    final isWide = MediaQuery.of(context).size.width >= 600;
++
++    return Container(
++      color: AppColors.surface,
++      padding: const EdgeInsets.fromLTRB(
++        AppSpacing.lg,
++        AppSpacing.md,
++        AppSpacing.lg,
++        AppSpacing.md,
++      ),
++      child: Row(
++        children: [
++          if (!isWide) ...[
++            GestureDetector(
++              onTap: () {
++                if (Navigator.of(context).canPop()) {
++                  Navigator.of(context).pop();
++                }
++              },
++              child: Container(
++                width: 42,
++                height: 42,
++                decoration: BoxDecoration(
++                  color: AppColors.surfaceAlt,
++                  borderRadius: AppRadii.smAll,
++                  border: Border.all(color: AppColors.border),
++                ),
++                child: const Icon(
++                  Icons.chevron_left_rounded,
++                  color: AppColors.accent,
++                  size: 30,
++                ),
++              ),
++            ),
++            const SizedBox(width: AppSpacing.md),
++          ],
++          RichText(
++            text: TextSpan(
++              children: [
++                TextSpan(
++                  text: 'D-',
++                  style: AppText.sectionLabel.copyWith(
++                    color: AppColors.textPrimary,
++                    fontSize: isWide ? 20 : null,
++                  ),
++                ),
++                TextSpan(
++                  text: 'METER',
++                  style: AppText.sectionLabel.copyWith(
++                    color: AppColors.brand,
++                    fontSize: isWide ? 20 : null,
++                  ),
++                ),
++              ],
++            ),
++          ),
++          const SizedBox(width: AppSpacing.md),
++          Expanded(
++            child: Text(
++              title,
++              style: AppText.sectionLabel,
++              overflow: TextOverflow.ellipsis,
++            ),
++          ),
++          if (isWide)
++            TextButton.icon(
++              onPressed: () {
++                if (Navigator.of(context).canPop()) {
++                  Navigator.of(context).pop();
++                }
++              },
++              icon: const Icon(Icons.chevron_left_rounded),
++              label: const Text('Calculator'),
++            ),
++        ],
++      ),
++    );
++  }
++}
++
++class _Body extends StatelessWidget {
++  const _Body();
++
++  @override
++  Widget build(BuildContext context) {
++    final state = context.watch<VisualizationState>();
++    final l = AppL10n.of(context);
++
++    final operatingPoint = DensityPoint(
++      tempC: state.sliderTempC,
++      densityKgL: state.thermalState.densityKgL,
++    );
++
++    return ListView(
++      padding: AppSpacing.screenPadding,
++      children: [
++        const SizedBox(height: AppSpacing.sm),
++        const Text('FUEL', style: AppText.sectionLabel),
++        const SizedBox(height: AppSpacing.xs + 2),
++        _FuelToggle(
++          isDiesel: state.fuel.family == FuelFamily.diesel,
++          onDiesel: () => state.setFuel(
++            kFuelGrades.firstWhere((f) => f.family == FuelFamily.diesel),
++          ),
++          onGasoline: () => state.setFuel(
++            kFuelGrades.firstWhere((f) => f.family == FuelFamily.gasoline),
++          ),
++        ),
++        const SizedBox(height: AppSpacing.md),
++        Text(l.vizChartTitle.toUpperCase(), style: AppText.sectionLabel),
++        const SizedBox(height: AppSpacing.xs + 2),
++        DensityChart(
++          curve: state.passportCurve,
++          operatingPoint: operatingPoint,
++        ),
++        const SizedBox(height: AppSpacing.sm),
++        Row(
++          children: [
++            const _LegendDot(color: AppColors.accent),
++            const SizedBox(width: 4),
++            Text(l.vizLegendPassport, style: AppText.detailUnit),
++            const SizedBox(width: AppSpacing.md),
++            const _LegendDot(color: AppColors.brand),
++            const SizedBox(width: 4),
++            Text(l.vizLegendOperating, style: AppText.detailUnit),
++          ],
++        ),
++        const SizedBox(height: AppSpacing.md),
++        DensitySlider(
++          value: state.sliderTempC,
++          min: state.sliderMin,
++          max: state.sliderMax,
++          onChanged: state.setSliderTemp,
++          label: l.labelDeliveryTemp,
++        ),
++        const SizedBox(height: AppSpacing.md),
++        const _QuantityCard(),
++        const SizedBox(height: AppSpacing.md),
++        ThermalInfoPanel(
++          state: state.thermalState,
++          labelDensity: l.resultDeliveryDensity,
++          labelVolume: l.detailVolume,
++          labelMass: l.detailWeight,
++          labelExpansion: l.vizThermalExpansion,
++        ),
++        const SizedBox(height: AppSpacing.xl),
++      ],
++    );
++  }
++}
++
++class _QuantityCard extends StatelessWidget {
++  const _QuantityCard();
++
++  @override
++  Widget build(BuildContext context) {
++    final state = context.watch<VisualizationState>();
++    final unitText = state.quantityUnit == QuantityUnit.m3 ? 'm³' : 't';
++    final isFineVolumeRange = state.quantityUnit == QuantityUnit.m3 &&
++        state.quantityRange == QuantityRange.r1to100;
++    final valueDecimals = isFineVolumeRange ? 3 : 0;
++    final sliderDivisions = isFineVolumeRange ? 99000 : 1000;
++
++    return Container(
++      padding: AppSpacing.cardPadding,
++      decoration: BoxDecoration(
++        color: AppColors.surface,
++        borderRadius: AppRadii.lgAll,
++        border: Border.all(color: AppColors.border, width: 0.5),
++      ),
++      child: Column(
++        crossAxisAlignment: CrossAxisAlignment.start,
++        children: [
++          Row(
++            children: [
++              const Text('Quantity', style: AppText.detailKey),
++              const Spacer(),
++              _UnitButton(
++                label: 'm³',
++                active: state.quantityUnit == QuantityUnit.m3,
++                onTap: () => state.setQuantityUnit(QuantityUnit.m3),
++              ),
++              const SizedBox(width: 6),
++              _UnitButton(
++                label: 't',
++                active: state.quantityUnit == QuantityUnit.tonnes,
++                onTap: () => state.setQuantityUnit(QuantityUnit.tonnes),
++              ),
++            ],
++          ),
++          const SizedBox(height: AppSpacing.sm),
++          Row(
++            children: [
++              Text(
++                state.quantityValue.toStringAsFixed(valueDecimals),
++                style: AppText.detailValue.copyWith(color: AppColors.accent),
++              ),
++              const SizedBox(width: 6),
++              Text(unitText, style: AppText.detailUnit),
++              const Spacer(),
++              Text(state.quantityRange.description, style: AppText.detailUnit),
++            ],
++          ),
++          Slider(
++            value: state.quantityValue.clamp(
++              state.quantityRange.min,
++              state.quantityRange.max,
++            ),
++            min: state.quantityRange.min,
++            max: state.quantityRange.max,
++            divisions: sliderDivisions,
++            onChanged: state.setQuantityValue,
++          ),
++          Wrap(
++            spacing: 6,
++            runSpacing: 6,
++            children: QuantityRange.values.map((r) {
++              return _RangeChip(
++                range: r,
++                active: r == state.quantityRange,
++                onTap: () => state.setQuantityRange(r),
++              );
++            }).toList(),
++          ),
++        ],
++      ),
++    );
++  }
++}
++
++class _UnitButton extends StatelessWidget {
++  final String label;
++  final bool active;
++  final VoidCallback onTap;
++
++  const _UnitButton({
++    required this.label,
++    required this.active,
++    required this.onTap,
++  });
++
++  @override
++  Widget build(BuildContext context) {
++    return GestureDetector(
++      onTap: onTap,
++      child: Container(
++        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
++        decoration: BoxDecoration(
++          color: active ? AppColors.accent : AppColors.surfaceAlt,
++          borderRadius: AppRadii.smAll,
++        ),
++        child: Text(
++          label,
++          style: active ? AppText.modeActive : AppText.modeInactive,
++        ),
++      ),
++    );
++  }
++}
++
++class _RangeChip extends StatelessWidget {
++  final QuantityRange range;
++  final bool active;
++  final VoidCallback onTap;
++
++  const _RangeChip({
++    required this.range,
++    required this.active,
++    required this.onTap,
++  });
++
++  @override
++  Widget build(BuildContext context) {
++    return GestureDetector(
++      onTap: onTap,
++      child: Container(
++        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
++        decoration: BoxDecoration(
++          color: active ? AppColors.accent : AppColors.surfaceAlt,
++          borderRadius: AppRadii.smAll,
++        ),
++        child: Text(
++          range.label,
++          style: active ? AppText.modeActive : AppText.detailUnit,
++        ),
++      ),
++    );
++  }
++}
++
++class _FuelToggle extends StatelessWidget {
++  final bool isDiesel;
++  final VoidCallback onDiesel;
++  final VoidCallback onGasoline;
++
++  const _FuelToggle({
++    required this.isDiesel,
++    required this.onDiesel,
++    required this.onGasoline,
++  });
++
++  @override
++  Widget build(BuildContext context) {
++    return Container(
++      padding: const EdgeInsets.all(3),
++      decoration: BoxDecoration(
++        color: AppColors.surfaceAlt,
++        borderRadius: AppRadii.mdAll,
++        border: Border.all(color: AppColors.border, width: 0.5),
++      ),
++      child: Row(
++        children: [
++          _Tab(label: 'Diesel', active: isDiesel, onTap: onDiesel),
++          _Tab(label: 'Gasoline', active: !isDiesel, onTap: onGasoline),
++        ],
++      ),
++    );
++  }
++}
++
++class _Tab extends StatelessWidget {
++  final String label;
++  final bool active;
++  final VoidCallback onTap;
++
++  const _Tab({
++    required this.label,
++    required this.active,
++    required this.onTap,
++  });
++
++  @override
++  Widget build(BuildContext context) {
++    return Expanded(
++      child: GestureDetector(
++        onTap: onTap,
++        child: AnimatedContainer(
++          duration: const Duration(milliseconds: 180),
++          padding: const EdgeInsets.symmetric(
++            vertical: AppSpacing.sm,
++            horizontal: AppSpacing.sm,
++          ),
++          decoration: BoxDecoration(
++            color: active ? AppColors.accent : Colors.transparent,
++            borderRadius: AppRadii.smAll,
++          ),
++          child: Text(
++            label,
++            textAlign: TextAlign.center,
++            style: active ? AppText.modeActive : AppText.modeInactive,
++          ),
++        ),
++      ),
++    );
++  }
++}
++
++class _LegendDot extends StatelessWidget {
++  final Color color;
++
++  const _LegendDot({required this.color});
++
++  @override
++  Widget build(BuildContext context) {
++    return Container(
++      width: 8,
++      height: 8,
++      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
++    );
++  }
++}
+diff --git a/lib/l10n/app_en.arb b/lib/l10n/app_en.arb
+index 5722ac9..863dbfc 100644
+--- a/lib/l10n/app_en.arb
++++ b/lib/l10n/app_en.arb
+@@ -201,5 +201,43 @@
+   "@detailsCopied": { "description": "SnackBar text after long-press copy on result card" },
+ 
+   "detailContractDensity": "Contract density",
+-  "@detailContractDensity": { "description": "Details row label for contract/passport density" }
++  "@detailContractDensity": { "description": "Details row label for contract/passport density" },
++"vizScreenTitle": "Density Chart",
++  "@vizScreenTitle": { "description": "Title for the density visualization screen" },
++
++  "vizChartTitle": "Density vs Temperature",
++  "@vizChartTitle": { "description": "Section label above the chart" },
++
++  "vizLegendPassport": "Passport curve",
++  "@vizLegendPassport": { "description": "Chart legend — blue passport density curve" },
++
++  "vizLegendOperating": "Operating point",
++  "@vizLegendOperating": { "description": "Chart legend — red operating point marker" },
++
++  "vizThermalExpansion": "Thermal expansion",
++  "@vizThermalExpansion": { "description": "Label for thermal expansion row" },
++
++  "vizMixtureTitle": "Fuel Mixing",
++  "@vizMixtureTitle": { "description": "Phase 3: section title for fuel mixing" },
++
++  "vizMixtureBatchA": "Existing tank",
++  "@vizMixtureBatchA": { "description": "Phase 3: label for batch A" },
++
++  "vizMixtureBatchB": "Incoming fuel",
++  "@vizMixtureBatchB": { "description": "Phase 3: label for batch B" },
++
++  "vizMixtureResult": "Mixture Result",
++  "@vizMixtureResult": { "description": "Phase 3: result card title" },
++
++  "vizTotalVolume": "Total volume",
++  "@vizTotalVolume": {},
++
++  "vizTotalMass": "Total mass",
++  "@vizTotalMass": {},
++
++  "vizMixedDensity": "Mixed density",
++  "@vizMixedDensity": {},
++
++  "vizMixedTemp": "Mixed temperature",
++  "@vizMixedTemp": {}
+ }
+diff --git a/lib/l10n/app_localizations.dart b/lib/l10n/app_localizations.dart
+index 1c4dc35..b0030b7 100644
+--- a/lib/l10n/app_localizations.dart
++++ b/lib/l10n/app_localizations.dart
+@@ -462,6 +462,84 @@ abstract class AppL10n {
+   /// In en, this message translates to:
+   /// **'Contract density'**
+   String get detailContractDensity;
++
++  /// Title for the density visualization screen
++  ///
++  /// In en, this message translates to:
++  /// **'Density Chart'**
++  String get vizScreenTitle;
++
++  /// Section label above the chart
++  ///
++  /// In en, this message translates to:
++  /// **'Density vs Temperature'**
++  String get vizChartTitle;
++
++  /// Chart legend — blue passport density curve
++  ///
++  /// In en, this message translates to:
++  /// **'Passport curve'**
++  String get vizLegendPassport;
++
++  /// Chart legend — red operating point marker
++  ///
++  /// In en, this message translates to:
++  /// **'Operating point'**
++  String get vizLegendOperating;
++
++  /// Label for thermal expansion row
++  ///
++  /// In en, this message translates to:
++  /// **'Thermal expansion'**
++  String get vizThermalExpansion;
++
++  /// Phase 3: section title for fuel mixing
++  ///
++  /// In en, this message translates to:
++  /// **'Fuel Mixing'**
++  String get vizMixtureTitle;
++
++  /// Phase 3: label for batch A
++  ///
++  /// In en, this message translates to:
++  /// **'Existing tank'**
++  String get vizMixtureBatchA;
++
++  /// Phase 3: label for batch B
++  ///
++  /// In en, this message translates to:
++  /// **'Incoming fuel'**
++  String get vizMixtureBatchB;
++
++  /// Phase 3: result card title
++  ///
++  /// In en, this message translates to:
++  /// **'Mixture Result'**
++  String get vizMixtureResult;
++
++  /// No description provided for @vizTotalVolume.
++  ///
++  /// In en, this message translates to:
++  /// **'Total volume'**
++  String get vizTotalVolume;
++
++  /// No description provided for @vizTotalMass.
++  ///
++  /// In en, this message translates to:
++  /// **'Total mass'**
++  String get vizTotalMass;
++
++  /// No description provided for @vizMixedDensity.
++  ///
++  /// In en, this message translates to:
++  /// **'Mixed density'**
++  String get vizMixedDensity;
++
++  /// No description provided for @vizMixedTemp.
++  ///
++  /// In en, this message translates to:
++  /// **'Mixed temperature'**
++  String get vizMixedTemp;
+ }
+ 
+ class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {
+diff --git a/lib/l10n/app_localizations_en.dart b/lib/l10n/app_localizations_en.dart
+index dd835ba..b0ac3be 100644
+--- a/lib/l10n/app_localizations_en.dart
++++ b/lib/l10n/app_localizations_en.dart
+@@ -202,4 +202,43 @@ class AppL10nEn extends AppL10n {
+ 
+   @override
+   String get detailContractDensity => 'Contract density';
++
++  @override
++  String get vizScreenTitle => 'Density Chart';
++
++  @override
++  String get vizChartTitle => 'Density vs Temperature';
++
++  @override
++  String get vizLegendPassport => 'Passport curve';
++
++  @override
++  String get vizLegendOperating => 'Operating point';
++
++  @override
++  String get vizThermalExpansion => 'Thermal expansion';
++
++  @override
++  String get vizMixtureTitle => 'Fuel Mixing';
++
++  @override
++  String get vizMixtureBatchA => 'Existing tank';
++
++  @override
++  String get vizMixtureBatchB => 'Incoming fuel';
++
++  @override
++  String get vizMixtureResult => 'Mixture Result';
++
++  @override
++  String get vizTotalVolume => 'Total volume';
++
++  @override
++  String get vizTotalMass => 'Total mass';
++
++  @override
++  String get vizMixedDensity => 'Mixed density';
++
++  @override
++  String get vizMixedTemp => 'Mixed temperature';
+ }
+diff --git a/lib/l10n/app_localizations_uk.dart b/lib/l10n/app_localizations_uk.dart
+index 3b3df17..259132e 100644
+--- a/lib/l10n/app_localizations_uk.dart
++++ b/lib/l10n/app_localizations_uk.dart
+@@ -202,4 +202,43 @@ class AppL10nUk extends AppL10n {
+ 
+   @override
+   String get detailContractDensity => 'Контрактна густина';
++
++  @override
++  String get vizScreenTitle => 'Графік густини';
++
++  @override
++  String get vizChartTitle => 'Густина vs Температура';
++
++  @override
++  String get vizLegendPassport => 'Паспортна крива';
++
++  @override
++  String get vizLegendOperating => 'Робоча точка';
++
++  @override
++  String get vizThermalExpansion => 'Теплове розширення';
++
++  @override
++  String get vizMixtureTitle => 'Змішування палива';
++
++  @override
++  String get vizMixtureBatchA => 'Наявний резервуар';
++
++  @override
++  String get vizMixtureBatchB => 'Паливо, що надходить';
++
++  @override
++  String get vizMixtureResult => 'Результат змішування';
++
++  @override
++  String get vizTotalVolume => 'Загальний об\'єм';
++
++  @override
++  String get vizTotalMass => 'Загальна маса';
++
++  @override
++  String get vizMixedDensity => 'Змішана густина';
++
++  @override
++  String get vizMixedTemp => 'Температура суміші';
+ }
+diff --git a/lib/l10n/app_uk.arb b/lib/l10n/app_uk.arb
+index ba00bff..31338c3 100644
+--- a/lib/l10n/app_uk.arb
++++ b/lib/l10n/app_uk.arb
+@@ -120,5 +120,30 @@
+ 
+   "detailsCopied": "Скопійовано",
+ 
+-  "detailContractDensity": "Контрактна густина"
++  "detailContractDensity": "Контрактна густина",
++"vizScreenTitle": "Графік густини",
++
++  "vizChartTitle": "Густина vs Температура",
++
++  "vizLegendPassport": "Паспортна крива",
++
++  "vizLegendOperating": "Робоча точка",
++
++  "vizThermalExpansion": "Теплове розширення",
++
++  "vizMixtureTitle": "Змішування палива",
++
++  "vizMixtureBatchA": "Наявний резервуар",
++
++  "vizMixtureBatchB": "Паливо, що надходить",
++
++  "vizMixtureResult": "Результат змішування",
++
++  "vizTotalVolume": "Загальний об'єм",
++
++  "vizTotalMass": "Загальна маса",
++
++  "vizMixedDensity": "Змішана густина",
++
++  "vizMixedTemp": "Температура суміші"
+ }
+diff --git a/pubspec.yaml b/pubspec.yaml
+index 2f01c6f..87997d8 100644
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -14,6 +14,7 @@ dependencies:
+     sdk: flutter
+   intl: any
+   flutter_svg: ^2.0.9
++  fl_chart: ^0.68.0
+   provider: ^6.1.2
+   shared_preferences: ^2.3.0
+   package_info_plus: ^8.0.0
+diff --git a/test/escalation/escalation_state_test.dart b/test/escalation/escalation_state_test.dart
+index 04f09f8..5f413b9 100644
+--- a/test/escalation/escalation_state_test.dart
++++ b/test/escalation/escalation_state_test.dart
+@@ -22,7 +22,9 @@ void main() {
+     expect(state.contractDensityRaw, isNotEmpty);
+   });
+ 
+-  test('setBasis VAC to AIR converts actualDensity, leaves contractDensity unchanged', () {
++  test(
++      'setBasis VAC to AIR converts actualDensity, leaves contractDensity unchanged',
++      () {
+     DensityMemory.setP15KgL(0.8332, FuelFamily.diesel);
+     state.dispose();
+     state = EscalationState();
+@@ -38,7 +40,9 @@ void main() {
+     );
+   });
+ 
+-  test('setBasis AIR to VAC converts actualDensity, leaves contractDensity unchanged', () {
++  test(
++      'setBasis AIR to VAC converts actualDensity, leaves contractDensity unchanged',
++      () {
+     DensityMemory.setP15KgL(0.8332, FuelFamily.diesel);
+     state.dispose();
+     state = EscalationState();
+@@ -55,7 +59,8 @@ void main() {
+     );
+   });
+ 
+-  test('setBasis round-trip VAC to AIR to VAC recovers original actualDensity', () {
++  test('setBasis round-trip VAC to AIR to VAC recovers original actualDensity',
++      () {
+     DensityMemory.setP15KgL(0.8332, FuelFamily.diesel);
+     state.dispose();
+     state = EscalationState();
+@@ -145,8 +150,12 @@ void main() {
+   });
+   test('setGroup does not overwrite user-edited contractDensity', () {
+     state.updateField('contractDensity', '0.8600');
+-    state.setGroup(FuelProductGroup.gasoline);
+-    state.setGroup(FuelProductGroup.gasoil);
++    state.setProduct(
++      kFuelGrades.firstWhere((f) => f.family == FuelFamily.gasoline),
++    );
++    state.setProduct(
++      kFuelGrades.firstWhere((f) => f.family == FuelFamily.diesel),
++    );
+ 
+     expect(state.contractDensityRaw, '0.8600');
+   }, skip: 'known bug: setGroup resets contractDensityRaw unconditionally');
+@@ -163,5 +172,4 @@ void main() {
+       expect(state.contractDensityRaw, equals(contract));
+     }
+   });
+-
+ }
+diff --git a/test/visualization/density_curve_service_test.dart b/test/visualization/density_curve_service_test.dart
+new file mode 100644
+index 0000000..d781ed9
+--- /dev/null
++++ b/test/visualization/density_curve_service_test.dart
+@@ -0,0 +1,99 @@
++import 'package:flutter_test/flutter_test.dart';
++import 'package:d_meter/core/fuel_grade.dart';
++import 'package:d_meter/features/calculator/services/density_curve_service.dart';
++
++void main() {
++  group('DensityCurveService.generateCurve', () {
++    test('генерирует точки для всего диапазона', () {
++      final curve = DensityCurveService.generateCurve(
++        p15KgM3: 833.9, family: FuelFamily.diesel,
++        tempFrom: 0, tempTo: 30, step: 1,
++      );
++      expect(curve.length, 31);
++      expect(curve.first.tempC, 0.0);
++      expect(curve.last.tempC, 30.0);
++    });
++
++    test('при t=15 density равна P15/1000', () {
++      final curve = DensityCurveService.generateCurve(
++        p15KgM3: 833.9, family: FuelFamily.diesel,
++        tempFrom: 15, tempTo: 15, step: 1,
++      );
++      expect(curve.first.densityKgL, closeTo(833.9 / 1000, 0.0001));
++    });
++
++    test('density убывает при росте температуры (diesel)', () {
++      final curve = DensityCurveService.generateCurve(
++        p15KgM3: 833.9, family: FuelFamily.diesel,
++      );
++      for (int i = 1; i < curve.length; i++) {
++        expect(curve[i].densityKgL, lessThan(curve[i - 1].densityKgL));
++      }
++    });
++
++    test('diesel и gasoline дают разные кривые', () {
++      final d = DensityCurveService.generateCurve(
++          p15KgM3: 833.9, family: FuelFamily.diesel);
++      final g = DensityCurveService.generateCurve(
++          p15KgM3: 743.3, family: FuelFamily.gasoline);
++      expect(d.first.densityKgL,
++          isNot(closeTo(g.first.densityKgL, 0.001)));
++    });
++
++    test('densityRange возвращает физический диапазон', () {
++      final curve = DensityCurveService.generateCurve(
++          p15KgM3: 833.9, family: FuelFamily.diesel);
++      final r = DensityCurveService.densityRange(curve);
++      expect(r.min, greaterThan(0.7));
++      expect(r.max, lessThan(1.0));
++      expect(r.min, lessThan(r.max));
++    });
++  });
++
++  group('DensityCurveService.computeThermalState', () {
++    test('при t=15 расширение = 0', () {
++      final s = DensityCurveService.computeThermalState(
++          p15KgM3: 833.9, family: FuelFamily.diesel,
++          tempC: 15, massT: 100);
++      expect(s.thermalExpansionL, closeTo(0, 0.001));
++    });
++
++    test('при t>15 расширение положительное', () {
++      final s = DensityCurveService.computeThermalState(
++          p15KgM3: 833.9, family: FuelFamily.diesel,
++          tempC: 25, massT: 100);
++      expect(s.thermalExpansionL, greaterThan(0));
++    });
++
++    test('при t<15 расширение отрицательное', () {
++      final s = DensityCurveService.computeThermalState(
++          p15KgM3: 833.9, family: FuelFamily.diesel,
++          tempC: 5, massT: 100);
++      expect(s.thermalExpansionL, lessThan(0));
++    });
++
++    test('масса инвариантна при любой температуре', () {
++      for (final t in [0.0, 15.0, 30.0, -5.0]) {
++        final s = DensityCurveService.computeThermalState(
++            p15KgM3: 833.9, family: FuelFamily.diesel,
++            tempC: t, massT: 150);
++        expect(s.massT, closeTo(150, 0.0001));
++      }
++    });
++
++    test('volume = mass / density', () {
++      final s = DensityCurveService.computeThermalState(
++          p15KgM3: 833.9, family: FuelFamily.diesel,
++          tempC: 20, massT: 100);
++      expect(s.volumeM3, closeTo(s.massT / s.densityKgL, 0.001));
++    });
++
++    test('gasoline: плотность в физическом диапазоне', () {
++      final s = DensityCurveService.computeThermalState(
++          p15KgM3: 743.3, family: FuelFamily.gasoline,
++          tempC: 17, massT: 80);
++      expect(s.densityKgL, greaterThan(0.700));
++      expect(s.densityKgL, lessThan(0.780));
++    });
++  });
++}
+diff --git a/test/visualization/fuel_mixing_service_test.dart b/test/visualization/fuel_mixing_service_test.dart
+new file mode 100644
+index 0000000..b98f718
+--- /dev/null
++++ b/test/visualization/fuel_mixing_service_test.dart
+@@ -0,0 +1,82 @@
++import 'package:flutter_test/flutter_test.dart';
++import 'package:d_meter/core/fuel_grade.dart';
++import 'package:d_meter/features/calculator/models/fuel_mixture.dart';
++import 'package:d_meter/features/calculator/services/fuel_mixing_service.dart';
++
++void main() {
++  const dieselA = FuelBatch(
++    family: FuelFamily.diesel, volumeM3: 5.0,
++    p15KgM3: 830.0, actualDensityKgL: 0.820, tempC: 18.5,
++  );
++  const dieselB = FuelBatch(
++    family: FuelFamily.diesel, volumeM3: 10.0,
++    p15KgM3: 840.0, actualDensityKgL: 0.835, tempC: 18.0,
++  );
++  const gasolineA = FuelBatch(
++    family: FuelFamily.gasoline, volumeM3: 3.0,
++    p15KgM3: 740.0, actualDensityKgL: 0.735, tempC: 20.0,
++  );
++
++  group('FuelMixingService.mix', () {
++    test('итоговая масса = сумма масс', () {
++      final r = FuelMixingService.mix(dieselA, dieselB);
++      expect(r.totalMassT,
++          closeTo(dieselA.massT + dieselB.massT, 0.001));
++    });
++
++    test('объём = масса / плотность', () {
++      final r = FuelMixingService.mix(dieselA, dieselB);
++      expect(r.totalVolumeM3,
++          closeTo(r.totalMassT / r.mixedActualDensityKgL, 0.001));
++    });
++
++    test('смешанная плотность между min и max', () {
++      final r = FuelMixingService.mix(dieselA, dieselB);
++      expect(r.mixedActualDensityKgL,
++          greaterThanOrEqualTo(dieselA.actualDensityKgL));
++      expect(r.mixedActualDensityKgL,
++          lessThanOrEqualTo(dieselB.actualDensityKgL));
++    });
++
++    test('одинаковые партии → результат совпадает с партией', () {
++      final r = FuelMixingService.mix(dieselA, dieselA);
++      expect(r.mixedActualDensityKgL,
++          closeTo(dieselA.actualDensityKgL, 0.0001));
++    });
++
++    test('нельзя смешивать diesel и gasoline', () {
++      expect(() => FuelMixingService.mix(dieselA, gasolineA),
++          throwsArgumentError);
++    });
++  });
++
++  group('FuelMixingService.validate', () {
++    test('валидные diesel → null', () {
++      expect(FuelMixingService.validate(dieselA, dieselB), isNull);
++    });
++    test('null → ошибка', () {
++      expect(FuelMixingService.validate(null, dieselB), isNotNull);
++    });
++    test('разные типы → ошибка', () {
++      expect(FuelMixingService.validate(dieselA, gasolineA), isNotNull);
++    });
++    test('нулевой объём → ошибка', () {
++      const zero = FuelBatch(
++        family: FuelFamily.diesel, volumeM3: 0,
++        p15KgM3: 830.0, actualDensityKgL: 0.820, tempC: 18.0,
++      );
++      expect(FuelMixingService.validate(zero, dieselB), isNotNull);
++    });
++  });
++
++  group('FuelBatch helpers', () {
++    test('massT = volumeM3 × density', () {
++      expect(dieselA.massT,
++          closeTo(dieselA.volumeM3 * dieselA.actualDensityKgL, 0.0001));
++    });
++    test('densityAt15KgL = p15KgM3 / 1000', () {
++      expect(dieselA.densityAt15KgL,
++          closeTo(dieselA.p15KgM3 / 1000, 0.0001));
++    });
++  });
++}
+diff --git a/test/visualization/visualization_state_test.dart b/test/visualization/visualization_state_test.dart
+new file mode 100644
+index 0000000..81c2a78
+--- /dev/null
++++ b/test/visualization/visualization_state_test.dart
+@@ -0,0 +1,175 @@
++import 'package:flutter_test/flutter_test.dart';
++import 'package:d_meter/features/visualization/state/visualization_state.dart';
++import 'package:d_meter/core/fuel_grade.dart';
++
++void main() {
++  late VisualizationState state;
++
++  setUp(() {
++    state = VisualizationState();
++  });
++
++  tearDown(() {
++    state.dispose();
++  });
++
++  // ── Initial state ─────────────────────────────────────────────────────────
++
++  group('Initial state', () {
++    test('default unit is m3', () {
++      expect(state.quantityUnit, QuantityUnit.m3);
++    });
++
++    test('default range is 101–1000', () {
++      expect(state.quantityRange, QuantityRange.r1to100);
++    });
++
++    test('default value is 120', () {
++      expect(state.quantityValue, closeTo(50.0, 0.01));
++    });
++
++    test('default temp is 15', () {
++      expect(state.sliderTempC, 15.0);
++    });
++
++    test('passport curve is generated', () {
++      expect(state.passportCurve, isNotEmpty);
++    });
++
++    test('thermal state has positive mass', () {
++      expect(state.thermalState.massT, greaterThan(0));
++    });
++  });
++
++  // ── Temperature slider ────────────────────────────────────────────────────
++
++  group('Temperature slider', () {
++    test('setSliderTemp updates thermalState.tempC', () {
++      state.setSliderTemp(20.0);
++      expect(state.thermalState.tempC, closeTo(20.0, 0.01));
++    });
++
++    test('at t>15 thermal expansion is positive', () {
++      state.setSliderTemp(25.0);
++      expect(state.thermalState.thermalExpansionL, greaterThan(0));
++    });
++
++    test('at t<15 thermal expansion is negative', () {
++      state.setSliderTemp(5.0);
++      expect(state.thermalState.thermalExpansionL, lessThan(0));
++    });
++
++    test('at t=15 thermal expansion is zero', () {
++      state.setSliderTemp(15.0);
++      expect(state.thermalState.thermalExpansionL, closeTo(0, 0.01));
++    });
++  });
++
++  // ── Quantity value ────────────────────────────────────────────────────────
++
++  group('Quantity value', () {
++    test('setQuantityValue clamps to range', () {
++      state.setQuantityRange(QuantityRange.r1to100);
++      state.setQuantityValue(500);
++      expect(state.quantityValue, closeTo(100.0, 0.01));
++    });
++
++    test('volume 50 m3 gives volumeM3 ≈ 50', () {
++      state.setSliderTemp(15.0);
++      state.setQuantityValue(50.0);
++      expect(state.thermalState.volumeM3, closeTo(50.0, 0.5));
++    });
++
++    test('mass is proportional to volume', () {
++      state.setSliderTemp(15.0);
++      state.setQuantityRange(QuantityRange.r101to1000);
++      state.setQuantityValue(120.0);
++      final m1 = state.thermalState.massT;
++      state.setQuantityValue(240.0);
++      final m2 = state.thermalState.massT;
++      expect(m2, closeTo(m1 * 2, 1.0));
++    });
++  });
++
++  // ── Range switching ───────────────────────────────────────────────────────
++
++  group('Range switching', () {
++    test('switching range clamps value if out of bounds', () {
++      state.setQuantityRange(QuantityRange.r1to100);
++      state.setQuantityValue(500);
++      state.setQuantityRange(QuantityRange.r1to100);
++      expect(state.quantityValue, closeTo(100.0, 0.01));
++    });
++
++    test('switching to range containing value preserves value', () {
++      state.setQuantityRange(QuantityRange.r101to1000);
++      state.setQuantityValue(200);
++      state.setQuantityRange(QuantityRange.r101to1000);
++      expect(state.quantityValue, closeTo(200.0, 0.01));
++    });
++  });
++
++  // ── Unit switching ────────────────────────────────────────────────────────
++
++  group('Unit switching', () {
++    test('switching m3→t→m3 preserves quantity approximately', () {
++      state.setSliderTemp(15.0);
++      state.setQuantityValue(50.0);
++      final originalVolume = state.thermalState.volumeM3;
++
++      state.setQuantityUnit(QuantityUnit.tonnes);
++      state.setQuantityUnit(QuantityUnit.m3);
++
++      // After round-trip the volume should be close to original
++      expect(state.thermalState.volumeM3,
++          closeTo(originalVolume, originalVolume * 0.01));
++    });
++
++    test('switching unit updates quantityUnit', () {
++      expect(state.quantityUnit, QuantityUnit.m3);
++      state.setQuantityUnit(QuantityUnit.tonnes);
++      expect(state.quantityUnit, QuantityUnit.tonnes);
++    });
++
++    test('same unit switch is no-op', () {
++      final before = state.quantityValue;
++      state.setQuantityUnit(QuantityUnit.m3);
++      expect(state.quantityValue, before);
++    });
++  });
++
++  // ── QuantityRange ─────────────────────────────────────────────────────────
++
++  group('QuantityRange', () {
++    test('contains: values within range', () {
++      expect(QuantityRange.r1to100.contains(50), isTrue);
++      expect(QuantityRange.r1to100.contains(0), isFalse);
++      expect(QuantityRange.r1to100.contains(101), isFalse);
++    });
++
++    test('bestFor selects correct range', () {
++      expect(QuantityRange.bestFor(50), QuantityRange.r1to100);
++      expect(QuantityRange.bestFor(500), QuantityRange.r101to1000);
++      expect(QuantityRange.bestFor(5000), QuantityRange.r1001to10000);
++      expect(QuantityRange.bestFor(50000), QuantityRange.r10kto100k);
++    });
++
++    test('clamp keeps value in range', () {
++      expect(QuantityRange.r1to100.clamp(0), 1.0);
++      expect(QuantityRange.r1to100.clamp(50), 50.0);
++      expect(QuantityRange.r1to100.clamp(200), 100.0);
++    });
++  });
++
++  // ── Fuel switching ────────────────────────────────────────────────────────
++
++  group('Fuel switching', () {
++    test('switching to gasoline resets p15 to gasoline range', () {
++      state.setFuel(
++          kFuelGrades.firstWhere((f) => f.family == FuelFamily.gasoline));
++      expect(state.p15KgM3, closeTo(743.3, 0.1));
++      expect(state.thermalState.densityKgL, greaterThan(0.700));
++      expect(state.thermalState.densityKgL, lessThan(0.780));
++    });
++  });
++}

@@ -1,72 +1,69 @@
 import 'package:flutter/foundation.dart';
+
 import '../../../core/fuel_grade.dart';
 import '../../../core/validation.dart';
 import '../../../shared/state/density_memory.dart';
 import '../service/escalation_service.dart';
 
 class EscalationState extends ChangeNotifier {
-  FuelProductGroup _group = FuelProductGroup.gasoil;
-  FuelProductGroup get group => _group;
-
-  FuelGrade _product = kFuelGrades.first;
+  FuelGrade _product = _initialProduct();
   FuelGrade get product => _product;
 
   DensityBasis _basis = DensityBasis.vac;
   DensityBasis get basis => _basis;
 
-  String contractDensityRaw = '0.8450';
-  String actualDensityRaw   = '0.8332';
-  String averagePlattsRaw   = '1044.75';
-  String sellerPremiumRaw   = '140.00';
+  String contractDensityRaw = '';
+  String actualDensityRaw = '';
+  String averagePlattsRaw = '1044.75';
+  String sellerPremiumRaw = '140.00';
 
   EscalationResult? _result;
   EscalationResult? get result => _result;
 
-  // errors carry typed ValidationError? — widgets localize on demand.
   Map<String, ValidationError?> _errors = {};
   Map<String, ValidationError?> get errors => _errors;
 
   EscalationState() {
-    _group = DensityMemory.family == FuelFamily.gasoline
-        ? FuelProductGroup.gasoline
-        : FuelProductGroup.gasoil;
-
-    _product = kFuelGrades.firstWhere(
-      (f) => f.group == _group,
-      orElse: () => kFuelGrades.first,
-    );
+    contractDensityRaw =
+        (_product.contractDensityKgM3 / 1000).toStringAsFixed(4);
 
     actualDensityRaw = DensityMemory.p15VacKgL != null
         ? DensityMemory.p15VacKgL!.toStringAsFixed(4)
-        : (_group == FuelProductGroup.gasoil ? '0.8332' : '0.7433');
-
-    contractDensityRaw =
-        _group == FuelProductGroup.gasoil ? '0.8450' : '0.7450';
+        : _defaultActualDensityKgL(_product).toStringAsFixed(4);
 
     _calculate();
   }
 
-  void setGroup(FuelProductGroup group) {
-    _group = group;
-    final products = kFuelGrades.where((f) => f.group == group).toList();
-    _product = products.first;
-
-    if (group == FuelProductGroup.gasoil) {
-      contractDensityRaw = '0.8450';
-      actualDensityRaw   = '0.8332';
-    } else {
-      contractDensityRaw = '0.7450';
-      actualDensityRaw   = '0.7433';
+  static FuelGrade _initialProduct() {
+    final memoryFamily = DensityMemory.family;
+    if (memoryFamily != null) {
+      return kFuelGrades.firstWhere(
+        (f) => f.family == memoryFamily,
+        orElse: () => kFuelGrades.first,
+      );
     }
+    return kFuelGrades.first;
+  }
 
-    _calculate();
+  static double _defaultActualDensityKgL(FuelGrade product) {
+    return product.family == FuelFamily.gasoline ? 0.7433 : 0.8332;
   }
 
   void setProduct(FuelGrade product) {
     _product = product;
-    _group   = product.group;
+
     contractDensityRaw =
         (product.contractDensityKgM3 / 1000).toStringAsFixed(4);
+
+    final rememberedFamily = DensityMemory.family;
+    final rememberedP15 = DensityMemory.p15VacKgL;
+
+    if (rememberedP15 != null && rememberedFamily == product.family) {
+      actualDensityRaw = rememberedP15.toStringAsFixed(4);
+    } else {
+      actualDensityRaw = _defaultActualDensityKgL(product).toStringAsFixed(4);
+    }
+
     _calculate();
   }
 
@@ -107,11 +104,11 @@ class EscalationState extends ChangeNotifier {
       case 'sellerPremium':
         sellerPremiumRaw = value;
     }
+
     _calculate();
   }
 
-  List<FuelGrade> get availableProducts =>
-      kFuelGrades.where((f) => f.group == _group).toList();
+  List<FuelGrade> get availableProducts => kFuelGrades;
 
   void _calculate() {
     _errors = _validate();
@@ -123,11 +120,11 @@ class EscalationState extends ChangeNotifier {
     }
 
     _result = EscalationService.calculate(
-      averagePlatts:   _parse(averagePlattsRaw)!,
-      sellerPremium:   _parse(sellerPremiumRaw)!,
+      averagePlatts: _parse(averagePlattsRaw)!,
+      sellerPremium: _parse(sellerPremiumRaw)!,
       contractDensity: _parse(contractDensityRaw)!,
-      actualDensity:   _parse(actualDensityRaw)!,
-      basis:           _basis,
+      actualDensity: _parse(actualDensityRaw)!,
+      basis: _basis,
     );
 
     notifyListeners();
@@ -136,9 +133,9 @@ class EscalationState extends ChangeNotifier {
   Map<String, ValidationError?> _validate() {
     return {
       'contractDensity': EscalationService.validateDensity(contractDensityRaw),
-      'actualDensity':   EscalationService.validateDensity(actualDensityRaw),
-      'averagePlatts':   EscalationService.validatePrice(averagePlattsRaw),
-      'sellerPremium':   EscalationService.validatePrice(sellerPremiumRaw),
+      'actualDensity': EscalationService.validateDensity(actualDensityRaw),
+      'averagePlatts': EscalationService.validatePrice(averagePlattsRaw),
+      'sellerPremium': EscalationService.validatePrice(sellerPremiumRaw),
     };
   }
 
