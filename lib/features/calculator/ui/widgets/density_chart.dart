@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../../core/tokens.dart';
 import '../../models/density_point.dart';
 import '../../services/density_curve_service.dart';
-import '../../../visualization/utils/unit_converter.dart';
 
 /// График плотности vs температуры.
 ///
@@ -16,39 +15,27 @@ import '../../../visualization/utils/unit_converter.dart';
 class DensityChart extends StatelessWidget {
   final List<DensityPoint> curve;
   final DensityPoint operatingPoint;
-  final DensityPoint? referencePoint;
   final DensityPoint? mixturePoint;
   final double height;
-  final UnitSystem unitSystem;
 
   const DensityChart({
     super.key,
     required this.curve,
     required this.operatingPoint,
-    this.referencePoint,
     this.mixturePoint,
     this.height = 220,
-    this.unitSystem = UnitSystem.metric,
   });
 
   @override
   Widget build(BuildContext context) {
     if (curve.isEmpty) return const SizedBox.shrink();
 
-    final rawRange = DensityCurveService.densityRange(curve);
-    final isApi = unitSystem == UnitSystem.us;
-    final range = isApi
-        ? (min: UnitConverter.kglToApi(rawRange.max),
-           max: UnitConverter.kglToApi(rawRange.min))
-        : rawRange;
+    final range = DensityCurveService.densityRange(curve);
     final minTemp = curve.first.tempC;
     final maxTemp = curve.last.tempC;
 
-    double yVal(double kgl) =>
-        isApi ? UnitConverter.kglToApi(kgl) : kgl;
-
     final passportSpots =
-        curve.map((p) => FlSpot(p.tempC, yVal(p.densityKgL))).toList();
+        curve.map((p) => FlSpot(p.tempC, p.densityKgL)).toList();
 
     return Container(
       height: height,
@@ -69,7 +56,6 @@ class DensityChart extends StatelessWidget {
           range: range,
           minTemp: minTemp,
           maxTemp: maxTemp,
-          isApi: isApi,
         ),
         duration: const Duration(milliseconds: 150),
       ),
@@ -81,7 +67,6 @@ class DensityChart extends StatelessWidget {
     required ({double min, double max}) range,
     required double minTemp,
     required double maxTemp,
-    bool isApi = false,
   }) {
     final tInterval = (maxTemp - minTemp) / 6;
     final dInterval = (range.max - range.min) / 3;
@@ -103,9 +88,8 @@ class DensityChart extends StatelessWidget {
       ),
       titlesData: FlTitlesData(
         bottomTitles: AxisTitles(
-          axisNameWidget: Text(
-              isApi ? '°F' : '°C',
-              style: AppText.detailUnit.copyWith(fontSize: 10)),
+          axisNameWidget:
+              Text('°C', style: AppText.detailUnit.copyWith(fontSize: 10)),
           sideTitles: SideTitles(
             showTitles: true,
             interval: tInterval,
@@ -117,15 +101,14 @@ class DensityChart extends StatelessWidget {
           ),
         ),
         leftTitles: AxisTitles(
-          axisNameWidget: Text(
-              isApi ? '°API' : 'kg/l',
-              style: AppText.detailUnit.copyWith(fontSize: 10)),
+          axisNameWidget:
+              Text('kg/l', style: AppText.detailUnit.copyWith(fontSize: 10)),
           sideTitles: SideTitles(
             showTitles: true,
             interval: dInterval,
             reservedSize: 54,
             getTitlesWidget: (val, _) => Text(
-              isApi ? val.toStringAsFixed(1) : val.toStringAsFixed(3),
+              val.toStringAsFixed(3),
               style: AppText.detailUnit.copyWith(fontSize: 9),
             ),
           ),

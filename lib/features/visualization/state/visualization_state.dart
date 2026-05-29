@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import '../utils/unit_converter.dart';
 
 import '../../../core/fuel_grade.dart';
 import '../../calculator/models/density_point.dart';
@@ -62,7 +61,6 @@ class VisualizationState extends ChangeNotifier {
   QuantityUnit _qUnit = QuantityUnit.m3;
   QuantityRange _qRange = QuantityRange.r1to100;
   double _qValue = 50.0;
-  UnitSystem _unitSystem = UnitSystem.metric;
 
   late List<DensityPoint> _passportCurve;
   late ThermalState _thermalState;
@@ -100,7 +98,6 @@ class VisualizationState extends ChangeNotifier {
   QuantityUnit get quantityUnit => _qUnit;
   QuantityRange get quantityRange => _qRange;
   double get quantityValue => _qValue;
-  UnitSystem get unitSystem => _unitSystem;
 
   double get massT => _thermalState.massT;
 
@@ -140,12 +137,6 @@ class VisualizationState extends ChangeNotifier {
   void setQuantityValue(double value) {
     _qValue = _qRange.clamp(value);
     _thermalState = _computeState(_sliderT);
-    notifyListeners();
-  }
-
-  void setUnitSystem(UnitSystem sys) {
-    if (sys == _unitSystem) return;
-    _unitSystem = sys;
     notifyListeners();
   }
 
