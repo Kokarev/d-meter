@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../core/tokens.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/state/locale_state.dart';
+import '../../../shared/state/theme_state.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -33,6 +34,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     final l           = AppL10n.of(context);
     final localeState = context.watch<LocaleState>();
+    final themeState  = context.watch<ThemeState>();
     final currentCode =
         localeState.locale?.languageCode ??
         Localizations.localeOf(context).languageCode;
@@ -60,6 +62,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     currentCode:  currentCode,
                     localeState:  localeState,
                   ),
+
+                  const SizedBox(height: AppSpacing.lg),
+                  const Divider(color: AppColors.border, height: 1),
+                  const SizedBox(height: AppSpacing.lg),
+
+                  // ── Theme section ────────────────────────
+                  const _SectionLabel('APPEARANCE'),
+                  const SizedBox(height: AppSpacing.xs),
+                  _ThemeSelector(themeState: themeState),
 
                   const SizedBox(height: AppSpacing.lg),
                   const Divider(color: AppColors.border, height: 1),
@@ -206,6 +217,98 @@ class _LangButton extends StatelessWidget {
               color:      active ? AppColors.accent : AppColors.textSecondary,
               fontWeight: FontWeight.w700,
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Theme selector ──────────────────────────────────────────────────────────
+
+class _ThemeSelector extends StatelessWidget {
+  final ThemeState themeState;
+  const _ThemeSelector({required this.themeState});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: const BoxDecoration(
+        color:        AppColors.surfaceAlt,
+        borderRadius: AppRadii.lgAll,
+      ),
+      child: Row(
+        children: [
+          _ThemeButton(
+            label:  '☀️',
+            hint:   'Light',
+            active: themeState.mode == ThemeMode.light,
+            onTap:  () => themeState.setMode(ThemeMode.light),
+          ),
+          _ThemeButton(
+            label:  '⚙️',
+            hint:   'System',
+            active: themeState.mode == ThemeMode.system,
+            onTap:  () => themeState.setMode(ThemeMode.system),
+          ),
+          _ThemeButton(
+            label:  '🌙',
+            hint:   'Dark',
+            active: themeState.mode == ThemeMode.dark,
+            onTap:  () => themeState.setMode(ThemeMode.dark),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ThemeButton extends StatelessWidget {
+  final String       label;
+  final String       hint;
+  final bool         active;
+  final VoidCallback onTap;
+
+  const _ThemeButton({
+    required this.label,
+    required this.hint,
+    required this.active,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color:        active ? AppColors.accentBg : Colors.transparent,
+            borderRadius: AppRadii.mdAll,
+            border: active
+                ? Border.all(
+                    color: AppColors.accent.withAlpha(60), width: 1)
+                : null,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(label, style: const TextStyle(fontSize: 16)),
+              const SizedBox(height: 2),
+              Text(
+                hint,
+                style: AppText.detailUnit.copyWith(
+                  color: active
+                      ? AppColors.accent
+                      : AppColors.textSecondary,
+                  fontSize: 10,
+                  fontWeight: active ? FontWeight.w600 : FontWeight.w400,
+                ),
+              ),
+            ],
           ),
         ),
       ),
