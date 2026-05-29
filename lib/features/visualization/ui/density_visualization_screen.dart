@@ -10,6 +10,7 @@ import '../../calculator/ui/widgets/density_chart.dart';
 import '../../calculator/ui/widgets/density_slider.dart';
 import '../../calculator/ui/widgets/thermal_info_panel.dart';
 import '../state/visualization_state.dart';
+import '../utils/unit_converter.dart';
 
 class DensityVisualizationScreen extends StatelessWidget {
   const DensityVisualizationScreen({super.key});
@@ -60,6 +61,7 @@ class _VizHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isWide = MediaQuery.of(context).size.width >= 600;
+    final state  = context.watch<VisualizationState>();
 
     return Container(
       color: AppColors.surface,
@@ -133,6 +135,11 @@ class _VizHeader extends StatelessWidget {
               icon: const Icon(Icons.chevron_left_rounded),
               label: const Text('Calculator'),
             ),
+          const SizedBox(width: AppSpacing.xs),
+          _SystemToggle(
+            isUs:      state.unitSystem == UnitSystem.us,
+            onChanged: state.setUnitSystem,
+          ),
         ],
       ),
     );
@@ -171,8 +178,9 @@ class _Body extends StatelessWidget {
         Text(l.vizChartTitle.toUpperCase(), style: AppText.sectionLabel),
         const SizedBox(height: AppSpacing.xs + 2),
         DensityChart(
-          curve: state.passportCurve,
+          curve:          state.passportCurve,
           operatingPoint: operatingPoint,
+          unitSystem:     state.unitSystem,
         ),
         const SizedBox(height: AppSpacing.sm),
         Row(
@@ -203,6 +211,7 @@ class _Body extends StatelessWidget {
           labelVolume: l.detailVolume,
           labelMass: l.detailWeight,
           labelExpansion: l.vizThermalExpansion,
+          unitSystem:     state.unitSystem,
         ),
         const SizedBox(height: AppSpacing.xl),
       ],
@@ -427,6 +436,66 @@ class _LegendDot extends StatelessWidget {
       width: 8,
       height: 8,
       decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+    );
+  }
+}
+
+// ── Unit system toggle ────────────────────────────────────────────────────────
+
+class _SystemToggle extends StatelessWidget {
+  final bool isUs;
+  final ValueChanged<UnitSystem> onChanged;
+  const _SystemToggle({required this.isUs, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(2),
+      decoration: BoxDecoration(
+        color:        AppColors.surfaceAlt,
+        borderRadius: AppRadii.smAll,
+        border: Border.all(color: AppColors.border, width: 0.5),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _SysChip(label: 'SI', active: !isUs,
+              onTap: () => onChanged(UnitSystem.metric)),
+          _SysChip(label: 'US', active: isUs,
+              onTap: () => onChanged(UnitSystem.us)),
+        ],
+      ),
+    );
+  }
+}
+
+class _SysChip extends StatelessWidget {
+  final String       label;
+  final bool         active;
+  final VoidCallback onTap;
+  const _SysChip({required this.label, required this.active,
+                  required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm + 2, vertical: 4),
+        decoration: BoxDecoration(
+          color:        active ? AppColors.accent : Colors.transparent,
+          borderRadius: AppRadii.smAll,
+        ),
+        child: Text(label,
+          style: TextStyle(
+            fontSize:   11,
+            fontWeight: FontWeight.w600,
+            color: active ? Colors.white : AppColors.textSecondary,
+          ),
+        ),
+      ),
     );
   }
 }
