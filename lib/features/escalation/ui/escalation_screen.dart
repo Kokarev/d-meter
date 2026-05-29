@@ -68,6 +68,10 @@ class _FuelBasisCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isGasoil = state.product.family == FuelFamily.diesel;
     final fuelLabel = isGasoil ? 'GASOIL' : 'GASOLINE';
+    final isDark   = Theme.of(context).brightness == Brightness.dark;
+    final surface  = isDark ? AppColorsDark.surface : AppColors.surface;
+    final border   = isDark ? AppColorsDark.border  : AppColors.border;
+    final accent   = isDark ? AppColorsDark.accent  : AppColors.accent;
 
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -75,9 +79,9 @@ class _FuelBasisCard extends StatelessWidget {
         vertical: AppSpacing.sm,
       ),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: surface,
         borderRadius: AppRadii.lgAll,
-        border: Border.all(color: AppColors.border, width: 0.5),
+        border: Border.all(color: border, width: 0.5),
       ),
       child: Row(
         children: [
@@ -106,16 +110,16 @@ class _FuelBasisCard extends StatelessWidget {
                       fuelLabel,
                       overflow: TextOverflow.ellipsis,
                       style: AppText.detailValue.copyWith(
-                        color: AppColors.accent,
+                        color: accent,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 0.5,
                       ),
                     ),
                   ),
                   const SizedBox(width: AppSpacing.xs),
-                  const Icon(
+                  Icon(
                     Icons.keyboard_arrow_down_rounded,
-                    color: AppColors.accent,
+                    color: accent,
                   ),
                 ],
               ),
@@ -125,7 +129,7 @@ class _FuelBasisCard extends StatelessWidget {
             width: 1,
             height: 30,
             margin: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-            color: AppColors.border,
+            color: border,
           ),
           _DensityBasisSwitch(state: state),
         ],
@@ -140,7 +144,14 @@ class _DensityBasisSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isAir = state.basis == DensityBasis.air;
+    final isAir      = state.basis == DensityBasis.air;
+    final isDark     = Theme.of(context).brightness == Brightness.dark;
+    final surfaceAlt = isDark ? AppColorsDark.surfaceAlt : AppColors.surfaceAlt;
+    final border     = isDark ? AppColorsDark.border     : AppColors.border;
+    final accent     = isDark ? AppColorsDark.accent     : AppColors.accent;
+    final textSecondary = isDark
+        ? AppColorsDark.textSecondary
+        : AppColors.textSecondary;
 
     return GestureDetector(
       onTap: () => state.setBasis(
@@ -152,9 +163,9 @@ class _DensityBasisSwitch extends StatelessWidget {
         height: 44,
         padding: const EdgeInsets.all(3),
         decoration: BoxDecoration(
-          color: AppColors.surfaceAlt,
+          color: surfaceAlt,
           borderRadius: BorderRadius.circular(22),
-          border: Border.all(color: AppColors.border, width: 0.5),
+          border: Border.all(color: border, width: 0.5),
         ),
         child: Stack(
           children: [
@@ -166,7 +177,7 @@ class _DensityBasisSwitch extends StatelessWidget {
                 width: 62,
                 height: 38,
                 decoration: BoxDecoration(
-                  color: AppColors.accent,
+                  color: accent,
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
@@ -186,7 +197,7 @@ class _DensityBasisSwitch extends StatelessWidget {
                       'VAC',
                       style: AppText.detailValue.copyWith(
                         fontWeight: FontWeight.w800,
-                        color: isAir ? AppColors.textSecondary : Colors.white,
+                        color: isAir ? textSecondary : Colors.white,
                       ),
                     ),
                   ),
@@ -197,7 +208,7 @@ class _DensityBasisSwitch extends StatelessWidget {
                       'AIR',
                       style: AppText.detailValue.copyWith(
                         fontWeight: FontWeight.w800,
-                        color: isAir ? Colors.white : AppColors.textSecondary,
+                        color: isAir ? Colors.white : textSecondary,
                       ),
                     ),
                   ),
@@ -261,15 +272,19 @@ class _ResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = AppL10n.of(context);
-    final sign = result.escalationPerTon >= 0 ? '+' : '';
+    final l      = AppL10n.of(context);
+    final sign   = result.escalationPerTon >= 0 ? '+' : '';
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardSurface = isDark ? AppColorsDark.cardSurface : AppColors.cardSurface;
+    final border      = isDark ? AppColorsDark.border      : AppColors.border;
+    final accent      = isDark ? AppColorsDark.accent      : AppColors.accent;
 
     return Container(
       padding: AppSpacing.resultCardPadding,
       decoration: BoxDecoration(
-        color: AppColors.cardSurface,
+        color: cardSurface,
         borderRadius: AppRadii.lgAll,
-        border: Border.all(color: AppColors.border, width: 0.5),
+        border: Border.all(color: border, width: 0.5),
       ),
       child: Row(
         children: [
@@ -277,7 +292,7 @@ class _ResultCard extends StatelessWidget {
             width: 3,
             height: 92,
             decoration: BoxDecoration(
-              color: AppColors.accent,
+              color: accent,
               borderRadius: BorderRadius.circular(99),
             ),
           ),
@@ -331,14 +346,17 @@ class _FormulaNote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = AppL10n.of(context);
+    final l      = AppL10n.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final formulaBg = isDark ? AppColorsDark.formulaBg : AppColors.formulaBg;
+    final border    = isDark ? AppColorsDark.border    : AppColors.border;
 
     return Container(
       padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
-        color: AppColors.formulaBg,
+        color: formulaBg,
         borderRadius: AppRadii.lgAll,
-        border: Border.all(color: AppColors.border, width: 0.5),
+        border: Border.all(color: border, width: 0.5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
