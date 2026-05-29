@@ -8,10 +8,13 @@ import '../../services/density_curve_service.dart';
 ///
 /// Отображает:
 ///   1. Паспортную кривую (синяя линия)
-///   2. Текущую рабочую точку (красная точка + вертикальная пунктирная линия)
-///   3. Опциональную точку смеси — Phase 3 (зелёная точка)
+///   2. 🔵 Операционную точку (синяя, движется со слайдером)
+///   3. 🔴 Паспортную точку P15 @ 15°C (красная, фиксирована)
+///   4. Опциональную точку смеси — Phase 3 (зелёная точка)
 ///
-/// Стиль: industrial, mobile-first, без тяжёлых градиентов.
+/// Theme-aware: читает brightness из BuildContext.
+/// Light — AppColors.*, Dark — AppColorsDark.*
+/// Расчётная логика и публичный API не изменены.
 class DensityChart extends StatelessWidget {
   final List<DensityPoint> curve;
 
@@ -39,10 +42,12 @@ class DensityChart extends StatelessWidget {
   Widget build(BuildContext context) {
     if (curve.isEmpty) return const SizedBox.shrink();
 
-    final range = DensityCurveService.densityRange(curve);
-    final minTemp = curve.first.tempC;
-    final maxTemp = curve.last.tempC;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = _ChartColors(isDark);
 
+    final range    = DensityCurveService.densityRange(curve);
+    final minTemp  = curve.first.tempC;
+    final maxTemp  = curve.last.tempC;
     final passportSpots =
         curve.map((p) => FlSpot(p.tempC, p.densityKgL)).toList();
 
@@ -55,16 +60,17 @@ class DensityChart extends StatelessWidget {
         AppSpacing.md,
       ),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color:        colors.surface,
         borderRadius: AppRadii.lgAll,
-        border: Border.all(color: AppColors.border, width: 0.5),
+        border: Border.all(color: colors.border, width: 0.5),
       ),
       child: LineChart(
         _buildData(
           passportSpots: passportSpots,
-          range: range,
-          minTemp: minTemp,
-          maxTemp: maxTemp,
+          range:         range,
+          minTemp:       minTemp,
+          maxTemp:       maxTemp,
+          colors:        colors,
         ),
         duration: const Duration(milliseconds: 150),
       ),
@@ -72,14 +78,26 @@ class DensityChart extends StatelessWidget {
   }
 
   LineChartData _buildData({
-    required List<FlSpot> passportSpots,
+    required List<FlSpot>           passportSpots,
     required ({double min, double max}) range,
-    required double minTemp,
-    required double maxTemp,
+    required double                 minTemp,
+    required double                 maxTemp,
+    required _ChartColors           colors,
   }) {
     final tInterval = (maxTemp - minTemp) / 6;
     // 5 делений по оси Y — достаточный зазор между подписями
     final dInterval = (range.max - range.min) / 5;
+
+    final axisLabelStyle = TextStyle(
+      fontSize:   9,
+      color:      colors.axisLabel,
+      fontFamily: 'Roboto',
+    );
+    final axisNameStyle = TextStyle(
+      fontSize:   10,
+      color:      colors.axisLabel,
+      fontFamily: 'Roboto',
+    );
 
     return LineChartData(
       minX: minTemp,
@@ -87,79 +105,88 @@ class DensityChart extends StatelessWidget {
       minY: range.min,
       maxY: range.max,
       clipData: const FlClipData.all(),
+
+      // ── Grid ─────────────────────────────────────────────────────────────
       gridData: FlGridData(
         show: true,
         horizontalInterval: dInterval,
-        verticalInterval: tInterval,
+        verticalInterval:   tInterval,
         getDrawingHorizontalLine: (_) =>
-            const FlLine(color: AppColors.divider, strokeWidth: 0.5),
+            FlLine(color: colors.grid, strokeWidth: 0.5),
         getDrawingVerticalLine: (_) =>
-            const FlLine(color: AppColors.divider, strokeWidth: 0.5),
+            FlLine(color: colors.grid, strokeWidth: 0.5),
       ),
+
+      // ── Axes ─────────────────────────────────────────────────────────────
       titlesData: FlTitlesData(
         bottomTitles: AxisTitles(
-          axisNameWidget:
-              Text('°C', style: AppText.detailUnit.copyWith(fontSize: 10)),
+          axisNameWidget: Text('°C', style: axisNameStyle),
           sideTitles: SideTitles(
             showTitles: true,
-            interval: tInterval,
+            interval:     tInterval,
             reservedSize: 22,
-            getTitlesWidget: (val, _) => Text(
-              val.toStringAsFixed(0),
-              style: AppText.detailUnit.copyWith(fontSize: 9),
-            ),
+            getTitlesWidget: (val, _) =>
+                Text(val.toStringAsFixed(0), style: axisLabelStyle),
           ),
         ),
         leftTitles: AxisTitles(
-          axisNameWidget:
-              Text('kg/l', style: AppText.detailUnit.copyWith(fontSize: 10)),
+          axisNameWidget: Text('kg/l', style: axisNameStyle),
           sideTitles: SideTitles(
             showTitles: true,
-            interval: dInterval,
+            interval:     dInterval,
             reservedSize: 54,
-            getTitlesWidget: (val, _) => Text(
-              val.toStringAsFixed(3),
-              style: AppText.detailUnit.copyWith(fontSize: 8),
-            ),
+            getTitlesWidget: (val, _) =>
+                Text(val.toStringAsFixed(3),
+                    style: axisLabelStyle.copyWith(fontSize: 8)),
           ),
         ),
-        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        rightTitles:
-            const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        topTitles:   const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
       ),
+
+      // ── Border ───────────────────────────────────────────────────────────
       borderData: FlBorderData(
         show: true,
-        border: const Border(
-          bottom: BorderSide(color: AppColors.border, width: 0.5),
-          left: BorderSide(color: AppColors.border, width: 0.5),
+        border: Border(
+          bottom: BorderSide(color: colors.border, width: 0.5),
+          left:   BorderSide(color: colors.border, width: 0.5),
         ),
       ),
+
+      // ── Tooltip ──────────────────────────────────────────────────────────
       lineTouchData: LineTouchData(
         touchTooltipData: LineTouchTooltipData(
-          getTooltipColor: (_) => AppColors.surface,
-          tooltipBorder: const BorderSide(color: AppColors.border, width: 0.5),
+          getTooltipColor:     (_) => colors.tooltipBg,
+          tooltipBorder:       BorderSide(color: colors.border, width: 0.5),
           tooltipRoundedRadius: AppRadii.sm,
           getTooltipItems: (spots) => spots.map((s) {
             return LineTooltipItem(
               '${s.x.toStringAsFixed(1)}°C\n'
               '${s.y.toStringAsFixed(4)} kg/l',
-              AppText.detailValue.copyWith(fontSize: 10),
+              TextStyle(
+                fontSize:   10,
+                fontWeight: FontWeight.w500,
+                color:      colors.tooltipText,
+                fontFamily: 'Roboto',
+              ),
             );
           }).toList(),
         ),
       ),
+
+      // ── Lines & points ───────────────────────────────────────────────────
       lineBarsData: [
         // 1. Паспортная кривая — синяя линия
         LineChartBarData(
-          spots: passportSpots,
-          isCurved: true,
-          curveSmoothness: 0.3,
-          color: AppColors.accent,
-          barWidth: 1.5,
-          dotData: const FlDotData(show: false),
+          spots:            passportSpots,
+          isCurved:         true,
+          curveSmoothness:  0.3,
+          color:            colors.curve,
+          barWidth:         1.5,
+          dotData:          const FlDotData(show: false),
           belowBarData: BarAreaData(
-            show: true,
-            color: AppColors.accent.withAlpha(15),
+            show:  true,
+            color: colors.curveFill,
           ),
         ),
 
@@ -169,23 +196,23 @@ class DensityChart extends StatelessWidget {
             FlSpot(operatingPoint.tempC, range.min),
             FlSpot(operatingPoint.tempC, range.max),
           ],
-          color: AppColors.accent.withAlpha(80),
-          barWidth: 1,
-          dotData: const FlDotData(show: false),
+          color:     colors.operatingDash,
+          barWidth:  1,
+          dotData:   const FlDotData(show: false),
           dashArray: [4, 4],
         ),
 
-        // 3. 🔵 Операционная точка — синяя (density @ delivery temp, движется)
+        // 3. 🔵 Операционная точка — синяя (density @ delivery temp)
         LineChartBarData(
-          spots: [FlSpot(operatingPoint.tempC, operatingPoint.densityKgL)],
-          color: AppColors.accent,
+          spots:    [FlSpot(operatingPoint.tempC, operatingPoint.densityKgL)],
+          color:    colors.operating,
           barWidth: 0,
           dotData: FlDotData(
             show: true,
             getDotPainter: (_, __, ___, ____) => FlDotCirclePainter(
-              radius: 6,
-              color: AppColors.accent,
-              strokeColor: AppColors.surface,
+              radius:      6,
+              color:       colors.operating,
+              strokeColor: colors.surface,
               strokeWidth: 2,
             ),
           ),
@@ -197,23 +224,23 @@ class DensityChart extends StatelessWidget {
             FlSpot(referencePoint.tempC, range.min),
             FlSpot(referencePoint.tempC, range.max),
           ],
-          color: AppColors.brand.withAlpha(60),
-          barWidth: 1,
-          dotData: const FlDotData(show: false),
+          color:     colors.referenceDash,
+          barWidth:  1,
+          dotData:   const FlDotData(show: false),
           dashArray: [3, 5],
         ),
 
         // 5. 🔴 Паспортная точка — красная (P15 @ 15°C, фиксирована)
         LineChartBarData(
-          spots: [FlSpot(referencePoint.tempC, referencePoint.densityKgL)],
-          color: AppColors.brand,
+          spots:    [FlSpot(referencePoint.tempC, referencePoint.densityKgL)],
+          color:    colors.reference,
           barWidth: 0,
           dotData: FlDotData(
             show: true,
             getDotPainter: (_, __, ___, ____) => FlDotCirclePainter(
-              radius: 5,
-              color: AppColors.brand,
-              strokeColor: AppColors.surface,
+              radius:      5,
+              color:       colors.reference,
+              strokeColor: colors.surface,
               strokeWidth: 2,
             ),
           ),
@@ -222,15 +249,15 @@ class DensityChart extends StatelessWidget {
         // 6. Точка смеси — зелёная (Phase 3)
         if (mixturePoint != null)
           LineChartBarData(
-            spots: [FlSpot(mixturePoint!.tempC, mixturePoint!.densityKgL)],
-            color: AppColors.success,
+            spots:    [FlSpot(mixturePoint!.tempC, mixturePoint!.densityKgL)],
+            color:    colors.mixture,
             barWidth: 0,
             dotData: FlDotData(
               show: true,
               getDotPainter: (_, __, ___, ____) => FlDotCirclePainter(
-                radius: 5,
-                color: AppColors.success,
-                strokeColor: AppColors.surface,
+                radius:      5,
+                color:       colors.mixture,
+                strokeColor: colors.surface,
                 strokeWidth: 2,
               ),
             ),
@@ -238,4 +265,42 @@ class DensityChart extends StatelessWidget {
       ],
     );
   }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// _ChartColors — isolated color set for light / dark.
+// Single source of truth for all chart colors.
+// ─────────────────────────────────────────────────────────────────────────────
+class _ChartColors {
+  final bool isDark;
+  const _ChartColors(this.isDark);
+
+  // Container
+  Color get surface => isDark ? AppColorsDark.surface : AppColors.surface;
+  Color get border  => isDark ? AppColorsDark.border  : AppColors.border;
+
+  // Grid & axes
+  Color get grid      => isDark ? AppColorsDark.chartGrid : AppColors.divider;
+  Color get axisLabel => isDark ? AppColorsDark.textHint  : AppColors.textHint;
+
+  // Tooltip
+  Color get tooltipBg   => isDark ? AppColorsDark.surface      : AppColors.surface;
+  Color get tooltipText => isDark ? AppColorsDark.textPrimary   : AppColors.textPrimary;
+
+  // Passport curve (синяя линия)
+  Color get curve     => isDark ? AppColorsDark.accent           : AppColors.accent;
+  Color get curveFill => isDark ? AppColorsDark.chartFill        : AppColors.accent.withAlpha(15);
+
+  // 🔵 Operating point (движется)
+  Color get operating     => isDark ? AppColorsDark.chartOperating   : AppColors.accent;
+  Color get operatingDash => isDark
+      ? AppColorsDark.chartOperating.withAlpha(100)
+      : AppColors.accent.withAlpha(80);
+
+  // 🔴 Reference point P15 @ 15°C (фиксирован, одинаков в обоих темах)
+  Color get reference     => AppColors.brand;
+  Color get referenceDash => AppColors.brand.withAlpha(60);
+
+  // Phase 3 mixture point
+  Color get mixture => isDark ? AppColorsDark.success : AppColors.success;
 }
