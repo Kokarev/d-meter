@@ -40,7 +40,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         Localizations.localeOf(context).languageCode;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).brightness == Brightness.dark
+          ? AppColorsDark.background
+          : AppColors.background,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,7 +66,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
 
                   const SizedBox(height: AppSpacing.lg),
-                  const Divider(color: AppColors.border, height: 1),
+                  Divider(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? AppColorsDark.border : AppColors.border,
+                    height: 1,
+                  ),
                   const SizedBox(height: AppSpacing.lg),
 
                   // ── Theme section ────────────────────────
@@ -73,7 +79,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   _ThemeSelector(themeState: themeState),
 
                   const SizedBox(height: AppSpacing.lg),
-                  const Divider(color: AppColors.border, height: 1),
+                  Divider(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? AppColorsDark.border : AppColors.border,
+                    height: 1,
+                  ),
                   const SizedBox(height: AppSpacing.lg),
 
                   // ── App section ──────────────────────────
@@ -108,8 +118,9 @@ class _SettingsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      color: AppColors.surface,
+      color: isDark ? AppColorsDark.surface : AppColors.surface,
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.md,
       ),
@@ -124,15 +135,18 @@ class _SettingsHeader extends StatelessWidget {
               child: Container(
                 width: 34, height: 34,
                 decoration: BoxDecoration(
-                  color:        AppColors.accentBg,
+                  color: isDark ? AppColorsDark.accentBg : AppColors.accentBg,
                   borderRadius: AppRadii.smAll,
                   border: Border.all(
-                    color: AppColors.accent.withAlpha(60), width: 1),
+                    color: (isDark ? AppColorsDark.accent : AppColors.accent)
+                        .withAlpha(60),
+                    width: 1,
+                  ),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.arrow_back_ios_new_rounded,
                   size: 15,
-                  color: AppColors.accent,
+                  color: isDark ? AppColorsDark.accent : AppColors.accent,
                 ),
               ),
             ),
@@ -163,10 +177,12 @@ class _LanguageSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark     = Theme.of(context).brightness == Brightness.dark;
+    final surfaceAlt = isDark ? AppColorsDark.surfaceAlt : AppColors.surfaceAlt;
     return Container(
       padding: const EdgeInsets.all(4),
-      decoration: const BoxDecoration(
-        color:        AppColors.surfaceAlt,
+      decoration: BoxDecoration(
+        color:        surfaceAlt,
         borderRadius: AppRadii.lgAll,
       ),
       child: Row(
@@ -207,14 +223,21 @@ class _LangButton extends StatelessWidget {
           duration: const Duration(milliseconds: 180),
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color:        active ? AppColors.accentBg : Colors.transparent,
+            color: active
+                ? (Theme.of(context).brightness == Brightness.dark
+                    ? AppColorsDark.accentBg : AppColors.accentBg)
+                : Colors.transparent,
             borderRadius: AppRadii.mdAll,
           ),
           child: Text(
             label,
             textAlign: TextAlign.center,
             style: AppText.dropdownItem.copyWith(
-              color:      active ? AppColors.accent : AppColors.textSecondary,
+              color: active
+                  ? (Theme.of(context).brightness == Brightness.dark
+                      ? AppColorsDark.accent : AppColors.accent)
+                  : (Theme.of(context).brightness == Brightness.dark
+                      ? AppColorsDark.textSecondary : AppColors.textSecondary),
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -234,8 +257,9 @@ class _ThemeSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(4),
-      decoration: const BoxDecoration(
-        color:        AppColors.surfaceAlt,
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.dark
+            ? AppColorsDark.surfaceAlt : AppColors.surfaceAlt,
         borderRadius: AppRadii.lgAll,
       ),
       child: Row(
@@ -286,11 +310,17 @@ class _ThemeButton extends StatelessWidget {
           duration: const Duration(milliseconds: 180),
           padding: const EdgeInsets.symmetric(vertical: 8),
           decoration: BoxDecoration(
-            color:        active ? AppColors.accentBg : Colors.transparent,
+            color: active
+                ? (Theme.of(context).brightness == Brightness.dark
+                    ? AppColorsDark.accentBg : AppColors.accentBg)
+                : Colors.transparent,
             borderRadius: AppRadii.mdAll,
             border: active
                 ? Border.all(
-                    color: AppColors.accent.withAlpha(60), width: 1)
+                    color: (Theme.of(context).brightness == Brightness.dark
+                        ? AppColorsDark.accent : AppColors.accent)
+                        .withAlpha(60),
+                    width: 1)
                 : null,
           ),
           child: Column(
@@ -302,8 +332,10 @@ class _ThemeButton extends StatelessWidget {
                 hint,
                 style: AppText.detailUnit.copyWith(
                   color: active
-                      ? AppColors.accent
-                      : AppColors.textSecondary,
+                      ? (Theme.of(context).brightness == Brightness.dark
+                          ? AppColorsDark.accent : AppColors.accent)
+                      : (Theme.of(context).brightness == Brightness.dark
+                          ? AppColorsDark.textSecondary : AppColors.textSecondary),
                   fontSize: 10,
                   fontWeight: active ? FontWeight.w600 : FontWeight.w400,
                 ),
