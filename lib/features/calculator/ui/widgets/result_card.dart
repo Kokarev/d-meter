@@ -43,20 +43,26 @@ class ResultCard extends StatelessWidget {
         : result.weightT.toStringAsFixed(3);
     final secondaryUnit = isDensityMode ? 'm³' : 't';
 
+    final isDark   = Theme.of(context).brightness == Brightness.dark;
+    final resultBg = isDark ? AppColorsDark.resultBg : AppColors.resultBg;
+    final border   = isDark ? AppColorsDark.border   : AppColors.border;
+    final shadow   = isDark ? AppColorsDark.shadow   : AppColors.shadow;
+    final accent   = isDark ? AppColorsDark.accent   : AppColors.accent;
+    final divider  = isDark ? AppColorsDark.divider  : AppColors.divider;
     return GestureDetector(
       onLongPress: () =>
           _copyToClipboard(context, l, primaryValue, primaryUnit),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: AppColors.resultBg,
+          color: resultBg,
           borderRadius: AppRadii.lgAll,
-          border: Border.all(color: AppColors.border, width: 0.5),
-          boxShadow: const [
+          border: Border.all(color: border, width: 0.5),
+          boxShadow: [
             BoxShadow(
-              color: AppColors.shadow,
+              color: shadow,
               blurRadius: 8,
-              offset: Offset(0, 2),
+              offset: const Offset(0, 2),
             ),
           ],
         ),
@@ -67,9 +73,9 @@ class ResultCard extends StatelessWidget {
               // ── Синя акцентна смуга ────────────────────────────────
               Container(
                 width: 3,
-                decoration: const BoxDecoration(
-                  color: AppColors.accent,
-                  borderRadius: BorderRadius.only(
+                decoration: BoxDecoration(
+                  color: accent,
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(AppRadii.lg),
                     bottomLeft: Radius.circular(AppRadii.lg),
                   ),
@@ -101,10 +107,10 @@ class ResultCard extends StatelessWidget {
                       ),
 
                       const SizedBox(height: 8),
-                      const Divider(
+                      Divider(
                         height: 1,
                         thickness: 0.5,
-                        color: AppColors.divider,
+                        color: divider,
                       ),
                       const SizedBox(height: 6),
 
@@ -158,10 +164,10 @@ class ResultCard extends StatelessWidget {
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                    const Icon(
+                                    Icon(
                                       Icons.chevron_right_rounded,
                                       size: 14,
-                                      color: AppColors.accent,
+                                      color: accent,
                                     ),
                                   ],
                                 ),

@@ -56,6 +56,11 @@ class _LabeledInputFieldState extends State<LabeledInputField> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark     = Theme.of(context).brightness == Brightness.dark;
+    final surface    = isDark ? AppColorsDark.surface      : AppColors.surface;
+    final border     = isDark ? AppColorsDark.border       : AppColors.border;
+    final focusBorder = isDark ? AppColorsDark.borderFocus : AppColors.borderFocus;
+    final danger     = isDark ? AppColorsDark.danger       : AppColors.danger;
     final hasError  = widget.error != null;
     final errorText = hasError ? widget.error!.localize(context) : null;
 
@@ -88,32 +93,32 @@ class _LabeledInputFieldState extends State<LabeledInputField> {
                       vertical:   AppSpacing.inputPadV,
                     ),
                     filled:    true,
-                    fillColor: AppColors.surface,
+                    fillColor: surface,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: AppRadii.mdAll,
                       borderSide: BorderSide(
-                        color: hasError ? AppColors.danger : AppColors.border,
+                        color: hasError ? danger : border,
                         width: 0.75,
                       ),
                     ),
-                    focusedBorder: const OutlineInputBorder(
+                    focusedBorder: OutlineInputBorder(
                       borderRadius: AppRadii.mdAll,
                       borderSide: BorderSide(
-                        color: AppColors.borderFocus,
+                        color: focusBorder,
                         width: 1.5,
                       ),
                     ),
-                    errorBorder: const OutlineInputBorder(
+                    errorBorder: OutlineInputBorder(
                       borderRadius: AppRadii.mdAll,
                       borderSide: BorderSide(
-                        color: AppColors.danger,
+                        color: danger,
                         width: 1,
                       ),
                     ),
-                    focusedErrorBorder: const OutlineInputBorder(
+                    focusedErrorBorder: OutlineInputBorder(
                       borderRadius: AppRadii.mdAll,
                       borderSide: BorderSide(
-                        color: AppColors.danger,
+                        color: danger,
                         width: 1.5,
                       ),
                     ),
@@ -135,7 +140,7 @@ class _LabeledInputFieldState extends State<LabeledInputField> {
             const SizedBox(height: 3),
             Text(
               errorText!,
-              style: AppText.sectionLabel.copyWith(color: AppColors.danger),
+              style: AppText.sectionLabel.copyWith(color: danger),
             ),
           ],
         ],

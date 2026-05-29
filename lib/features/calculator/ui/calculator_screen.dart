@@ -42,7 +42,9 @@ class _CalculatorView extends StatelessWidget {
         autofocus: true,
         child: Scaffold(
           drawerEdgeDragWidth: 0,
-          backgroundColor: AppColors.background,
+          backgroundColor: Theme.of(context).brightness == Brightness.dark
+              ? AppColorsDark.background
+              : AppColors.background,
           drawer: const AppMenuDrawer(),
           body: Center(
             child: ConstrainedBox(
@@ -209,19 +211,25 @@ class _InfoHint extends StatelessWidget {
     return Container(
       padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? AppColorsDark.surface : AppColors.surface,
         borderRadius: AppRadii.lgAll,
-        border: Border.all(color: AppColors.border, width: 0.5),
+        border: Border.all(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? AppColorsDark.border : AppColors.border,
+          width: 0.5,
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(top: 1),
+          Padding(
+            padding: const EdgeInsets.only(top: 1),
             child: Icon(
               Icons.info_outline_rounded,
               size: 14,
-              color: AppColors.textHint,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColorsDark.textHint : AppColors.textHint,
             ),
           ),
           const SizedBox(width: AppSpacing.sm),
@@ -229,7 +237,8 @@ class _InfoHint extends StatelessWidget {
             child: Text(
               text,
               style: AppText.detailKey.copyWith(
-                color: AppColors.textSecondary,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? AppColorsDark.textSecondary : AppColors.textSecondary,
                 fontSize: 11,
               ),
             ),

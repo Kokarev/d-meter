@@ -16,11 +16,14 @@ class ModeSelectorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppL10n.of(context);
+    final isDark     = Theme.of(context).brightness == Brightness.dark;
+    final surfaceAlt = isDark ? AppColorsDark.surfaceAlt : AppColors.surfaceAlt;
+    final border     = isDark ? AppColorsDark.border     : AppColors.border;
     return Container(
       decoration: BoxDecoration(
-        color:        AppColors.surfaceAlt,
+        color:        surfaceAlt,
         borderRadius: AppRadii.mdAll,
-        border:       Border.all(color: AppColors.border, width: 0.5),
+        border:       Border.all(color: border, width: 0.5),
       ),
       padding: const EdgeInsets.all(3),
       child: Row(
@@ -65,7 +68,10 @@ class _Tab extends StatelessWidget {
             horizontal: AppSpacing.sm,
           ),
           decoration: BoxDecoration(
-            color:        active ? AppColors.accent : Colors.transparent,
+            color: active
+                ? (Theme.of(context).brightness == Brightness.dark
+                    ? AppColorsDark.accent : AppColors.accent)
+                : Colors.transparent,
             borderRadius: AppRadii.smAll,
           ),
           child: Text(

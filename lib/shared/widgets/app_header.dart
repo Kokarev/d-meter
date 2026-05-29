@@ -20,8 +20,9 @@ class AppHeader extends StatelessWidget {
     final compactMode = screenWidth < 360;
     final ultraCompactMode = screenWidth < 220;
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      color: AppColors.surface,
+      color: isDark ? AppColorsDark.surface : AppColors.surface,
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.lg,
         AppSpacing.md,
@@ -74,18 +75,18 @@ class AppHeader extends StatelessWidget {
                       width: 34,
                       height: 34,
                       decoration: BoxDecoration(
-                        color: AppColors.accentBg,
+                        color: isDark ? AppColorsDark.accentBg : AppColors.accentBg,
                         borderRadius: AppRadii.smAll,
                         border: Border.all(
-                          color:
-                              AppColors.accent.withAlpha(60),
+                          color: (isDark ? AppColorsDark.accent : AppColors.accent)
+                              .withAlpha(60),
                           width: 1,
                         ),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.menu_rounded,
                         size: 17,
-                        color: AppColors.accent,
+                        color: isDark ? AppColorsDark.accent : AppColors.accent,
                       ),
                     ),
                   ),
@@ -134,17 +135,20 @@ class _LocaleToggle extends StatelessWidget {
             vertical: 6,
           ),
           decoration: BoxDecoration(
-            color: AppColors.accentBg,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColorsDark.accentBg : AppColors.accentBg,
             borderRadius: AppRadii.smAll,
             border: Border.all(
-              color: AppColors.accent.withAlpha(60),
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? AppColorsDark.accent : AppColors.accent).withAlpha(60),
               width: 1,
             ),
           ),
           child: Text(
             label,
             style: AppText.sectionLabel.copyWith(
-              color: AppColors.accent,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColorsDark.accent : AppColors.accent,
               fontSize: 11,
               letterSpacing: 0.5,
             ),
