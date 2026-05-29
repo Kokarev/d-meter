@@ -34,7 +34,9 @@ class _View extends StatelessWidget {
     final l = AppL10n.of(context);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).brightness == Brightness.dark
+          ? AppColorsDark.background
+          : AppColors.background,
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -62,7 +64,9 @@ class _VizHeader extends StatelessWidget {
     final isWide = MediaQuery.of(context).size.width >= 600;
 
     return Container(
-      color: AppColors.surface,
+      color: Theme.of(context).brightness == Brightness.dark
+          ? AppColorsDark.surface
+          : AppColors.surface,
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.lg,
         AppSpacing.md,
@@ -82,13 +86,21 @@ class _VizHeader extends StatelessWidget {
                 width: 42,
                 height: 42,
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceAlt,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? AppColorsDark.surfaceAlt
+                      : AppColors.surfaceAlt,
                   borderRadius: AppRadii.smAll,
-                  border: Border.all(color: AppColors.border),
+                  border: Border.all(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? AppColorsDark.border
+                        : AppColors.border,
+                  ),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.chevron_left_rounded,
-                  color: AppColors.accent,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? AppColorsDark.accent
+                      : AppColors.accent,
                   size: 30,
                 ),
               ),
@@ -101,14 +113,16 @@ class _VizHeader extends StatelessWidget {
                 TextSpan(
                   text: 'D-',
                   style: AppText.sectionLabel.copyWith(
-                    color: AppColors.textPrimary,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? AppColorsDark.textPrimary
+                        : AppColors.textPrimary,
                     fontSize: isWide ? 20 : null,
                   ),
                 ),
                 TextSpan(
                   text: 'METER',
                   style: AppText.sectionLabel.copyWith(
-                    color: AppColors.brand,
+                    color: AppColors.brand, // brand unchanged in dark
                     fontSize: isWide ? 20 : null,
                   ),
                 ),
@@ -191,7 +205,11 @@ class _Body extends StatelessWidget {
         const SizedBox(height: AppSpacing.sm),
         Row(
           children: [
-            const _LegendDot(color: AppColors.accent),
+            _LegendDot(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColorsDark.accent
+                  : AppColors.accent,
+            ),
             const SizedBox(width: 4),
             Text(l.vizLegendOperating, style: AppText.detailUnit),
             const SizedBox(width: AppSpacing.md),
@@ -243,9 +261,9 @@ class _QuantityCard extends StatelessWidget {
     return Container(
       padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: surface,
         borderRadius: AppRadii.lgAll,
-        border: Border.all(color: AppColors.border, width: 0.5),
+        border: Border.all(color: border, width: 0.5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -280,10 +298,10 @@ class _QuantityCard extends StatelessWidget {
           ),
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
-              activeTrackColor:   AppColors.accent,
-              inactiveTrackColor: AppColors.surfaceAlt,
-              thumbColor:         AppColors.accent,
-              overlayColor:       AppColors.accent.withAlpha(25),
+              activeTrackColor:   accent,
+              inactiveTrackColor: surfaceAlt,
+              thumbColor:         accent,
+              overlayColor:       accent.withAlpha(25),
               trackHeight:        3,
               thumbShape:
                   const RoundSliderThumbShape(enabledThumbRadius: 7),
@@ -423,18 +441,32 @@ class _QuantityInputState extends State<_QuantityInput> {
             focusNode:  _focusNode,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             textAlign: TextAlign.right,
-            style: AppText.detailValue.copyWith(color: AppColors.accent),
+            style: AppText.detailValue.copyWith(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColorsDark.accent
+                  : AppColors.accent,
+            ),
             decoration: InputDecoration(
               isDense: true,
               contentPadding: const EdgeInsets.symmetric(
                   horizontal: AppSpacing.sm, vertical: 6),
-              enabledBorder: const OutlineInputBorder(
+              enabledBorder: OutlineInputBorder(
                 borderRadius: AppRadii.smAll,
-                borderSide: BorderSide(color: AppColors.border, width: 0.5),
+                borderSide: BorderSide(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? AppColorsDark.border
+                      : AppColors.border,
+                  width: 0.5,
+                ),
               ),
-              focusedBorder: const OutlineInputBorder(
+              focusedBorder: OutlineInputBorder(
                 borderRadius: AppRadii.smAll,
-                borderSide: BorderSide(color: AppColors.accent, width: 1),
+                borderSide: BorderSide(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? AppColorsDark.accent
+                      : AppColors.accent,
+                  width: 1,
+                ),
               ),
               suffixText: widget.unitText,
               suffixStyle: AppText.detailUnit,
@@ -473,7 +505,11 @@ class _UnitButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
         decoration: BoxDecoration(
-          color: active ? AppColors.accent : AppColors.surfaceAlt,
+          color: active
+              ? (Theme.of(context).brightness == Brightness.dark
+                  ? AppColorsDark.accent : AppColors.accent)
+              : (Theme.of(context).brightness == Brightness.dark
+                  ? AppColorsDark.surfaceAlt : AppColors.surfaceAlt),
           borderRadius: AppRadii.smAll,
         ),
         child: Text(
@@ -503,7 +539,11 @@ class _RangeChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
         decoration: BoxDecoration(
-          color: active ? AppColors.accent : AppColors.surfaceAlt,
+          color: active
+              ? (Theme.of(context).brightness == Brightness.dark
+                  ? AppColorsDark.accent : AppColors.accent)
+              : (Theme.of(context).brightness == Brightness.dark
+                  ? AppColorsDark.surfaceAlt : AppColors.surfaceAlt),
           borderRadius: AppRadii.smAll,
         ),
         child: Text(
@@ -531,9 +571,14 @@ class _FuelToggle extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        color: AppColors.surfaceAlt,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? AppColorsDark.surfaceAlt : AppColors.surfaceAlt,
         borderRadius: AppRadii.mdAll,
-        border: Border.all(color: AppColors.border, width: 0.5),
+        border: Border.all(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? AppColorsDark.border : AppColors.border,
+          width: 0.5,
+        ),
       ),
       child: Row(
         children: [
@@ -568,7 +613,10 @@ class _Tab extends StatelessWidget {
             horizontal: AppSpacing.sm,
           ),
           decoration: BoxDecoration(
-            color: active ? AppColors.accent : Colors.transparent,
+            color: active
+                ? (Theme.of(context).brightness == Brightness.dark
+                    ? AppColorsDark.accent : AppColors.accent)
+                : Colors.transparent,
             borderRadius: AppRadii.smAll,
           ),
           child: Text(
