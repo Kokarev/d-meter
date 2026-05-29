@@ -43,13 +43,20 @@ class DetailsPanel extends StatelessWidget {
   // ── Desktop: inline expand/collapse (оригинальное поведение) ─────────────
 
   Widget _buildInline(BuildContext context) {
-    final l = AppL10n.of(context);
+    final l      = AppL10n.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final surface  = isDark ? AppColorsDark.surface  : AppColors.surface;
+    final border   = isDark ? AppColorsDark.border   : AppColors.border;
+    final divider  = isDark ? AppColorsDark.divider  : AppColors.divider;
+    final accent   = isDark ? AppColorsDark.accent   : AppColors.accent;
+    final textHint = isDark ? AppColorsDark.textHint : AppColors.textHint;
+    final formulaBg = isDark ? AppColorsDark.formulaBg : AppColors.formulaBg;
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: surface,
         borderRadius: AppRadii.lgAll,
-        border: Border.all(color: AppColors.border, width: 0.5),
+        border: Border.all(color: border, width: 0.5),
       ),
       child: Column(
         children: [
@@ -66,10 +73,10 @@ class DetailsPanel extends StatelessWidget {
               padding: AppSpacing.cardPadding,
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.expand_circle_down_outlined,
                     size: 15,
-                    color: AppColors.accent,
+                    color: accent,
                   ),
                   const SizedBox(width: AppSpacing.sm),
                   Text(l.detailsToggle, style: AppText.resultLabel),
@@ -77,10 +84,10 @@ class DetailsPanel extends StatelessWidget {
                   AnimatedRotation(
                     duration: const Duration(milliseconds: 200),
                     turns: isOpen ? 0.5 : 0,
-                    child: const Icon(
+                    child: Icon(
                       Icons.keyboard_arrow_down_rounded,
                       size: 16,
-                      color: AppColors.textHint,
+                      color: textHint,
                     ),
                   ),
                 ],
@@ -100,8 +107,7 @@ class DetailsPanel extends StatelessWidget {
               excluding: !isOpen,
               child: Column(
                 children: [
-                  const Divider(
-                      height: 1, thickness: 0.5, color: AppColors.divider),
+                  Divider(height: 1, thickness: 0.5, color: divider),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(
                       AppSpacing.lg,
@@ -145,9 +151,8 @@ class DetailsPanel extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const Divider(
-                      height: 1, thickness: 0.5, color: AppColors.divider),
-                  _FormulaBlock(mode: mode),
+                  Divider(height: 1, thickness: 0.5, color: divider),
+                  _FormulaBlock(mode: mode, isDark: isDark, formulaBg: formulaBg),
                 ],
               ),
             ), // ExcludeFocus
@@ -160,13 +165,18 @@ class DetailsPanel extends StatelessWidget {
   // ── Mobile: tap открывает bottom sheet ───────────────────────────────────
 
   Widget _buildSheetTrigger(BuildContext context) {
-    final l = AppL10n.of(context);
+    final l      = AppL10n.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final surface  = isDark ? AppColorsDark.surface  : AppColors.surface;
+    final border   = isDark ? AppColorsDark.border   : AppColors.border;
+    final accent   = isDark ? AppColorsDark.accent   : AppColors.accent;
+    final textHint = isDark ? AppColorsDark.textHint : AppColors.textHint;
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: surface,
         borderRadius: AppRadii.lgAll,
-        border: Border.all(color: AppColors.border, width: 0.5),
+        border: Border.all(color: border, width: 0.5),
       ),
       child: InkWell(
         onTap: () => _openSheet(context),
@@ -175,18 +185,18 @@ class DetailsPanel extends StatelessWidget {
           padding: AppSpacing.cardPadding,
           child: Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.expand_circle_down_outlined,
                 size: 15,
-                color: AppColors.accent,
+                color: accent,
               ),
               const SizedBox(width: AppSpacing.sm),
               Text(l.detailsToggle, style: AppText.resultLabel),
               const Spacer(),
-              const Icon(
+              Icon(
                 Icons.chevron_right_rounded,
                 size: 16,
-                color: AppColors.textHint,
+                color: textHint,
               ),
             ],
           ),
@@ -255,7 +265,13 @@ class _DetailRow extends StatelessWidget {
 
 class _FormulaBlock extends StatelessWidget {
   final CalcMode mode;
-  const _FormulaBlock({required this.mode});
+  final bool  isDark;
+  final Color formulaBg;
+  const _FormulaBlock({
+    required this.mode,
+    required this.isDark,
+    required this.formulaBg,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -269,9 +285,9 @@ class _FormulaBlock extends StatelessWidget {
         horizontal: AppSpacing.lg,
         vertical: AppSpacing.sm + 2,
       ),
-      decoration: const BoxDecoration(
-        color: AppColors.formulaBg,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: formulaBg,
+        borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(AppRadii.lg),
           bottomRight: Radius.circular(AppRadii.lg),
         ),
