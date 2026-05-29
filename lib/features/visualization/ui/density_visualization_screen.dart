@@ -147,9 +147,16 @@ class _Body extends StatelessWidget {
     final state = context.watch<VisualizationState>();
     final l = AppL10n.of(context);
 
+    // 🔵 Операционная точка: density @ delivery temp (движется)
     final operatingPoint = DensityPoint(
       tempC: state.sliderTempC,
       densityKgL: state.thermalState.densityKgL,
+    );
+
+    // 🔴 Паспортная точка: P15 @ 15°C (фиксирована)
+    final referencePoint = DensityPoint(
+      tempC: 15.0,
+      densityKgL: state.p15KgM3 / 1000,
     );
 
     return ListView(
@@ -173,17 +180,18 @@ class _Body extends StatelessWidget {
         DensityChart(
           curve: state.passportCurve,
           operatingPoint: operatingPoint,
+          referencePoint: referencePoint,
         ),
         const SizedBox(height: AppSpacing.sm),
         Row(
           children: [
             const _LegendDot(color: AppColors.accent),
             const SizedBox(width: 4),
-            Text(l.vizLegendPassport, style: AppText.detailUnit),
+            Text(l.vizLegendOperating, style: AppText.detailUnit),
             const SizedBox(width: AppSpacing.md),
             const _LegendDot(color: AppColors.brand),
             const SizedBox(width: 4),
-            Text(l.vizLegendOperating, style: AppText.detailUnit),
+            Text(l.vizLegendPassport, style: AppText.detailUnit),
           ],
         ),
         const SizedBox(height: AppSpacing.md),
@@ -216,11 +224,15 @@ class _QuantityCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<VisualizationState>();
+    // Стандартное обозначение массы: t (не tn)
     final unitText = state.quantityUnit == QuantityUnit.m3 ? 'm³' : 't';
     final isFineVolumeRange = state.quantityUnit == QuantityUnit.m3 &&
         state.quantityRange == QuantityRange.r1to100;
-    final valueDecimals = isFineVolumeRange ? 3 : 0;
-    final sliderDivisions = isFineVolumeRange ? 99000 : 1000;
+    // Всегда 3 знака после запятой
+    const valueDecimals = 3;
+    final sliderDivisions = ((state.quantityRange.max -
+            state.quantityRange.min) *
+        (isFineVolumeRange ? 10 : 1)).round();
 
     return Container(
       padding: AppSpacing.cardPadding,
@@ -250,27 +262,54 @@ class _QuantityCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
-          Row(
-            children: [
-              Text(
-                state.quantityValue.toStringAsFixed(valueDecimals),
-                style: AppText.detailValue.copyWith(color: AppColors.accent),
-              ),
-              const SizedBox(width: 6),
-              Text(unitText, style: AppText.detailUnit),
-              const Spacer(),
-              Text(state.quantityRange.description, style: AppText.detailUnit),
-            ],
-          ),
-          Slider(
-            value: state.quantityValue.clamp(
-              state.quantityRange.min,
-              state.quantityRange.max,
-            ),
-            min: state.quantityRange.min,
-            max: state.quantityRange.max,
-            divisions: sliderDivisions,
+          // Текстовый ввод + отображение значения
+          _QuantityInput(
+            value: state.quantityValue,
+            unitText: unitText,
+            decimals: valueDecimals,
+            rangeMin: state.quantityRange.min,
+            rangeMax: state.quantityRange.max,
+            description: state.quantityRange.description,
             onChanged: state.setQuantityValue,
+          ),
+          SliderTheme(
+            data: SliderTheme.of(context).copyWith(
+              activeTrackColor:   AppColors.accent,
+              inactiveTrackColor: AppColors.surfaceAlt,
+              thumbColor:         AppColors.accent,
+              overlayColor:       AppColors.accent.withAlpha(25),
+              trackHeight:        3,
+              thumbShape:
+                  const RoundSliderThumbShape(enabledThumbRadius: 7),
+              overlayShape:
+                  const RoundSliderOverlayShape(overlayRadius: 16),
+            ),
+            child: Slider(
+              value: state.quantityValue.clamp(
+                state.quantityRange.min,
+                state.quantityRange.max,
+              ),
+              min: state.quantityRange.min,
+              max: state.quantityRange.max,
+              divisions: sliderDivisions,
+              onChanged: state.setQuantityValue,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '${state.quantityRange.min.toStringAsFixed(0)} $unitText',
+                  style: AppText.detailUnit.copyWith(fontSize: 9),
+                ),
+                Text(
+                  '${state.quantityRange.max.toStringAsFixed(0)} $unitText',
+                  style: AppText.detailUnit.copyWith(fontSize: 9),
+                ),
+              ],
+            ),
           ),
           Wrap(
             spacing: 6,
@@ -285,6 +324,127 @@ class _QuantityCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+// ── Quantity input: текстовое поле + слайдер синхронизированы ──────────────
+class _QuantityInput extends StatefulWidget {
+  final double       value;
+  final String       unitText;
+  final int          decimals;
+  final double       rangeMin;
+  final double       rangeMax;
+  final String       description;
+  final ValueChanged<double> onChanged;
+
+  const _QuantityInput({
+    required this.value,
+    required this.unitText,
+    required this.decimals,
+    required this.rangeMin,
+    required this.rangeMax,
+    required this.description,
+    required this.onChanged,
+  });
+
+  @override
+  State<_QuantityInput> createState() => _QuantityInputState();
+}
+
+class _QuantityInputState extends State<_QuantityInput> {
+  late TextEditingController _controller;
+  late FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(
+      text: widget.value.toStringAsFixed(widget.decimals),
+    );
+    _focusNode = FocusNode();
+    // Когда поле теряет фокус — применяем введённое значение
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus) {
+        _onSubmit(_controller.text);
+      }
+    });
+  }
+
+  @override
+  void didUpdateWidget(_QuantityInput old) {
+    super.didUpdateWidget(old);
+    // Слайдер изменил значение — синхронизируем поле
+    // только когда TextField не в фокусе (пользователь не набирает)
+    if (!_focusNode.hasFocus) {
+      final newText = widget.value.toStringAsFixed(widget.decimals);
+      if (_controller.text != newText) {
+        _controller.text = newText;
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _onSubmit(String raw) {
+    final v = double.tryParse(raw.replaceAll(',', '.'));
+    if (v != null) {
+      final clamped = v.clamp(widget.rangeMin, widget.rangeMax);
+      widget.onChanged(clamped);
+      final newText = clamped.toStringAsFixed(widget.decimals);
+      if (_controller.text != newText) {
+        _controller.text = newText;
+      }
+    } else {
+      _controller.text = widget.value.toStringAsFixed(widget.decimals);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 108,
+          child: TextField(
+            controller: _controller,
+            focusNode:  _focusNode,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            textAlign: TextAlign.right,
+            style: AppText.detailValue.copyWith(color: AppColors.accent),
+            decoration: InputDecoration(
+              isDense: true,
+              contentPadding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.sm, vertical: 6),
+              enabledBorder: const OutlineInputBorder(
+                borderRadius: AppRadii.smAll,
+                borderSide: BorderSide(color: AppColors.border, width: 0.5),
+              ),
+              focusedBorder: const OutlineInputBorder(
+                borderRadius: AppRadii.smAll,
+                borderSide: BorderSide(color: AppColors.accent, width: 1),
+              ),
+              suffixText: widget.unitText,
+              suffixStyle: AppText.detailUnit,
+            ),
+            onSubmitted: _onSubmit,
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(
+          child: Text(
+            widget.description,
+            style: AppText.detailUnit,
+            textAlign: TextAlign.right,
+          ),
+        ),
+      ],
     );
   }
 }

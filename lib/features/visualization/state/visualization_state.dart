@@ -92,7 +92,7 @@ class VisualizationState extends ChangeNotifier {
   double get p15KgM3 => _p15KgM3;
 
   double get sliderTempC => _sliderT;
-  double get sliderMin => -10.0;
+  double get sliderMin => -40.0;
   double get sliderMax => 50.0;
 
   QuantityUnit get quantityUnit => _qUnit;

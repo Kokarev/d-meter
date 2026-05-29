@@ -14,7 +14,15 @@ import '../../services/density_curve_service.dart';
 /// Стиль: industrial, mobile-first, без тяжёлых градиентов.
 class DensityChart extends StatelessWidget {
   final List<DensityPoint> curve;
+
+  /// 🔵 Синяя точка — операционная плотность при delivery temperature.
+  /// Движется при изменении слайдера температуры.
   final DensityPoint operatingPoint;
+
+  /// 🔴 Красная точка — паспортная плотность P15 при 15°C.
+  /// Фиксирована, изменяется только при редактировании P15.
+  final DensityPoint referencePoint;
+
   final DensityPoint? mixturePoint;
   final double height;
 
@@ -22,6 +30,7 @@ class DensityChart extends StatelessWidget {
     super.key,
     required this.curve,
     required this.operatingPoint,
+    required this.referencePoint,
     this.mixturePoint,
     this.height = 220,
   });
@@ -69,7 +78,8 @@ class DensityChart extends StatelessWidget {
     required double maxTemp,
   }) {
     final tInterval = (maxTemp - minTemp) / 6;
-    final dInterval = (range.max - range.min) / 3;
+    // 5 делений по оси Y — достаточный зазор между подписями
+    final dInterval = (range.max - range.min) / 5;
 
     return LineChartData(
       minX: minTemp,
@@ -109,7 +119,7 @@ class DensityChart extends StatelessWidget {
             reservedSize: 54,
             getTitlesWidget: (val, _) => Text(
               val.toStringAsFixed(3),
-              style: AppText.detailUnit.copyWith(fontSize: 9),
+              style: AppText.detailUnit.copyWith(fontSize: 8),
             ),
           ),
         ),
@@ -139,7 +149,7 @@ class DensityChart extends StatelessWidget {
         ),
       ),
       lineBarsData: [
-        // 1. Паспортная кривая — синяя
+        // 1. Паспортная кривая — синяя линия
         LineChartBarData(
           spots: passportSpots,
           isCurved: true,
@@ -153,21 +163,49 @@ class DensityChart extends StatelessWidget {
           ),
         ),
 
-        // 2. Пунктирная вертикаль на рабочей точке
+        // 2. Пунктирная вертикаль на ОПЕРАЦИОННОЙ точке (синяя, движется)
         LineChartBarData(
           spots: [
             FlSpot(operatingPoint.tempC, range.min),
             FlSpot(operatingPoint.tempC, range.max),
           ],
-          color: AppColors.brand.withAlpha(100),
+          color: AppColors.accent.withAlpha(80),
           barWidth: 1,
           dotData: const FlDotData(show: false),
           dashArray: [4, 4],
         ),
 
-        // 3. Рабочая точка — красная
+        // 3. 🔵 Операционная точка — синяя (density @ delivery temp, движется)
         LineChartBarData(
           spots: [FlSpot(operatingPoint.tempC, operatingPoint.densityKgL)],
+          color: AppColors.accent,
+          barWidth: 0,
+          dotData: FlDotData(
+            show: true,
+            getDotPainter: (_, __, ___, ____) => FlDotCirclePainter(
+              radius: 6,
+              color: AppColors.accent,
+              strokeColor: AppColors.surface,
+              strokeWidth: 2,
+            ),
+          ),
+        ),
+
+        // 4. Пунктирная вертикаль на ПАСПОРТНОЙ точке (красная, t=15)
+        LineChartBarData(
+          spots: [
+            FlSpot(referencePoint.tempC, range.min),
+            FlSpot(referencePoint.tempC, range.max),
+          ],
+          color: AppColors.brand.withAlpha(60),
+          barWidth: 1,
+          dotData: const FlDotData(show: false),
+          dashArray: [3, 5],
+        ),
+
+        // 5. 🔴 Паспортная точка — красная (P15 @ 15°C, фиксирована)
+        LineChartBarData(
+          spots: [FlSpot(referencePoint.tempC, referencePoint.densityKgL)],
           color: AppColors.brand,
           barWidth: 0,
           dotData: FlDotData(
@@ -181,7 +219,7 @@ class DensityChart extends StatelessWidget {
           ),
         ),
 
-        // 4. Точка смеси — зелёная (Phase 3)
+        // 6. Точка смеси — зелёная (Phase 3)
         if (mixturePoint != null)
           LineChartBarData(
             spots: [FlSpot(mixturePoint!.tempC, mixturePoint!.densityKgL)],
