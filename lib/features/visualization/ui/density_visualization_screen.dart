@@ -159,8 +159,14 @@ class _Body extends StatelessWidget {
       densityKgL: state.p15KgM3 / 1000,
     );
 
+    // Add bottom SafeArea padding for iPhone home indicator / nav bar.
+    final bottomPad = MediaQuery.paddingOf(context).bottom;
+    final listPadding = AppSpacing.screenPadding.copyWith(
+      bottom: AppSpacing.screenPadding.bottom + bottomPad + AppSpacing.xl,
+    );
+
     return ListView(
-      padding: AppSpacing.screenPadding,
+      padding: listPadding,
       children: [
         const SizedBox(height: AppSpacing.sm),
         const Text('FUEL', style: AppText.sectionLabel),

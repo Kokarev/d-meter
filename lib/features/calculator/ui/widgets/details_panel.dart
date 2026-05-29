@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/app_layout.dart';
 import '../../../../core/tokens.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../service/density_calculator_service.dart';
@@ -36,9 +35,9 @@ class DetailsPanel extends StatelessWidget {
     final isDesktop = platform == TargetPlatform.macOS ||
         platform == TargetPlatform.windows ||
         platform == TargetPlatform.linux;
-    final isWide =
-        isDesktop || AppLayout.isWide(MediaQuery.of(context).size.width);
-    return isWide ? _buildInline(context) : _buildSheetTrigger(context);
+    // iOS/Android: always use bottom sheet, regardless of screen width.
+    // Inline Details only on desktop platforms (macOS, Windows, Linux).
+    return isDesktop ? _buildInline(context) : _buildSheetTrigger(context);
   }
 
   // ── Desktop: inline expand/collapse (оригинальное поведение) ─────────────

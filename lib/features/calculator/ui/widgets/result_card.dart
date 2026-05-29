@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../../core/app_layout.dart';
 import '../../../../core/tokens.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../service/density_calculator_service.dart';
@@ -136,15 +135,14 @@ class ResultCard extends StatelessWidget {
                           // Details link — только на mobile.
                           // На desktop Details раскрывается inline
                           // в DetailsPanel под ResultCard.
+                          // Show Details link on all non-desktop platforms.
+                          // On desktop, Details panel opens inline in DetailsPanel.
                           if (!(Theme.of(context).platform ==
                                       TargetPlatform.macOS ||
                                   Theme.of(context).platform ==
                                       TargetPlatform.windows ||
                                   Theme.of(context).platform ==
-                                      TargetPlatform.linux) &&
-                              !AppLayout.isWide(
-                                MediaQuery.of(context).size.width,
-                              ))
+                                      TargetPlatform.linux))
                             GestureDetector(
                               behavior: HitTestBehavior.opaque,
                               onTap: () => _openDetails(context),

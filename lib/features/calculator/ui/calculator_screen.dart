@@ -45,11 +45,11 @@ class _CalculatorView extends StatelessWidget {
           backgroundColor: AppColors.background,
           drawer: const AppMenuDrawer(),
           body: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 480),
-            child: SafeArea(child: _Body(title: l.menuDensityCalculator)),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 480),
+              child: SafeArea(child: _Body(title: l.menuDensityCalculator)),
+            ),
           ),
-        ),
         ),
       ),
     );
@@ -63,7 +63,7 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<CalculatorState>();
-    final l     = AppL10n.of(context);
+    final l = AppL10n.of(context);
 
     return CustomScrollView(
       slivers: [
@@ -87,7 +87,7 @@ class _Body extends StatelessWidget {
 
               // ── Mode selector ────────────────────────────────────────
               ModeSelectorWidget(
-                current:   state.mode,
+                current: state.mode,
                 onChanged: (m) => state.setMode(m),
               ),
               const SizedBox(height: AppSpacing.md + 2),
@@ -104,12 +104,15 @@ class _Body extends StatelessWidget {
               if (state.result != null) ...[
                 ResultCard(result: state.result!, mode: state.mode),
                 const SizedBox(height: AppSpacing.sm),
-                DetailsPanel(
-                  result:   state.result!,
-                  mode:     state.mode,
-                  isOpen:   state.detailsOpen,
-                  onToggle: state.toggleDetails,
-                ),
+                if (Theme.of(context).platform == TargetPlatform.macOS ||
+                    Theme.of(context).platform == TargetPlatform.windows ||
+                    Theme.of(context).platform == TargetPlatform.linux)
+                  DetailsPanel(
+                    result:   state.result!,
+                    mode:     state.mode,
+                    isOpen:   state.detailsOpen,
+                    onToggle: state.toggleDetails,
+                  ),
                 const SizedBox(height: AppSpacing.md),
               ],
 
@@ -144,48 +147,47 @@ class _InputsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final errors = state.errors;
-    final l      = AppL10n.of(context);
+    final l = AppL10n.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         LabeledInputField(
-          label:        l.labelP15,
-          unit:         'kg/m³',
+          label: l.labelP15,
+          unit: 'kg/m³',
           initialValue: state.p15Raw,
-          error:        errors['p15'],
-          onChanged:    (v) => state.updateField('p15', v),
+          error: errors['p15'],
+          onChanged: (v) => state.updateField('p15', v),
         ),
-
         if (state.mode == CalcMode.densityAtTemp) ...[
           LabeledInputField(
-            label:        l.labelDeliveryTemp,
-            unit:         '°C',
+            label: l.labelDeliveryTemp,
+            unit: '°C',
             initialValue: state.tempRaw,
-            error:        errors['temp'],
-            onChanged:    (v) => state.updateField('temp', v),
+            error: errors['temp'],
+            onChanged: (v) => state.updateField('temp', v),
           ),
           LabeledInputField(
-            label:        l.labelWeight,
-            unit:         't',
+            label: l.labelWeight,
+            unit: 't',
             initialValue: state.weightRaw,
-            error:        errors['weight'],
-            onChanged:    (v) => state.updateField('weight', v),
+            error: errors['weight'],
+            onChanged: (v) => state.updateField('weight', v),
           ),
         ] else ...[
           LabeledInputField(
-            label:        l.labelActualDensity,
-            unit:         'kg/l',
+            label: l.labelActualDensity,
+            unit: 'kg/l',
             initialValue: state.densityRaw,
-            error:        errors['density'],
-            onChanged:    (v) => state.updateField('density', v),
+            error: errors['density'],
+            onChanged: (v) => state.updateField('density', v),
           ),
           LabeledInputField(
-            label:        l.labelVolume,
-            unit:         'm³',
+            label: l.labelVolume,
+            unit: 'm³',
             initialValue: state.volumeRaw,
-            error:        errors['volume'],
-            onChanged:    (v) => state.updateField('volume', v),
+            error: errors['volume'],
+            onChanged: (v) => state.updateField('volume', v),
           ),
         ],
       ],
@@ -201,15 +203,15 @@ class _InfoHint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l    = AppL10n.of(context);
+    final l = AppL10n.of(context);
     final text = mode == CalcMode.densityAtTemp ? l.hintModeA : l.hintModeB;
 
     return Container(
       padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
-        color:        AppColors.surface,
+        color: AppColors.surface,
         borderRadius: AppRadii.lgAll,
-        border:       Border.all(color: AppColors.border, width: 0.5),
+        border: Border.all(color: AppColors.border, width: 0.5),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,7 +220,7 @@ class _InfoHint extends StatelessWidget {
             padding: EdgeInsets.only(top: 1),
             child: Icon(
               Icons.info_outline_rounded,
-              size:  14,
+              size: 14,
               color: AppColors.textHint,
             ),
           ),
@@ -227,7 +229,7 @@ class _InfoHint extends StatelessWidget {
             child: Text(
               text,
               style: AppText.detailKey.copyWith(
-                color:    AppColors.textSecondary,
+                color: AppColors.textSecondary,
                 fontSize: 11,
               ),
             ),
