@@ -266,3 +266,51 @@ abstract final class AppRadii {
   static const BorderRadius lgAll  = BorderRadius.all(Radius.circular(lg));
   static const BorderRadius xlAll  = BorderRadius.all(Radius.circular(xl));
 }
+
+// ─── Dark Theme Colors ────────────────────────────────────────────────────────
+// Step 1: foundation only. Not active until screens are theme-aware.
+// Usage: AppColorsDark.background, etc. — parallel to AppColors.
+abstract final class AppColorsDark {
+  // Brand (unchanged — logo identity)
+  static const Color brand      = Color(0xFFE24B4A);
+  static const Color accent     = Color(0xFF5B9FE8); // lighter blue for dark bg
+  static const Color accentBg   = Color(0xFF1A2535);
+
+  // Surface
+  static const Color surface    = Color(0xFF1C1F26);
+  static const Color surfaceAlt = Color(0xFF252830); // toggle track, pill
+  static const Color background = Color(0xFF0F1117); // near-black, not pure
+
+  // Cards
+  static const Color cardSurface  = Color(0xFF1C1F26);
+  static const Color resultBg     = Color(0xFF1C1F26);
+  static const Color resultBorder = Color(0xFF5B9FE8);
+  static const Color formulaBg    = Color(0xFF1A2030); // blue-tinted dark
+  static const Color shadow       = Color(0x18000000);
+
+  // Text
+  static const Color textPrimary   = Color(0xFFE8EAF0);
+  static const Color textSecondary = Color(0xFF9BA3AF);
+  static const Color textHint      = Color(0xFF4B5563);
+
+  // Border
+  static const Color border      = Color(0xFF2D3139);
+  static const Color borderFocus = Color(0xFF5B9FE8);
+  static const Color divider     = Color(0xFF252830);
+
+  // Status
+  static const Color success = Color(0xFF5AAF72);
+  static const Color warning = Color(0xFFD4A03A); // thermal expansion
+  static const Color danger  = Color(0xFFE55555);
+
+  // Chart-specific
+  // Operating point (🔵 blue) — brighter in dark mode for readability
+  static const Color chartOperating  = Color(0xFF5B9FE8);
+  // Reference point (🔴 red) — unchanged
+  static const Color chartReference  = Color(0xFFE24B4A);
+  // Grid lines — subtle in dark
+  static const Color chartGrid       = Color(0xFF2D3139);
+  // Chart fill area below curve
+  static const Color chartFill       = Color(0x225B9FE8); // alpha 34
+}
+
